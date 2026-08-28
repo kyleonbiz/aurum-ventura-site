@@ -523,14 +523,14 @@ export default function App() {
           margin: 0;
         }
         h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); line-height: 1.1; }
-        h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: 1.2rem; }
+        h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom: 1rem; }
         h3 { font-size: 1.25rem; margin-bottom: 0.4rem; }
         p { line-height: 1.65; color: ${COLORS.slate}; margin: 0; }
         button { font-family: inherit; cursor: pointer; }
 
         .kicker {
           font-size: 0.78rem; font-weight: 600; letter-spacing: 0.14em;
-          text-transform: uppercase; color: ${COLORS.teal}; margin: 0 0 0.9rem;
+          text-transform: uppercase; color: ${COLORS.teal}; margin: 0 0 0.7rem;
         }
 
         /* Nav */
@@ -560,10 +560,10 @@ export default function App() {
         }
 
         /* Hero */
-        .hero { position: relative; overflow: hidden; padding: 5rem 1.5rem 4rem; }
+        .hero { position: relative; overflow: hidden; padding: 4rem 1.5rem 3rem; }
         .hero-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; max-width: 640px; }
-        .hero-sub { font-size: 1.02rem; margin: 1.3rem 0 2rem; max-width: 560px; }
-        .hero-cta { display: flex; align-items: center; gap: 1.6rem; flex-wrap: wrap; }
+        .hero-sub { font-size: 1.02rem; margin: 1rem 0 1.6rem; max-width: 560px; }
+        .hero-cta { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; }
 
         .btn-primary { background: ${COLORS.navy}; color: ${COLORS.white}; border: none; padding: 0.85rem 1.7rem; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.02em; }
         .btn-primary:hover { background: ${COLORS.teal}; }
@@ -571,14 +571,14 @@ export default function App() {
         .btn-text:hover { color: ${COLORS.navy}; }
 
         /* Sections */
-        .section { max-width: 1100px; margin: 0 auto; padding: 3.2rem 1.5rem; }
+        .section { max-width: 1100px; margin: 0 auto; padding: 2.6rem 1.5rem; }
         .section.alt { background: ${COLORS.ice}; max-width: none; }
         .section.alt > * { max-width: 1100px; margin-left: auto; margin-right: auto; }
-        .section-lead { max-width: 620px; margin-bottom: 1rem; }
-        .page-head { max-width: 1100px; margin: 0 auto; padding: 3.5rem 1.5rem 1rem; }
+        .section-lead { max-width: 620px; margin-bottom: 0.8rem; }
+        .page-head { max-width: 1100px; margin: 0 auto; padding: 2.8rem 1.5rem 1rem; }
         .page-head .hero-sub { max-width: 640px; }
 
-        .plain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.1rem 2.5rem; margin: 1.3rem 0 1.5rem; }
+        .plain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.1rem 2.5rem; margin: 1.1rem 0 1.3rem; }
         .plain-grid-item { display: flex; gap: 0.7rem; align-items: baseline; padding: 0.6rem 0; border-bottom: 1px solid #E4E9EF; font-size: 0.92rem; color: ${COLORS.navy}; width: 100%; background: none; border-left: none; border-right: none; border-top: none; text-align: left; font-family: inherit; cursor: pointer; }
         .plain-grid-item:hover { color: ${COLORS.teal}; border-bottom-color: ${COLORS.teal}; }
         .plain-num { color: ${COLORS.aqua}; font-weight: 600; font-size: 0.8rem; }
@@ -590,25 +590,25 @@ export default function App() {
         .plain-list { margin: 0.8rem 0 0; padding-left: 1.2rem; color: ${COLORS.slate}; }
         .plain-list li { margin-bottom: 0.5rem; line-height: 1.5; }
 
-        .cta-band { text-align: center; padding: 3.5rem 1.5rem; border-top: 1px solid #E4E9EF; }
+        .cta-band { text-align: center; padding: 2.8rem 1.5rem; border-top: 1px solid #E4E9EF; }
         .cta-band h2 { margin-bottom: 0.5rem; }
-        .cta-band p { margin-bottom: 1.4rem; }
+        .cta-band p { margin-bottom: 1.1rem; }
 
-        .service-row { display: block; padding: 1.3rem 0; border-bottom: 1px solid #E4E9EF; max-width: 720px; width: 100%; background: none; border-left: none; border-right: none; border-top: none; text-align: left; font-family: inherit; cursor: pointer; }
+        .service-row { display: block; padding: 1.1rem 0; border-bottom: 1px solid #E4E9EF; max-width: 720px; width: 100%; background: none; border-left: none; border-right: none; border-top: none; text-align: left; font-family: inherit; cursor: pointer; }
         .service-row:first-child { padding-top: 0; }
         .service-row-link { display: inline-block; margin-top: 0.5rem; color: ${COLORS.teal}; font-size: 0.85rem; font-weight: 600; }
         .service-row:hover h3 { color: ${COLORS.teal}; }
         .service-row:hover .service-row-link { color: ${COLORS.navy}; }
 
-        .back-link { display: inline-block; margin-bottom: 1.2rem; }
+        .back-link { display: inline-block; margin-bottom: 1rem; }
 
         /* Steps */
-        .steps { display: flex; flex-direction: column; gap: 1.6rem; max-width: 640px; }
+        .steps { display: flex; flex-direction: column; gap: 1.3rem; max-width: 640px; }
         .step { display: flex; gap: 1.2rem; }
         .step-num { flex-shrink: 0; width: 34px; height: 34px; border: 1.5px solid ${COLORS.aqua}; color: ${COLORS.navy}; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
 
         /* Contact */
-        .contact-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 3rem; }
+        .contact-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2.5rem; }
         .contact-form { display: flex; flex-direction: column; gap: 1.1rem; }
         .contact-form label { display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.82rem; font-weight: 600; color: ${COLORS.navy}; }
         .contact-form input, .contact-form select, .contact-form textarea {
@@ -628,8 +628,8 @@ export default function App() {
         }
 
         /* Footer */
-        .footer { background: ${COLORS.navy}; color: ${COLORS.white}; padding: 3.5rem 1.5rem 1.5rem; margin-top: 2rem; }
-        .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2.5rem; padding-bottom: 2rem; }
+        .footer { background: ${COLORS.navy}; color: ${COLORS.white}; padding: 3rem 1.5rem 1.5rem; margin-top: 1.5rem; }
+        .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2.5rem; padding-bottom: 1.5rem; }
         .footer-cols { display: flex; gap: 3.5rem; }
         .footer-cols h4 { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: ${COLORS.aqua}; margin-bottom: 0.8rem; }
         .footer-cols button { display: block; background: none; border: none; color: rgba(255,255,255,0.8); font-size: 0.87rem; padding: 0.3rem 0; text-align: left; }

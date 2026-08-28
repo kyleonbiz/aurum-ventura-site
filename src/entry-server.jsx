@@ -8,6 +8,7 @@ export const ROUTES = [
   "Services",
   "About",
   "Contact",
+  "Upload",
   ...SERVICES.map((s) => s.slug),
 ].map((key) => ({ path: pathFor(key), ...metaFor(key) }));
 

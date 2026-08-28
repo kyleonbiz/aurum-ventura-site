@@ -1,4 +1,16 @@
 import { useState, useEffect, useRef } from "react";
+import {
+  CATEGORIES as UPLOAD_CATEGORIES,
+  MIN_DESCRIPTION_LENGTH,
+  MIN_REQUESTED_ACTION_LENGTH,
+  MAX_FILE_SIZE_BYTES,
+  MAX_FILES_PER_UPLOAD,
+  ALLOWED_EXTENSIONS,
+  isValidEmail,
+  isMeaningfulText,
+  fileExtension,
+  isAllowedExtension,
+} from "../shared/uploadShared.js";
 
 const COLORS = {
   navy: "#041944",
@@ -180,6 +192,7 @@ export function pathFor(key) {
     case "Services": return "/services";
     case "About": return "/about";
     case "Contact": return "/contact";
+    case "Upload": return "/upload";
     default: return "/services/" + key;
   }
 }
@@ -190,6 +203,7 @@ export function pageFromPath(pathname) {
   if (path === "/services") return "Services";
   if (path === "/about") return "About";
   if (path === "/contact") return "Contact";
+  if (path === "/upload") return "Upload";
   const match = path.match(/^\/services\/([^/]+)$/);
   if (match && SERVICES.some((s) => s.slug === match[1])) return match[1];
   return "Home";
@@ -217,7 +231,7 @@ function Swoosh({ style }) {
 }
 
 function Nav({ page, setPage }) {
-  const items = ["Home", "Services", "About"];
+  const items = ["Home", "Services", "About", "Upload"];
   const [open, setOpen] = useState(false);
   const isServiceDetail = SERVICES.some((s) => s.slug === page);
   const isActive = (it) => page === it || (it === "Services" && isServiceDetail);
@@ -244,7 +258,7 @@ function Nav({ page, setPage }) {
               href={pathFor(it)}
               onClick={go(it)}
             >
-              {it}
+              {it === "Upload" ? "Upload Documents" : it}
             </a>
           ))}
           <a
@@ -274,7 +288,7 @@ function Nav({ page, setPage }) {
               href={pathFor(it)}
               onClick={go(it, true)}
             >
-              {it}
+              {it === "Upload" ? "Upload Documents" : it}
             </a>
           ))}
           <a
@@ -697,18 +711,351 @@ function ContactPage() {
   );
 }
 
+function readDirectoryEntry(entry) {
+  return new Promise((resolve) => {
+    if (entry.isFile) {
+      entry.file((file) => resolve([file]), () => resolve([]));
+      return;
+    }
+    if (entry.isDirectory) {
+      const reader = entry.createReader();
+      const collected = [];
+      const readBatch = () => {
+        reader.readEntries(async (entries) => {
+          if (!entries.length) { resolve(collected); return; }
+          for (const e of entries) collected.push(...(await readDirectoryEntry(e)));
+          readBatch(); // readEntries only returns a batch at a time — must keep calling until empty
+        }, () => resolve(collected));
+      };
+      readBatch();
+      return;
+    }
+    resolve([]);
+  });
+}
+
+function UploadPage() {
+  const [form, setForm] = useState({
+    uploadCode: "", email: "", category: "", documentDescription: "", requestedAction: "", additionalNotes: "",
+  });
+  const [files, setFiles] = useState([]);
+  const [submitState, setSubmitState] = useState("idle"); // idle | submitting | success
+  const [formError, setFormError] = useState("");
+  const [confirmation, setConfirmation] = useState(null);
+  const [dragActive, setDragActive] = useState(false);
+  const idempotencyKey = useRef(crypto.randomUUID()).current;
+  const browseRef = useRef(null);
+  const folderRef = useRef(null);
+
+  const update = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+
+  const validFileCount = files.filter((f) => f.status !== "error").length;
+  const isReady =
+    form.uploadCode.trim().length > 0 &&
+    isValidEmail(form.email) &&
+    UPLOAD_CATEGORIES.includes(form.category) &&
+    isMeaningfulText(form.documentDescription, MIN_DESCRIPTION_LENGTH) &&
+    isMeaningfulText(form.requestedAction, MIN_REQUESTED_ACTION_LENGTH) &&
+    validFileCount > 0 &&
+    submitState !== "submitting";
+
+  function addFiles(fileList) {
+    const incoming = Array.from(fileList).map((file) => {
+      const allowed = isAllowedExtension(file.name);
+      const tooLarge = file.size > MAX_FILE_SIZE_BYTES;
+      return {
+        localId: `${file.name}-${file.size}-${Math.random().toString(36).slice(2, 9)}`,
+        file,
+        status: !allowed || tooLarge ? "error" : "pending",
+        error: !allowed
+          ? `".${fileExtension(file.name) || "?"}" isn't a supported file type.`
+          : tooLarge
+          ? `Larger than the ${Math.round(MAX_FILE_SIZE_BYTES / (1024 * 1024))}MB limit.`
+          : "",
+        progress: 0,
+      };
+    });
+    setFiles((prev) => {
+      const room = Math.max(0, MAX_FILES_PER_UPLOAD - prev.length);
+      return [...prev, ...incoming.slice(0, room)];
+    });
+  }
+
+  const removeFile = (localId) => setFiles((prev) => prev.filter((f) => f.localId !== localId));
+
+  const onDrop = async (e) => {
+    e.preventDefault();
+    setDragActive(false);
+    const items = e.dataTransfer.items;
+    if (items && items.length && items[0].webkitGetAsEntry) {
+      const collected = [];
+      for (const item of items) {
+        const entry = item.webkitGetAsEntry && item.webkitGetAsEntry();
+        if (entry) collected.push(...(await readDirectoryEntry(entry)));
+      }
+      addFiles(collected);
+    } else {
+      addFiles(e.dataTransfer.files);
+    }
+  };
+
+  function uploadOneFile(uploadId, f) {
+    return new Promise((resolve) => {
+      setFiles((prev) => prev.map((x) => (x.localId === f.localId ? { ...x, status: "uploading", progress: 0 } : x)));
+      const xhr = new XMLHttpRequest();
+      const body = new FormData();
+      body.append("uploadId", uploadId);
+      body.append("file", f.file, f.file.name);
+      xhr.open("POST", "/api/upload/file");
+      xhr.upload.onprogress = (e) => {
+        if (!e.lengthComputable) return;
+        const pct = Math.round((e.loaded / e.total) * 100);
+        setFiles((prev) => prev.map((x) => (x.localId === f.localId ? { ...x, progress: pct } : x)));
+      };
+      xhr.onload = () => {
+        const ok = xhr.status >= 200 && xhr.status < 300;
+        let message = "";
+        try { message = JSON.parse(xhr.responseText).message || ""; } catch { /* non-JSON error body */ }
+        setFiles((prev) => prev.map((x) => (x.localId === f.localId
+          ? { ...x, status: ok ? "done" : "error", progress: ok ? 100 : x.progress, error: ok ? "" : (message || "Upload failed.") }
+          : x)));
+        resolve(ok);
+      };
+      xhr.onerror = () => {
+        setFiles((prev) => prev.map((x) => (x.localId === f.localId ? { ...x, status: "error", error: "Network error." } : x)));
+        resolve(false);
+      };
+      xhr.send(body);
+    });
+  }
+
+  async function submit(e) {
+    e.preventDefault();
+    if (!isReady) return;
+    setSubmitState("submitting");
+    setFormError("");
+    try {
+      const initRes = await fetch("/api/upload/init", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, idempotencyKey }),
+      });
+      const initData = await initRes.json().catch(() => ({}));
+      if (!initRes.ok) {
+        setFormError(initData.message || "Something went wrong. Please try again.");
+        setSubmitState("idle");
+        return;
+      }
+      const { uploadId } = initData;
+
+      const pending = files.filter((f) => f.status !== "error");
+      const results = [];
+      for (const f of pending) results.push(await uploadOneFile(uploadId, f));
+
+      if (!results.some(Boolean)) {
+        setFormError("None of the files could be uploaded. Please check them and try again.");
+        setSubmitState("idle");
+        return;
+      }
+
+      const completeRes = await fetch("/api/upload/complete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ uploadId }),
+      });
+      const completeData = await completeRes.json().catch(() => ({}));
+      if (!completeRes.ok) {
+        setFormError(completeData.message || "Your files were received, but we couldn't finish submitting. Your files are safe — please try again.");
+        setSubmitState("idle");
+        return;
+      }
+
+      setConfirmation(completeData);
+      setSubmitState("success");
+    } catch {
+      setFormError("A network error occurred. Please check your connection and try again.");
+      setSubmitState("idle");
+    }
+  }
+
+  if (submitState === "success" && confirmation) {
+    return (
+      <div>
+        <section className="page-head">
+          <p className="kicker">Upload Documents</p>
+          <h1>Upload Received</h1>
+          <p className="hero-sub">Your documents have been securely received by Aurum Ventura.</p>
+        </section>
+        <section className="section">
+          <div className="upload-confirm-panel">
+            <div className="upload-confirm-row"><span>Reference</span><strong>{confirmation.referenceNumber}</strong></div>
+            <div className="upload-confirm-row"><span>Files received</span><strong>{confirmation.fileCount}</strong></div>
+            <div className="upload-confirm-row"><span>Category</span><strong>{confirmation.category}</strong></div>
+            <div className="upload-confirm-row"><span>Requested action</span><strong>{confirmation.requestedAction}</strong></div>
+          </div>
+          <p className="hero-sub" style={{ marginTop: "1.4rem" }}>We will contact you if additional information is required.</p>
+        </section>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <section className="page-head">
+        <p className="kicker">Upload Documents</p>
+        <h1>Upload Documents</h1>
+        <p className="hero-sub">Securely send documents and administrative requests to Aurum Ventura.</p>
+      </section>
+      <section className="section">
+        <div className="upload-layout">
+          <div className="upload-explain">
+            <h2>How this works</h2>
+            <p>
+              Enter your upload code and email, tell us what you're sending and what you need done with it,
+              then attach the files or folder. We'll confirm by email once it's received.
+            </p>
+            <div className="upload-notice">
+              Do not upload account passwords, authentication codes, security questions, encryption keys, or
+              payment-card information through this form.
+            </div>
+          </div>
+
+          <form className="contact-form upload-form" onSubmit={submit} noValidate>
+            {formError && <div className="upload-error" role="alert" aria-live="assertive">{formError}</div>}
+
+            <label>
+              Upload Code
+              <input type="password" required autoComplete="off" value={form.uploadCode} onChange={update("uploadCode")} />
+            </label>
+            <label>
+              Email Address
+              <input type="email" required value={form.email} onChange={update("email")} />
+            </label>
+            <label>
+              Document Category
+              <select required value={form.category} onChange={update("category")}>
+                <option value="">Select one</option>
+                {UPLOAD_CATEGORIES.map((c) => <option key={c}>{c}</option>)}
+              </select>
+            </label>
+            <label>
+              What is this document?
+              <span className="field-help">Briefly describe what you are uploading so our team knows what the files relate to.</span>
+              <textarea
+                rows={3}
+                required
+                placeholder="Updated certificate of insurance for Green Valley Landscaping."
+                value={form.documentDescription}
+                onChange={update("documentDescription")}
+              />
+            </label>
+            <label>
+              What do you need us to do with it?
+              <span className="field-help">Tell us the administrative action you need completed.</span>
+              <textarea
+                rows={3}
+                required
+                placeholder="Replace the previous COI in the vendor record and update the expiration date."
+                value={form.requestedAction}
+                onChange={update("requestedAction")}
+              />
+            </label>
+            <label>
+              Additional Notes <span className="field-optional">(optional)</span>
+              <textarea rows={2} value={form.additionalNotes} onChange={update("additionalNotes")} />
+            </label>
+
+            <div>
+              <span className="upload-dropzone-label">Files</span>
+              <div
+                className={"upload-dropzone" + (dragActive ? " active" : "")}
+                onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
+                onDragLeave={() => setDragActive(false)}
+                onDrop={onDrop}
+                onClick={() => browseRef.current?.click()}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); browseRef.current?.click(); } }}
+                aria-label="Drag and drop files here, or activate to browse"
+              >
+                <p>Drag files or a folder here, or</p>
+                <div className="upload-dropzone-actions">
+                  <button type="button" className="btn-secondary" onClick={(e) => { e.stopPropagation(); browseRef.current?.click(); }}>
+                    Browse Files
+                  </button>
+                  <button type="button" className="btn-secondary" onClick={(e) => { e.stopPropagation(); folderRef.current?.click(); }}>
+                    Browse Folder
+                  </button>
+                </div>
+                <p className="upload-dropzone-hint">
+                  Allowed: {ALLOWED_EXTENSIONS.join(", ").toUpperCase()} — up to {Math.round(MAX_FILE_SIZE_BYTES / (1024 * 1024))}MB per file
+                </p>
+                <input
+                  ref={browseRef}
+                  type="file"
+                  multiple
+                  hidden
+                  onChange={(e) => { addFiles(e.target.files); e.target.value = ""; }}
+                />
+                <input
+                  ref={folderRef}
+                  type="file"
+                  multiple
+                  webkitdirectory=""
+                  directory=""
+                  hidden
+                  onChange={(e) => { addFiles(e.target.files); e.target.value = ""; }}
+                />
+              </div>
+
+              {files.length > 0 && (
+                <ul className="upload-file-list" aria-live="polite">
+                  {files.map((f) => (
+                    <li key={f.localId} className={"upload-file-row" + (f.status === "error" ? " error" : "")}>
+                      <div className="upload-file-info">
+                        <span className="upload-file-name">{f.file.name}</span>
+                        <span className="upload-file-size">{(f.file.size / 1024).toFixed(0)} KB</span>
+                      </div>
+                      {f.status === "uploading" && (
+                        <div className="upload-progress-track"><div className="upload-progress-fill" style={{ width: f.progress + "%" }} /></div>
+                      )}
+                      {f.status === "done" && <span className="upload-file-status done">Uploaded</span>}
+                      {f.status === "error" && <span className="upload-file-status error">{f.error}</span>}
+                      {f.status !== "uploading" && submitState !== "submitting" && (
+                        <button type="button" className="upload-file-remove" aria-label={`Remove ${f.file.name}`} onClick={() => removeFile(f.localId)}>
+                          &times;
+                        </button>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            <button className="btn-primary" type="submit" disabled={!isReady} aria-live="polite">
+              {submitState === "submitting" ? "Submitting…" : "Submit Documents"}
+            </button>
+          </form>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 export const SITE_NAME = "Aurum Ventura Enterprise LLC";
 const PAGE_TITLES = {
   Home: `${SITE_NAME} — Business Administrative Services`,
   Services: `Services — ${SITE_NAME}`,
   About: `About — ${SITE_NAME}`,
   Contact: `Contact — ${SITE_NAME}`,
+  Upload: `Upload Documents — ${SITE_NAME}`,
 };
 const PAGE_DESCRIPTIONS = {
   Home: "Outsourced administrative back-office support for small and growing businesses.",
   Services: "Nine core categories of administrative support — document prep, invoicing, license tracking, vendor admin, data management, and more.",
   About: "How Aurum Ventura works: a defined scope, reserved monthly capacity, and a monthly report on what moved.",
   Contact: "Request a consultation to see where administrative work is taking your time.",
+  Upload: "Securely send documents and administrative requests to Aurum Ventura.",
 };
 
 // Title + meta description for a given page key or service slug — shared
@@ -754,6 +1101,7 @@ export default function App({ initialPath } = {}) {
     Services: <ServicesPage setPage={navigate} />,
     About: <AboutPage setPage={navigate} />,
     Contact: <ContactPage />,
+    Upload: <UploadPage />,
   };
   const service = SERVICES.find((s) => s.slug === page);
   const content = pages[page] || (service ? <ServiceDetailPage slug={page} setPage={navigate} /> : pages.Home);
@@ -898,6 +1246,47 @@ export default function App({ initialPath } = {}) {
           .contact-grid { grid-template-columns: 1fr; }
           .contact-side { border-left: none; border-top: 1px solid #E4E9EF; padding-left: 0; padding-top: 1.5rem; }
           .form-row { grid-template-columns: 1fr; }
+        }
+
+        /* Upload */
+        .btn-secondary { background: ${COLORS.white}; color: ${COLORS.teal}; border: 1px solid ${COLORS.teal}; padding: 0.6rem 1rem; font-size: 0.85rem; font-weight: 600; }
+        .btn-secondary:hover { background: ${COLORS.ice}; }
+        .upload-layout { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 3rem; align-items: start; }
+        .upload-explain h2 { margin-bottom: 0.7rem; }
+        .upload-explain p { margin-bottom: 1.2rem; }
+        .upload-notice { background: ${COLORS.ice}; border-left: 3px solid ${COLORS.teal}; color: ${COLORS.navy}; font-size: 0.85rem; line-height: 1.55; padding: 0.9rem 1rem; }
+        .upload-form { position: relative; }
+        .field-help { font-weight: 500; font-size: 0.78rem; color: ${COLORS.slate}; text-transform: none; letter-spacing: 0; margin-top: -0.15rem; }
+        .field-optional { font-weight: 500; text-transform: none; letter-spacing: 0; color: ${COLORS.slate}; }
+        .upload-error { background: #FBEAEA; border-left: 3px solid #B3261E; color: #7A241E; font-size: 0.85rem; padding: 0.75rem 0.9rem; }
+        .upload-dropzone-label { display: block; font-size: 0.82rem; font-weight: 600; color: ${COLORS.navy}; margin-bottom: 0.4rem; }
+        .upload-dropzone { border: 1.5px dashed #C9D3DC; padding: 1.6rem 1rem; text-align: center; cursor: pointer; background: ${COLORS.white}; transition: border-color 0.15s ease, background 0.15s ease; }
+        .upload-dropzone:hover, .upload-dropzone:focus-visible { border-color: ${COLORS.teal}; outline: none; }
+        .upload-dropzone.active { border-color: ${COLORS.aqua}; background: ${COLORS.ice}; }
+        .upload-dropzone p { font-size: 0.88rem; margin-bottom: 0.7rem; }
+        .upload-dropzone-actions { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; margin-bottom: 0.7rem; }
+        .upload-dropzone-hint { font-size: 0.75rem; color: ${COLORS.slate}; margin-bottom: 0 !important; }
+        .upload-file-list { list-style: none; margin: 0.8rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+        .upload-file-row { display: flex; align-items: center; gap: 0.7rem; border: 1px solid #E4E9EF; padding: 0.5rem 0.7rem; font-size: 0.82rem; }
+        .upload-file-row.error { border-color: #F3C6C3; background: #FBEAEA; }
+        .upload-file-info { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+        .upload-file-name { color: ${COLORS.navy}; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .upload-file-size { color: ${COLORS.slate}; font-size: 0.75rem; }
+        .upload-progress-track { width: 80px; height: 5px; background: #E4E9EF; flex-shrink: 0; }
+        .upload-progress-fill { height: 100%; background: ${COLORS.aqua}; transition: width 0.15s ease; }
+        .upload-file-status { flex-shrink: 0; font-weight: 600; }
+        .upload-file-status.done { color: #137333; }
+        .upload-file-status.error { color: #B3261E; }
+        .upload-file-remove { background: none; border: none; color: ${COLORS.slate}; font-size: 1.1rem; line-height: 1; cursor: pointer; flex-shrink: 0; padding: 0 0.2rem; }
+        .upload-file-remove:hover { color: #B3261E; }
+        .upload-form .btn-primary:disabled { background: #C9D3DC; cursor: not-allowed; }
+        .upload-confirm-panel { max-width: 480px; border: 1px solid #E4E9EF; }
+        .upload-confirm-row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.8rem 1rem; border-bottom: 1px solid #E4E9EF; font-size: 0.9rem; }
+        .upload-confirm-row:last-child { border-bottom: none; }
+        .upload-confirm-row span { color: ${COLORS.slate}; }
+        .upload-confirm-row strong { color: ${COLORS.navy}; text-align: right; }
+        @media (max-width: 800px) {
+          .upload-layout { grid-template-columns: 1fr; }
         }
 
         /* Footer */

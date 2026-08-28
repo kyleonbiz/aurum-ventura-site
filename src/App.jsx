@@ -318,7 +318,7 @@ function Footer({ setPage }) {
           <div>
             <h3>Get in touch</h3>
             <a href={pathFor("Contact")} onClick={go("Contact")}>Request a Consultation</a>
-            <p className="footer-contact">[BUSINESS EMAIL]</p>
+            <p className="footer-contact">admin@aurumventura.net</p>
             <p className="footer-contact">[BUSINESS PHONE]</p>
           </div>
         </div>
@@ -700,7 +700,7 @@ function ContactPage() {
           </form>
           <div className="contact-side">
             <h2>Direct Contact</h2>
-            <p>[BUSINESS EMAIL]</p>
+            <p>admin@aurumventura.net</p>
             <p>[BUSINESS PHONE]</p>
             <h2>Typical Response</h2>
             <p>Within one business day.</p>

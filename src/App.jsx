@@ -66,7 +66,7 @@ function Swoosh({ style }) {
 }
 
 function Nav({ page, setPage }) {
-  const items = ["Home", "Services", "About", "Contact"];
+  const items = ["Home", "Services", "About"];
   const [open, setOpen] = useState(false);
   return (
     <header className="nav">
@@ -88,6 +88,12 @@ function Nav({ page, setPage }) {
               {it}
             </button>
           ))}
+          <button
+            className={"nav-cta" + (page === "Contact" ? " active" : "")}
+            onClick={() => setPage("Contact")}
+          >
+            Request a Consultation
+          </button>
         </nav>
         <button className="nav-burger" onClick={() => setOpen(!open)} aria-label="Menu">
           <span /><span /><span />
@@ -104,6 +110,12 @@ function Nav({ page, setPage }) {
               {it}
             </button>
           ))}
+          <button
+            className={"nav-mobile-link nav-mobile-cta" + (page === "Contact" ? " active" : "")}
+            onClick={() => { setPage("Contact"); setOpen(false); }}
+          >
+            Request a Consultation
+          </button>
         </div>
       )}
     </header>
@@ -413,9 +425,11 @@ export default function App() {
         .nav-mark { height: 34px; width: auto; }
         .nav-word { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 600; color: ${COLORS.navy}; text-align: left; line-height: 1.15; }
         .nav-word small { display: block; font-family: 'Montserrat', sans-serif; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: ${COLORS.slate}; }
-        .nav-links { display: flex; gap: 2rem; }
+        .nav-links { display: flex; align-items: center; gap: 2rem; }
         .nav-link { background: none; border: none; font-size: 0.88rem; font-weight: 500; color: ${COLORS.slate}; padding: 0.3rem 0; border-bottom: 2px solid transparent; }
         .nav-link.active, .nav-link:hover { color: ${COLORS.navy}; border-bottom-color: ${COLORS.aqua}; }
+        .nav-cta { background: ${COLORS.navy}; color: ${COLORS.white}; border: none; padding: 0.6rem 1.2rem; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.02em; }
+        .nav-cta:hover, .nav-cta.active { background: ${COLORS.teal}; }
         .nav-burger { display: none; flex-direction: column; gap: 4px; background: none; border: none; padding: 0.4rem; }
         .nav-burger span { width: 22px; height: 2px; background: ${COLORS.navy}; }
         .nav-mobile { display: none; }
@@ -426,6 +440,8 @@ export default function App() {
           .nav-mobile { display: flex; flex-direction: column; border-top: 1px solid #E4E9EF; padding: 0.5rem 1.5rem 1rem; }
           .nav-mobile-link { text-align: left; background: none; border: none; padding: 0.6rem 0; font-size: 0.95rem; color: ${COLORS.slate}; }
           .nav-mobile-link.active { color: ${COLORS.navy}; font-weight: 600; }
+          .nav-mobile-cta { color: ${COLORS.navy}; font-weight: 600; margin-top: 0.4rem; }
+          .nav-mobile-cta.active { color: ${COLORS.teal}; }
         }
 
         /* Hero */

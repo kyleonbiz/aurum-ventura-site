@@ -162,7 +162,6 @@ function HomePage({ setPage }) {
             data entry, and routine reporting, handled within a defined scope and reserved capacity.
           </p>
           <div className="hero-cta">
-            <button className="btn-primary" onClick={() => setPage("Contact")}>Request a Consultation</button>
             <button className="btn-text" onClick={() => setPage("Services")}>See our services &rarr;</button>
           </div>
         </div>

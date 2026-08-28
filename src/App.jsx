@@ -125,6 +125,29 @@ const NOT_LIST = [
   "Compliance guarantees or regulatory determinations",
 ];
 
+// Real, shareable URLs for every page. Home/Services/About/Contact map to
+// fixed paths; anything else is treated as a service slug under /services/.
+function pathFor(key) {
+  switch (key) {
+    case "Home": return "/";
+    case "Services": return "/services";
+    case "About": return "/about";
+    case "Contact": return "/contact";
+    default: return "/services/" + key;
+  }
+}
+
+function pageFromPath(pathname) {
+  const path = pathname.replace(/\/+$/, "") || "/";
+  if (path === "/") return "Home";
+  if (path === "/services") return "Services";
+  if (path === "/about") return "About";
+  if (path === "/contact") return "Contact";
+  const match = path.match(/^\/services\/([^/]+)$/);
+  if (match && SERVICES.some((s) => s.slug === match[1])) return match[1];
+  return "Home";
+}
+
 function Swoosh({ style }) {
   return (
     <svg viewBox="0 0 600 200" style={style} preserveAspectRatio="none">
@@ -151,32 +174,39 @@ function Nav({ page, setPage }) {
   const [open, setOpen] = useState(false);
   const isServiceDetail = SERVICES.some((s) => s.slug === page);
   const isActive = (it) => page === it || (it === "Services" && isServiceDetail);
+  const go = (key, closeMenu) => (e) => {
+    e.preventDefault();
+    setPage(key);
+    if (closeMenu) setOpen(false);
+  };
   return (
     <header className="nav">
       <div className="nav-inner">
-        <button className="nav-brand" onClick={() => { setPage("Home"); setOpen(false); }}>
+        <a className="nav-brand" href={pathFor("Home")} onClick={go("Home", true)}>
           <img src={LOGO_MARK} alt="Aurum Ventura" className="nav-mark" />
           <span className="nav-word">
             Aurum Ventura
             <small>Business Administrative Services</small>
           </span>
-        </button>
+        </a>
         <nav className="nav-links">
           {items.map((it) => (
-            <button
+            <a
               key={it}
               className={"nav-link" + (isActive(it) ? " active" : "")}
-              onClick={() => setPage(it)}
+              href={pathFor(it)}
+              onClick={go(it)}
             >
               {it}
-            </button>
+            </a>
           ))}
-          <button
+          <a
             className={"nav-cta" + (page === "Contact" ? " active" : "")}
-            onClick={() => setPage("Contact")}
+            href={pathFor("Contact")}
+            onClick={go("Contact")}
           >
             Request a Consultation
-          </button>
+          </a>
         </nav>
         <button className="nav-burger" onClick={() => setOpen(!open)} aria-label="Menu">
           <span /><span /><span />
@@ -185,20 +215,22 @@ function Nav({ page, setPage }) {
       {open && (
         <div className="nav-mobile">
           {items.map((it) => (
-            <button
+            <a
               key={it}
               className={"nav-mobile-link" + (isActive(it) ? " active" : "")}
-              onClick={() => { setPage(it); setOpen(false); }}
+              href={pathFor(it)}
+              onClick={go(it, true)}
             >
               {it}
-            </button>
+            </a>
           ))}
-          <button
+          <a
             className={"nav-mobile-link nav-mobile-cta" + (page === "Contact" ? " active" : "")}
-            onClick={() => { setPage("Contact"); setOpen(false); }}
+            href={pathFor("Contact")}
+            onClick={go("Contact", true)}
           >
             Request a Consultation
-          </button>
+          </a>
         </div>
       )}
     </header>
@@ -206,18 +238,19 @@ function Nav({ page, setPage }) {
 }
 
 function Footer({ setPage }) {
+  const go = (key) => (e) => { e.preventDefault(); setPage(key); };
   return (
     <footer className="footer">
       <div className="footer-inner">
         <div className="footer-cols">
           <div>
             <h4>Company</h4>
-            <button onClick={() => setPage("About")}>About</button>
-            <button onClick={() => setPage("Services")}>Services</button>
+            <a href={pathFor("About")} onClick={go("About")}>About</a>
+            <a href={pathFor("Services")} onClick={go("Services")}>Services</a>
           </div>
           <div>
             <h4>Get in touch</h4>
-            <button onClick={() => setPage("Contact")}>Request a Consultation</button>
+            <a href={pathFor("Contact")} onClick={go("Contact")}>Request a Consultation</a>
             <p className="footer-contact">[BUSINESS EMAIL]</p>
             <p className="footer-contact">[BUSINESS PHONE]</p>
           </div>
@@ -232,6 +265,7 @@ function Footer({ setPage }) {
 }
 
 function HomePage({ setPage }) {
+  const go = (key) => (e) => { e.preventDefault(); setPage(key); };
   return (
     <div>
       <section className="hero">
@@ -245,7 +279,7 @@ function HomePage({ setPage }) {
             data entry, and routine reporting, handled within a defined scope and reserved capacity.
           </p>
           <div className="hero-cta">
-            <button className="btn-text" onClick={() => setPage("Services")}>See our services &rarr;</button>
+            <a className="btn-text" href={pathFor("Services")} onClick={go("Services")}>See our services &rarr;</a>
           </div>
         </div>
       </section>
@@ -254,10 +288,10 @@ function HomePage({ setPage }) {
         <h2>What We Handle</h2>
         <div className="plain-grid">
           {SERVICES.map((s, i) => (
-            <button className="plain-grid-item" key={s.slug} onClick={() => setPage(s.slug)}>
+            <a className="plain-grid-item" key={s.slug} href={pathFor(s.slug)} onClick={go(s.slug)}>
               <span className="plain-num">{String(i + 1).padStart(2, "0")}</span>
               <span>{s.title}</span>
-            </button>
+            </a>
           ))}
         </div>
       </section>
@@ -289,13 +323,14 @@ function HomePage({ setPage }) {
       <section className="cta-band">
         <h2>Ready to see where things stand?</h2>
         <p>A short consultation to understand what's actually taking time — no pressure, no commitment.</p>
-        <button className="btn-primary" onClick={() => setPage("Contact")}>Request a Consultation</button>
+        <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Request a Consultation</a>
       </section>
     </div>
   );
 }
 
 function ServicesPage({ setPage }) {
+  const go = (key) => (e) => { e.preventDefault(); setPage(key); };
   return (
     <div>
       <section className="page-head">
@@ -308,11 +343,11 @@ function ServicesPage({ setPage }) {
       </section>
       <section className="section">
         {SERVICES.map((s, i) => (
-          <button className="service-row" key={s.slug} onClick={() => setPage(s.slug)}>
+          <a className="service-row" key={s.slug} href={pathFor(s.slug)} onClick={go(s.slug)}>
             <h3>{String(i + 1).padStart(2, "0")} &middot; {s.title}</h3>
             <p>{s.summary}</p>
             <span className="service-row-link">View examples &rarr;</span>
-          </button>
+          </a>
         ))}
       </section>
       <section className="section alt">
@@ -324,7 +359,7 @@ function ServicesPage({ setPage }) {
       <section className="cta-band">
         <h2>Not sure which categories apply?</h2>
         <p>We'll work it out together in a short consultation.</p>
-        <button className="btn-primary" onClick={() => setPage("Contact")}>Request a Consultation</button>
+        <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Request a Consultation</a>
       </section>
     </div>
   );
@@ -333,10 +368,11 @@ function ServicesPage({ setPage }) {
 function ServiceDetailPage({ slug, setPage }) {
   const index = SERVICES.findIndex((s) => s.slug === slug);
   const service = SERVICES[index] || SERVICES[0];
+  const go = (key) => (e) => { e.preventDefault(); setPage(key); };
   return (
     <div>
       <section className="page-head">
-        <button className="btn-text back-link" onClick={() => setPage("Services")}>&larr; All Services</button>
+        <a className="btn-text back-link" href={pathFor("Services")} onClick={go("Services")}>&larr; All Services</a>
         <p className="kicker">{String(index + 1).padStart(2, "0")} &middot; Services</p>
         <h1>{service.title}</h1>
         <p className="hero-sub">{service.summary}</p>
@@ -350,7 +386,7 @@ function ServiceDetailPage({ slug, setPage }) {
       <section className="cta-band">
         <h2>Want this handled for you?</h2>
         <p>We'll fold it into a Scope of Services built around what you actually need.</p>
-        <button className="btn-primary" onClick={() => setPage("Contact")}>Request a Consultation</button>
+        <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Request a Consultation</a>
       </section>
     </div>
   );
@@ -394,7 +430,7 @@ function AboutPage({ setPage }) {
       <section className="cta-band">
         <h2>Ready to talk?</h2>
         <p>A short consultation to see if this is a fit — no pressure, no commitment.</p>
-        <button className="btn-primary" onClick={() => setPage("Contact")}>Request a Consultation</button>
+        <a className="btn-primary" href={pathFor("Contact")} onClick={(e) => { e.preventDefault(); setPage("Contact"); }}>Request a Consultation</a>
       </section>
     </div>
   );
@@ -488,21 +524,44 @@ function ContactPage() {
   );
 }
 
+const SITE_NAME = "Aurum Ventura Enterprise LLC";
+const PAGE_TITLES = {
+  Home: `${SITE_NAME} — Business Administrative Services`,
+  Services: `Services — ${SITE_NAME}`,
+  About: `About — ${SITE_NAME}`,
+  Contact: `Contact — ${SITE_NAME}`,
+};
+
 export default function App() {
-  const [page, setPage] = useState("Home");
+  const [page, setPage] = useState(() => pageFromPath(window.location.pathname));
+
+  // Keeps the browser URL in sync with the current page — real, shareable
+  // links, plus back/forward support via the popstate listener below.
+  const navigate = (key) => {
+    if (key !== page) window.history.pushState({}, "", pathFor(key));
+    setPage(key);
+  };
+
+  useEffect(() => {
+    const onPopState = () => setPage(pageFromPath(window.location.pathname));
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    const service = SERVICES.find((s) => s.slug === page);
+    document.title = PAGE_TITLES[page] || (service ? `${service.title} — ${SITE_NAME}` : PAGE_TITLES.Home);
   }, [page]);
 
   const pages = {
-    Home: <HomePage setPage={setPage} />,
-    Services: <ServicesPage setPage={setPage} />,
-    About: <AboutPage setPage={setPage} />,
+    Home: <HomePage setPage={navigate} />,
+    Services: <ServicesPage setPage={navigate} />,
+    About: <AboutPage setPage={navigate} />,
     Contact: <ContactPage />,
   };
   const service = SERVICES.find((s) => s.slug === page);
-  const content = pages[page] || (service ? <ServiceDetailPage slug={page} setPage={setPage} /> : pages.Home);
+  const content = pages[page] || (service ? <ServiceDetailPage slug={page} setPage={navigate} /> : pages.Home);
 
   return (
     <div className="app">
@@ -527,6 +586,7 @@ export default function App() {
         h3 { font-size: 1.25rem; margin-bottom: 0.4rem; }
         p { line-height: 1.65; color: ${COLORS.slate}; margin: 0; }
         button { font-family: inherit; cursor: pointer; }
+        a { color: inherit; text-decoration: none; cursor: pointer; }
 
         .kicker {
           font-size: 0.78rem; font-weight: 600; letter-spacing: 0.14em;
@@ -565,9 +625,9 @@ export default function App() {
         .hero-sub { font-size: 1.02rem; margin: 1rem 0 1.6rem; max-width: 560px; }
         .hero-cta { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; }
 
-        .btn-primary { background: ${COLORS.navy}; color: ${COLORS.white}; border: none; padding: 0.85rem 1.7rem; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.02em; }
+        .btn-primary { display: inline-block; background: ${COLORS.navy}; color: ${COLORS.white}; border: none; padding: 0.85rem 1.7rem; font-size: 0.9rem; font-weight: 600; letter-spacing: 0.02em; }
         .btn-primary:hover { background: ${COLORS.teal}; }
-        .btn-text { background: none; border: none; color: ${COLORS.teal}; font-size: 0.9rem; font-weight: 600; padding: 0.5rem 0; }
+        .btn-text { display: inline-block; background: none; border: none; color: ${COLORS.teal}; font-size: 0.9rem; font-weight: 600; padding: 0.5rem 0; }
         .btn-text:hover { color: ${COLORS.navy}; }
 
         /* Sections */
@@ -633,15 +693,15 @@ export default function App() {
         .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2.5rem; padding-bottom: 1.5rem; }
         .footer-cols { display: flex; gap: 3.5rem; }
         .footer-cols h4 { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: ${COLORS.aqua}; margin-bottom: 0.8rem; }
-        .footer-cols button { display: block; background: none; border: none; color: rgba(255,255,255,0.8); font-size: 0.87rem; padding: 0.3rem 0; text-align: left; }
-        .footer-cols button:hover { color: ${COLORS.white}; }
+        .footer-cols a { display: block; background: none; border: none; color: rgba(255,255,255,0.8); font-size: 0.87rem; padding: 0.3rem 0; text-align: left; }
+        .footer-cols a:hover { color: ${COLORS.white}; }
         .footer-contact { color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-top: 0.3rem; }
         .footer-legal { text-align: center; color: rgba(255,255,255,0.45); font-size: 0.78rem; margin-top: 1.2rem; }
       `}</style>
 
-      <Nav page={page} setPage={setPage} />
+      <Nav page={page} setPage={navigate} />
       {content}
-      <Footer setPage={setPage} />
+      <Footer setPage={navigate} />
     </div>
   );
 }

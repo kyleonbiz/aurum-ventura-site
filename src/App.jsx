@@ -29,13 +29,6 @@ const AUDIENCE = [
   "Cleaning & landscaping", "Contractors", "Retailers", "Professional service firms",
 ];
 
-const PLANS = [
-  { name: "Admin Essentials", price: "$495", capacity: "~8 hrs / month", note: "Solo operators and very small teams" },
-  { name: "Business Admin", price: "$895", capacity: "~18 hrs / month", note: "Most growing businesses", recommended: true },
-  { name: "Back Office Plus", price: "$1,495", capacity: "~32 hrs / month", note: "Higher-volume operations" },
-  { name: "Custom Administrative Department", price: "From $2,500", capacity: "Scoped individually", note: "Multi-location or complex operations" },
-];
-
 const STEPS = [
   ["Consultation", "A short conversation to understand where administrative work is creating strain."],
   ["Needs Assessment", "We document what's actually taking time and where a defined scope would help."],
@@ -74,7 +67,7 @@ function Swoosh({ style }) {
 }
 
 function Nav({ page, setPage }) {
-  const items = ["Home", "Services", "Pricing", "About", "Contact"];
+  const items = ["Home", "Services", "About", "Contact"];
   const [open, setOpen] = useState(false);
   return (
     <header className="nav">
@@ -131,7 +124,6 @@ function Footer({ setPage }) {
             <h4>Company</h4>
             <button onClick={() => setPage("About")}>About</button>
             <button onClick={() => setPage("Services")}>Services</button>
-            <button onClick={() => setPage("Pricing")}>Pricing</button>
           </div>
           <div>
             <h4>Get in touch</h4>
@@ -243,58 +235,6 @@ function ServicesPage({ setPage }) {
       <section className="cta-band">
         <h2>Not sure which categories apply?</h2>
         <p>We'll work it out together in a short consultation.</p>
-        <button className="btn-primary" onClick={() => setPage("Contact")}>Request a Consultation</button>
-      </section>
-    </div>
-  );
-}
-
-function PricingPage({ setPage }) {
-  return (
-    <div>
-      <section className="page-head">
-        <p className="kicker">Pricing</p>
-        <h1>Plans &amp; Capacity</h1>
-        <p className="hero-sub">
-          Plans are structured around reserved monthly capacity, not itemized tasks. Each plan
-          includes a set number of administrative hours reserved for you every month.
-        </p>
-      </section>
-      <section className="section">
-        <table className="pricing-table">
-          <thead>
-            <tr>
-              <th>Plan</th>
-              <th>Monthly Price</th>
-              <th>Reserved Capacity</th>
-              <th>Best For</th>
-            </tr>
-          </thead>
-          <tbody>
-            {PLANS.map((p) => (
-              <tr key={p.name}>
-                <td>
-                  <strong>{p.name}</strong>
-                  {p.recommended && <span className="rec-label">Recommended</span>}
-                </td>
-                <td>{p.price}<span className="per">/mo</span></td>
-                <td>{p.capacity}</td>
-                <td>{p.note}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-
-        <div className="notes">
-          <p>A one-time onboarding fee applies before service begins, in addition to the first month's plan fee.</p>
-          <p>Reserved capacity does not roll over month to month and resets on your billing date.</p>
-          <p>Work outside your approved scope, or beyond reserved capacity, always requires your authorization before it begins — billed at $60/hour once approved.</p>
-          <p>Priority and Urgent request handling may be available depending on your plan, subject to availability.</p>
-        </div>
-      </section>
-      <section className="cta-band">
-        <h2>Not sure which plan fits?</h2>
-        <p>We'll size it based on your actual administrative volume, not a guess.</p>
         <button className="btn-primary" onClick={() => setPage("Contact")}>Request a Consultation</button>
       </section>
     </div>
@@ -438,7 +378,6 @@ export default function App() {
   const pages = {
     Home: <HomePage setPage={setPage} />,
     Services: <ServicesPage setPage={setPage} />,
-    Pricing: <PricingPage setPage={setPage} />,
     About: <AboutPage setPage={setPage} />,
     Contact: <ContactPage />,
   };
@@ -530,21 +469,6 @@ export default function App() {
 
         .service-row { padding: 1.3rem 0; border-bottom: 1px solid #E4E9EF; max-width: 720px; }
         .service-row:first-child { padding-top: 0; }
-
-        /* Pricing */
-        .pricing-table { width: 100%; border-collapse: collapse; margin-bottom: 2rem; }
-        .pricing-table th { text-align: left; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: ${COLORS.navy}; padding: 0 0.8rem 0.7rem 0; border-bottom: 1.5px solid ${COLORS.navy}; }
-        .pricing-table td { padding: 1rem 0.8rem 1rem 0; border-bottom: 1px solid #E4E9EF; font-size: 0.92rem; color: ${COLORS.slate}; vertical-align: top; }
-        .pricing-table td strong { color: ${COLORS.navy}; font-weight: 600; display: block; }
-        .rec-label { display: inline-block; margin-top: 0.2rem; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: ${COLORS.aqua}; }
-        .per { font-size: 0.78rem; color: ${COLORS.slate}; }
-        .notes p { font-size: 0.85rem; margin-bottom: 0.6rem; padding-left: 0.8rem; border-left: 2px solid #E4E9EF; }
-        @media (max-width: 700px) {
-          .pricing-table thead { display: none; }
-          .pricing-table, .pricing-table tbody, .pricing-table tr, .pricing-table td { display: block; width: 100%; }
-          .pricing-table tr { border-bottom: 1px solid #E4E9EF; padding: 1rem 0; }
-          .pricing-table td { border: none; padding: 0.2rem 0; }
-        }
 
         /* Steps */
         .steps { display: flex; flex-direction: column; gap: 1.6rem; max-width: 640px; }

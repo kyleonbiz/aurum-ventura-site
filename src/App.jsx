@@ -244,12 +244,12 @@ function Footer({ setPage }) {
       <div className="footer-inner">
         <div className="footer-cols">
           <div>
-            <h4>Company</h4>
+            <h3>Company</h3>
             <a href={pathFor("About")} onClick={go("About")}>About</a>
             <a href={pathFor("Services")} onClick={go("Services")}>Services</a>
           </div>
           <div>
-            <h4>Get in touch</h4>
+            <h3>Get in touch</h3>
             <a href={pathFor("Contact")} onClick={go("Contact")}>Request a Consultation</a>
             <p className="footer-contact">[BUSINESS EMAIL]</p>
             <p className="footer-contact">[BUSINESS PHONE]</p>
@@ -290,7 +290,7 @@ function HomePage({ setPage }) {
           {SERVICES.map((s, i) => (
             <a className="plain-grid-item" key={s.slug} href={pathFor(s.slug)} onClick={go(s.slug)}>
               <span className="plain-num">{String(i + 1).padStart(2, "0")}</span>
-              <span>{s.title}</span>
+              <h3>{s.title}</h3>
             </a>
           ))}
         </div>
@@ -307,6 +307,7 @@ function HomePage({ setPage }) {
             <span className="tag" key={a}>{a}</span>
           ))}
         </div>
+        <a className="btn-text" href={pathFor("Services")} onClick={go("Services")}>See the full list of services &rarr;</a>
       </section>
 
       <section className="section">
@@ -318,6 +319,7 @@ function HomePage({ setPage }) {
         <ul className="plain-list">
           {NOT_LIST.map((n) => <li key={n}>{n}</li>)}
         </ul>
+        <a className="btn-text" href={pathFor("About")} onClick={go("About")}>Learn how we work &rarr;</a>
       </section>
 
       <section className="cta-band">
@@ -344,7 +346,7 @@ function ServicesPage({ setPage }) {
       <section className="section">
         {SERVICES.map((s, i) => (
           <a className="service-row" key={s.slug} href={pathFor(s.slug)} onClick={go(s.slug)}>
-            <h3>{String(i + 1).padStart(2, "0")} &middot; {s.title}</h3>
+            <h2>{String(i + 1).padStart(2, "0")} &middot; {s.title}</h2>
             <p>{s.summary}</p>
             <span className="service-row-link">View examples &rarr;</span>
           </a>
@@ -512,10 +514,10 @@ function ContactPage() {
             <button className="btn-primary" type="submit">Send Request</button>
           </form>
           <div className="contact-side">
-            <h4>Direct Contact</h4>
+            <h2>Direct Contact</h2>
             <p>[BUSINESS EMAIL]</p>
             <p>[BUSINESS PHONE]</p>
-            <h4>Typical Response</h4>
+            <h2>Typical Response</h2>
             <p>Within one business day.</p>
           </div>
         </div>
@@ -642,6 +644,7 @@ export default function App() {
         .plain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.1rem 2.5rem; margin: 1.1rem 0 1.3rem; }
         .plain-grid-item { display: flex; gap: 0.7rem; align-items: baseline; padding: 0.6rem 0; border-bottom: 1px solid #E4E9EF; font-size: 0.92rem; color: ${COLORS.navy}; width: 100%; background: none; border-left: none; border-right: none; border-top: none; text-align: left; font-family: inherit; cursor: pointer; }
         .plain-grid-item:hover { color: ${COLORS.teal}; border-bottom-color: ${COLORS.teal}; }
+        .plain-grid-item h3 { font: inherit; font-weight: inherit; color: inherit; margin: 0; }
         .plain-num { color: ${COLORS.aqua}; font-weight: 600; font-size: 0.8rem; }
         @media (max-width: 640px) { .plain-grid { grid-template-columns: 1fr; } }
 
@@ -657,8 +660,9 @@ export default function App() {
 
         .service-row { display: block; padding: 1.1rem 0; border-bottom: 1px solid #E4E9EF; max-width: 720px; width: 100%; background: none; border-left: none; border-right: none; border-top: none; text-align: left; font-family: inherit; cursor: pointer; }
         .service-row:first-child { padding-top: 0; }
+        .service-row h2 { font-size: 1.25rem; margin-bottom: 0.4rem; }
         .service-row-link { display: inline-block; margin-top: 0.5rem; color: ${COLORS.teal}; font-size: 0.85rem; font-weight: 600; }
-        .service-row:hover h3 { color: ${COLORS.teal}; }
+        .service-row:hover h2 { color: ${COLORS.teal}; }
         .service-row:hover .service-row-link { color: ${COLORS.navy}; }
 
         .back-link { display: inline-block; margin-bottom: 1rem; }
@@ -679,8 +683,8 @@ export default function App() {
         .contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus { outline: 2px solid ${COLORS.aqua}; outline-offset: 1px; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
         .contact-side { border-left: 1px solid #E4E9EF; padding-left: 2rem; }
-        .contact-side h4 { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: ${COLORS.teal}; margin: 1.4rem 0 0.4rem; }
-        .contact-side h4:first-child { margin-top: 0; }
+        .contact-side h2 { font-family: 'Montserrat', sans-serif; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: ${COLORS.teal}; margin: 1.4rem 0 0.4rem; }
+        .contact-side h2:first-child { margin-top: 0; }
         .contact-side p { font-size: 0.9rem; color: ${COLORS.navy}; margin-bottom: 0.2rem; }
         @media (max-width: 700px) {
           .contact-grid { grid-template-columns: 1fr; }
@@ -692,7 +696,7 @@ export default function App() {
         .footer { background: ${COLORS.navy}; color: ${COLORS.white}; padding: 3rem 1.5rem 1.5rem; margin-top: 1.5rem; }
         .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2.5rem; padding-bottom: 1.5rem; }
         .footer-cols { display: flex; gap: 3.5rem; }
-        .footer-cols h4 { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: ${COLORS.aqua}; margin-bottom: 0.8rem; }
+        .footer-cols h3 { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: ${COLORS.aqua}; margin-bottom: 0.8rem; }
         .footer-cols a { display: block; background: none; border: none; color: rgba(255,255,255,0.8); font-size: 0.87rem; padding: 0.3rem 0; text-align: left; }
         .footer-cols a:hover { color: ${COLORS.white}; }
         .footer-contact { color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-top: 0.3rem; }

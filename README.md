@@ -24,13 +24,26 @@ vercel
 ```
 Follow the prompts (link/create project, confirm defaults). Run `vercel --prod` to push to production once you're happy with the preview URL.
 
-## Routing
+## Routing & prerendering
 
 Each page has a real, shareable URL (`/`, `/services`, `/about`, `/contact`,
 `/services/<slug>`) synced via the native History API in `src/App.jsx` — no
-router library. `vercel.json` rewrites all paths to `index.html` so direct
-links and refreshes work in production; Vite's dev server does the same
-automatically.
+router library.
+
+`npm run build` does three things: builds the client bundle, builds an SSR
+bundle (`src/entry-server.jsx`), then runs `scripts/prerender.mjs`, which
+renders every route to real static HTML under `dist/<route>/index.html`.
+That means crawlers and other non-JS clients see actual content (a real
+`<h1>`, headings, links) on the first response instead of the empty
+`<div id="root">` a pure client-rendered SPA would ship. `src/main.jsx`
+hydrates that prerendered markup in production; in `npm run dev` (where
+`dist/` doesn't exist) it just renders fresh, same as before.
+
+`vercel.json` sets `cleanUrls: true` so Vercel resolves `/about` to the
+prerendered `dist/about/index.html` correctly. Note: `npm run preview`
+(Vite's own static server) does **not** do this — visiting `/about` locally
+falls back to the root page; use the trailing-slash form (`/about/`) to
+test a specific prerendered route locally.
 
 ## Before going live
 - Replace `[BUSINESS EMAIL]` and `[BUSINESS PHONE]` placeholders in `src/App.jsx` (search for both — they appear in the footer, contact page, and hero areas).

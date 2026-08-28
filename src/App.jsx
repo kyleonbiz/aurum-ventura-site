@@ -178,7 +178,6 @@ function HomePage({ setPage }) {
             </div>
           ))}
         </div>
-        <button className="btn-text" onClick={() => setPage("Services")}>Full service descriptions &rarr;</button>
       </section>
 
       <section className="section alt">

@@ -59,3 +59,43 @@ export function isStorageConfigured() {
   const { DROPBOX_APP_KEY, DROPBOX_APP_SECRET, DROPBOX_REFRESH_TOKEN, DROPBOX_ACCESS_TOKEN } = process.env;
   return !!((DROPBOX_APP_KEY && DROPBOX_APP_SECRET && DROPBOX_REFRESH_TOKEN) || DROPBOX_ACCESS_TOKEN);
 }
+
+const CLIENT_SUBFOLDERS = [
+  "01 Signed Agreements",
+  "02 Onboarding",
+  "03 Client Uploads",
+  "04 Completed Documents",
+  "05 Licenses & Renewals",
+  "06 Vendors",
+  "07 Invoices",
+  "08 CRM & Data",
+  "09 Projects",
+  "10 Admin Requests",
+  "11 Monthly Reports",
+  "12 Scope Changes",
+  "99 Archive",
+];
+
+// Creates the standard 13-folder structure for a newly-approved client.
+// Called ONLY after admin approval (never from an unapproved intake) —
+// see api/admin/intakes/[id]/approve.js. Each folder is created
+// independently so one failure doesn't block the rest; failures are
+// returned, not thrown, so approval can still succeed with a partial
+// folder set and a clear note for staff to finish manually.
+export async function createClientFolderStructure(clientLegalName) {
+  const dbx = getClient();
+  const safeName = String(clientLegalName).replace(/[\/\\]/g, "-").trim();
+  const results = [];
+  for (const sub of CLIENT_SUBFOLDERS) {
+    const path = `/Clients/${safeName}/${sub}`;
+    try {
+      await dbx.filesCreateFolderV2({ path, autorename: false });
+      results.push({ path, ok: true });
+    } catch (err) {
+      // "path/conflict/folder" just means it already exists — not a real failure.
+      const alreadyExists = err?.error?.error?.path?.[".tag"] === "conflict";
+      results.push({ path, ok: alreadyExists, error: alreadyExists ? null : String(err.message || err) });
+    }
+  }
+  return results;
+}

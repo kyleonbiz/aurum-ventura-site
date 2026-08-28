@@ -16,24 +16,27 @@ const root = path.resolve(__dirname, "..");
 const distDir = path.join(root, "dist");
 
 const template = fs.readFileSync(path.join(distDir, "index.html"), "utf-8");
-const { render, ROUTES } = await import(
+const { render, ROUTES, ADMIN_ROUTES } = await import(
   path.join(root, "dist-ssr", "entry-server.js")
 );
 
-for (const { path: routePath, title, description } of ROUTES) {
+for (const { path: routePath, title, description, noindex } of [...ROUTES, ...ADMIN_ROUTES]) {
   const appHtml = render(routePath);
-  const html = template
+  let html = template
     .replace('<div id="root"></div>', `<div id="root">${appHtml}</div>`)
     .replace(/<title>.*?<\/title>/, `<title>${escapeHtml(title)}</title>`)
     .replace(
       /<meta name="description" content=".*?"\s*\/?>/,
       `<meta name="description" content="${escapeHtml(description)}" />`
     );
+  if (noindex) {
+    html = html.replace("</head>", `  <meta name="robots" content="noindex, nofollow" />\n  </head>`);
+  }
 
   const outDir = routePath === "/" ? distDir : path.join(distDir, routePath);
   fs.mkdirSync(outDir, { recursive: true });
   fs.writeFileSync(path.join(outDir, "index.html"), html);
-  console.log("prerendered", routePath);
+  console.log("prerendered", routePath, noindex ? "(noindex)" : "");
 }
 
 const today = new Date().toISOString().slice(0, 10);

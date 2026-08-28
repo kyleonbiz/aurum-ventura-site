@@ -71,3 +71,121 @@ export async function sendInternalNotificationEmail({ clientLegalName, submitted
     text: lines.join("\n"),
   });
 }
+
+// ---------------------------------------------------------------------
+// Client Intake emails
+// ---------------------------------------------------------------------
+
+export async function sendIntakeConfirmationEmail({ to, contactName, companyName, referenceNumber }) {
+  const resend = getClient();
+  const text = [
+    `Hello ${contactName || "there"},`,
+    ``,
+    `We have received your Client Intake information.`,
+    ``,
+    `Company:`,
+    companyName,
+    ``,
+    `Reference:`,
+    referenceNumber,
+    ``,
+    `Your information is currently being reviewed by Aurum Ventura.`,
+    ``,
+    `Submission of the Client Intake form does not automatically activate your client profile.`,
+    ``,
+    `We will contact you if additional information is required.`,
+    ``,
+    `Aurum Ventura Enterprise LLC`,
+    `Business Administrative Services`,
+    `"Your Business. Our Back Office."`,
+  ].join("\n");
+
+  return resend.emails.send({
+    from: process.env.AURUM_FROM_EMAIL,
+    to,
+    subject: `Aurum Ventura — Client Intake Received — ${referenceNumber}`,
+    text,
+  });
+}
+
+export async function sendInternalIntakeNotificationEmail({ companyName, contactName, contactEmail, contactPhone, referenceNumber, adminReviewUrl }) {
+  const resend = getClient();
+  const to = process.env.AURUM_INTERNAL_NOTIFY_EMAIL;
+  if (!to) throw Object.assign(new Error("AURUM_INTERNAL_NOTIFY_EMAIL is not configured"), { code: "EMAIL_NOT_CONFIGURED" });
+
+  const lines = [
+    `Company: ${companyName}`,
+    `Contact: ${contactName}`,
+    `Email: ${contactEmail}`,
+    `Phone: ${contactPhone}`,
+    `Reference: ${referenceNumber}`,
+    `Submitted: ${new Date().toISOString()}`,
+  ];
+  if (adminReviewUrl) lines.push(``, `Review intake: ${adminReviewUrl}`);
+
+  return resend.emails.send({
+    from: process.env.AURUM_FROM_EMAIL,
+    to,
+    subject: `New Client Intake — ${companyName} — ${referenceNumber}`,
+    text: lines.join("\n"),
+  });
+}
+
+export async function sendIntakeApprovedEmail({ to, contactName, companyName, clientNumber }) {
+  const resend = getClient();
+  const text = [
+    `Hello ${contactName || "there"},`,
+    ``,
+    `Your company information has been reviewed and your Aurum Ventura client profile has been established.`,
+    ``,
+    `Company:`,
+    companyName,
+    ``,
+    `Client Reference:`,
+    clientNumber,
+    ``,
+    `Your account is now entering the onboarding stage.`,
+    ``,
+    `We will provide any additional onboarding instructions or document requests as needed.`,
+    ``,
+    `Aurum Ventura Enterprise LLC`,
+    `Business Administrative Services`,
+    `"Your Business. Our Back Office."`,
+  ].join("\n");
+
+  return resend.emails.send({
+    from: process.env.AURUM_FROM_EMAIL,
+    to,
+    subject: `Aurum Ventura — Client Intake Approved`,
+    text,
+  });
+}
+
+export async function sendIntakeMoreInfoRequestedEmail({ to, contactName, companyName, referenceNumber, adminMessage }) {
+  const resend = getClient();
+  const text = [
+    `Hello ${contactName || "there"},`,
+    ``,
+    `We're reviewing the Client Intake information you submitted and need a bit more detail before we can continue.`,
+    ``,
+    `Company:`,
+    companyName,
+    ``,
+    `Reference:`,
+    referenceNumber,
+    ``,
+    `What we need:`,
+    adminMessage,
+    ``,
+    `Aurum Ventura Enterprise LLC`,
+    `Business Administrative Services`,
+    `"Your Business. Our Back Office."`,
+  ].join("\n");
+
+  return resend.emails.send({
+    from: process.env.AURUM_FROM_EMAIL,
+    to,
+    subject: `Aurum Ventura — Additional Information Needed — ${referenceNumber}`,
+    text,
+  });
+}

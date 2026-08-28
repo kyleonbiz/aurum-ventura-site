@@ -11,6 +11,13 @@ import {
   fileExtension,
   isAllowedExtension,
 } from "../shared/uploadShared.js";
+import {
+  SYSTEM_OPTIONS,
+  ADMIN_AREA_OPTIONS,
+  CONTACT_METHODS,
+  MIN_BUSINESS_NOTES_LENGTH,
+  intakeValidationErrors,
+} from "../shared/intakeShared.js";
 
 const COLORS = {
   navy: "#041944",
@@ -186,13 +193,19 @@ function useReveal() {
 
 // Real, shareable URLs for every page. Home/Services/About/Contact map to
 // fixed paths; anything else is treated as a service slug under /services/.
+export function adminIntakeDetailKey(id) { return `admin-intake:${id}`; }
+
 export function pathFor(key) {
+  if (typeof key === "string" && key.startsWith("admin-intake:")) return "/admin/intakes/" + key.slice("admin-intake:".length);
   switch (key) {
     case "Home": return "/";
     case "Services": return "/services";
     case "About": return "/about";
     case "Contact": return "/contact";
     case "Upload": return "/upload";
+    case "ClientIntake": return "/client-intake";
+    case "AdminLogin": return "/admin";
+    case "AdminIntakes": return "/admin/intakes";
     default: return "/services/" + key;
   }
 }
@@ -204,6 +217,11 @@ export function pageFromPath(pathname) {
   if (path === "/about") return "About";
   if (path === "/contact") return "Contact";
   if (path === "/upload") return "Upload";
+  if (path === "/client-intake") return "ClientIntake";
+  if (path === "/admin" || path === "/admin/login") return "AdminLogin";
+  if (path === "/admin/intakes") return "AdminIntakes";
+  const adminIntakeMatch = path.match(/^\/admin\/intakes\/([^/]+)$/);
+  if (adminIntakeMatch) return adminIntakeDetailKey(adminIntakeMatch[1]);
   const match = path.match(/^\/services\/([^/]+)$/);
   if (match && SERVICES.some((s) => s.slug === match[1])) return match[1];
   return "Home";
@@ -320,6 +338,11 @@ function Footer({ setPage }) {
             <a href={pathFor("Contact")} onClick={go("Contact")}>Request a Consultation</a>
             <p className="footer-contact">admin@aurumventura.net</p>
             <p className="footer-contact">850-653-7797</p>
+          </div>
+          <div>
+            <h3>For Clients</h3>
+            <a href={pathFor("ClientIntake")} onClick={go("ClientIntake")}>Client Intake</a>
+            <a href={pathFor("Upload")} onClick={go("Upload")}>Upload Documents</a>
           </div>
         </div>
       </div>
@@ -1042,6 +1065,652 @@ function UploadPage() {
   );
 }
 
+function ClientIntakePage() {
+  const [form, setForm] = useState({
+    intakeCode: "",
+    legalName: "", dbaName: "", industry: "", website: "",
+    addressStreet: "", addressCity: "", addressState: "", addressZip: "",
+    numLocations: "", numEmployees: "", yearEstablished: "",
+    primaryContactName: "", primaryContactTitle: "", primaryContactEmail: "", primaryContactPhone: "",
+    preferredContactMethod: "", businessHours: "", timezone: "", mainAdminContact: "",
+    businessNotes: "", recurringNotes: "", additionalNotes: "",
+  });
+  const [contacts, setContacts] = useState([]);
+  const [systems, setSystems] = useState([]);
+  const [customSystems, setCustomSystems] = useState("");
+  const [areas, setAreas] = useState([]);
+  const [submitState, setSubmitState] = useState("idle");
+  const [formError, setFormError] = useState("");
+  const [confirmation, setConfirmation] = useState(null);
+  const idempotencyKey = useRef(crypto.randomUUID()).current;
+
+  const update = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  const toggle = (list, setList, value) => () =>
+    setList((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]));
+
+  const errors = intakeValidationErrors(form);
+  const isReady = form.intakeCode.trim().length > 0 && Object.keys(errors).length === 0 && submitState !== "submitting";
+
+  function addContact() {
+    setContacts((prev) => [...prev, { localId: crypto.randomUUID(), fullName: "", title: "", email: "", phone: "", notes: "" }]);
+  }
+  function updateContact(localId, field, value) {
+    setContacts((prev) => prev.map((c) => (c.localId === localId ? { ...c, [field]: value } : c)));
+  }
+  function removeContact(localId) {
+    setContacts((prev) => prev.filter((c) => c.localId !== localId));
+  }
+
+  async function submit(e) {
+    e.preventDefault();
+    if (!isReady) return;
+    setSubmitState("submitting");
+    setFormError("");
+    const allSystems = [...systems, ...customSystems.split(/[,\n]/).map((s) => s.trim()).filter(Boolean)];
+    try {
+      const res = await fetch("/api/intake/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...form,
+          authorizedContacts: contacts.map(({ localId, ...c }) => c),
+          systems: allSystems,
+          administrativeAreas: areas,
+          idempotencyKey,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setFormError(data.message || "Something went wrong. Please try again.");
+        setSubmitState("idle");
+        return;
+      }
+      setConfirmation(data);
+      setSubmitState("success");
+    } catch {
+      setFormError("A network error occurred. Please check your connection and try again.");
+      setSubmitState("idle");
+    }
+  }
+
+  if (submitState === "success" && confirmation) {
+    return (
+      <div>
+        <section className="page-head">
+          <p className="kicker">Client Intake</p>
+          <h1>Intake Request Received</h1>
+          <p className="hero-sub">Thank you. Your company information has been submitted to Aurum Ventura for review.</p>
+        </section>
+        <section className="section">
+          <div className="upload-confirm-panel">
+            <div className="upload-confirm-row"><span>Reference</span><strong>{confirmation.referenceNumber}</strong></div>
+          </div>
+          <p className="hero-sub" style={{ marginTop: "1.4rem" }}>
+            Your client profile has not yet been activated. Aurum Ventura will review your information and
+            contact you if anything further is required.
+          </p>
+        </section>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <section className="page-head">
+        <p className="kicker">Client Intake</p>
+        <h1>Client Intake</h1>
+        <p className="hero-sub">Complete your company information so Aurum Ventura can begin setting up your administrative services.</p>
+        <div className="upload-notice" style={{ maxWidth: "640px" }}>
+          Submitting this form does not automatically activate your account. Your information will be reviewed
+          by Aurum Ventura before your client profile is created.
+        </div>
+      </section>
+      <section className="section">
+        <form className="contact-form intake-form" onSubmit={submit} noValidate>
+          {formError && <div className="upload-error" role="alert" aria-live="assertive">{formError}</div>}
+
+          <label>
+            Client Intake Code
+            <input type="password" required autoComplete="off" value={form.intakeCode} onChange={update("intakeCode")} />
+          </label>
+
+          <h2 className="intake-section-title">Company Information</h2>
+          <label>
+            Legal Business Name
+            <input required value={form.legalName} onChange={update("legalName")} />
+          </label>
+          <label>
+            DBA / Trade Name <span className="field-optional">(optional)</span>
+            <input value={form.dbaName} onChange={update("dbaName")} />
+          </label>
+          <label>
+            Industry / Business Type
+            <input required value={form.industry} onChange={update("industry")} />
+          </label>
+          <label>
+            Website <span className="field-optional">(optional)</span>
+            <input type="url" value={form.website} onChange={update("website")} placeholder="https://" />
+          </label>
+          <label>
+            Business Street Address
+            <input required value={form.addressStreet} onChange={update("addressStreet")} />
+          </label>
+          <div className="form-row">
+            <label>
+              City
+              <input required value={form.addressCity} onChange={update("addressCity")} />
+            </label>
+            <label>
+              State
+              <input required value={form.addressState} onChange={update("addressState")} />
+            </label>
+          </div>
+          <div className="form-row">
+            <label>
+              ZIP Code
+              <input required value={form.addressZip} onChange={update("addressZip")} />
+            </label>
+            <label>
+              Number of Business Locations
+              <input type="number" min="1" required value={form.numLocations} onChange={update("numLocations")} />
+            </label>
+          </div>
+          <div className="form-row">
+            <label>
+              Approximate Number of Employees <span className="field-optional">(optional)</span>
+              <input value={form.numEmployees} onChange={update("numEmployees")} />
+            </label>
+            <label>
+              Year Business Was Established <span className="field-optional">(optional)</span>
+              <input value={form.yearEstablished} onChange={update("yearEstablished")} />
+            </label>
+          </div>
+
+          <h2 className="intake-section-title">Primary Contact</h2>
+          <div className="form-row">
+            <label>
+              Full Name
+              <input required value={form.primaryContactName} onChange={update("primaryContactName")} />
+            </label>
+            <label>
+              Title / Position
+              <input required value={form.primaryContactTitle} onChange={update("primaryContactTitle")} />
+            </label>
+          </div>
+          <div className="form-row">
+            <label>
+              Business Email Address
+              <input type="email" required value={form.primaryContactEmail} onChange={update("primaryContactEmail")} />
+            </label>
+            <label>
+              Phone Number
+              <input type="tel" required value={form.primaryContactPhone} onChange={update("primaryContactPhone")} />
+            </label>
+          </div>
+
+          <h2 className="intake-section-title">Business Operations</h2>
+          <label>
+            Preferred Communication Method
+            <select value={form.preferredContactMethod} onChange={update("preferredContactMethod")}>
+              <option value="">Select one</option>
+              {CONTACT_METHODS.map((m) => <option key={m}>{m}</option>)}
+            </select>
+          </label>
+          <div className="form-row">
+            <label>
+              Normal Business Hours
+              <input value={form.businessHours} onChange={update("businessHours")} placeholder="e.g. Mon–Fri, 8am–5pm" />
+            </label>
+            <label>
+              Time Zone
+              <input value={form.timezone} onChange={update("timezone")} placeholder="e.g. Central" />
+            </label>
+          </div>
+          <label>
+            Main Administrative Contact <span className="field-optional">(if different from primary contact)</span>
+            <input value={form.mainAdminContact} onChange={update("mainAdminContact")} />
+          </label>
+
+          <h2 className="intake-section-title">Authorized Contacts</h2>
+          <p className="field-help" style={{ marginBottom: "0.6rem" }}>
+            e.g. "Authorized to submit routine administrative requests," "Authorized to approve invoice
+            preparation," "Primary decision maker."
+          </p>
+          {contacts.map((c) => (
+            <div className="intake-contact-row" key={c.localId}>
+              <div className="form-row">
+                <label>Full Name<input value={c.fullName} onChange={(e) => updateContact(c.localId, "fullName", e.target.value)} /></label>
+                <label>Title / Role<input value={c.title} onChange={(e) => updateContact(c.localId, "title", e.target.value)} /></label>
+              </div>
+              <div className="form-row">
+                <label>Email Address<input type="email" value={c.email} onChange={(e) => updateContact(c.localId, "email", e.target.value)} /></label>
+                <label>Phone Number<input type="tel" value={c.phone} onChange={(e) => updateContact(c.localId, "phone", e.target.value)} /></label>
+              </div>
+              <label>Authorization Level / Notes<input value={c.notes} onChange={(e) => updateContact(c.localId, "notes", e.target.value)} /></label>
+              <button type="button" className="intake-remove-contact" onClick={() => removeContact(c.localId)}>Remove Contact</button>
+            </div>
+          ))}
+          <button type="button" className="btn-secondary" onClick={addContact}>+ Add Authorized Contact</button>
+
+          <h2 className="intake-section-title">Systems &amp; Software</h2>
+          <p className="field-help" style={{ marginBottom: "0.6rem" }}>Which systems does your business currently use?</p>
+          <div className="intake-checkbox-grid">
+            {SYSTEM_OPTIONS.map((s) => (
+              <label key={s} className="intake-checkbox">
+                <input type="checkbox" checked={systems.includes(s)} onChange={toggle(systems, setSystems, s)} />
+                {s}
+              </label>
+            ))}
+          </div>
+          <label>
+            Other system name(s) <span className="field-optional">(optional, comma-separated)</span>
+            <input value={customSystems} onChange={(e) => setCustomSystems(e.target.value)} />
+          </label>
+          <div className="upload-notice">
+            Do not enter passwords, authentication codes, security questions or other login credentials in this
+            form. Actual system access will be handled separately.
+          </div>
+
+          <h2 className="intake-section-title">Administrative Services</h2>
+          <p className="field-help" style={{ marginBottom: "0.6rem" }}>
+            Which administrative areas will Aurum Ventura be assisting your business with?
+          </p>
+          <div className="intake-checkbox-grid">
+            {ADMIN_AREA_OPTIONS.map((a) => (
+              <label key={a} className="intake-checkbox">
+                <input type="checkbox" checked={areas.includes(a)} onChange={toggle(areas, setAreas, a)} />
+                {a}
+              </label>
+            ))}
+          </div>
+
+          <h2 className="intake-section-title">Business Information / Notes</h2>
+          <label>
+            What should Aurum Ventura know about your business?
+            <span className="field-help">
+              Describe your business operations, administrative setup, current processes or anything that will
+              help us understand how your company operates. Are there any administrative processes, deadlines
+              or recurring responsibilities we should know about?
+            </span>
+            <textarea rows={4} required value={form.businessNotes} onChange={update("businessNotes")} />
+          </label>
+          <label>
+            Additional Notes <span className="field-optional">(optional)</span>
+            <textarea rows={2} value={form.additionalNotes} onChange={update("additionalNotes")} />
+          </label>
+
+          <button className="btn-primary" type="submit" disabled={!isReady}>
+            {submitState === "submitting" ? "Submitting Intake…" : "Submit Client Intake"}
+          </button>
+        </form>
+      </section>
+    </div>
+  );
+}
+
+// Thin fetch wrapper for /api/admin/* — always sends the session cookie,
+// and centralizes the "session expired mid-use" redirect so every admin
+// page doesn't have to handle that case separately.
+async function adminFetch(url, options, onUnauthorized) {
+  const res = await fetch(url, { ...options, credentials: "same-origin" });
+  if (res.status === 401) {
+    onUnauthorized?.();
+    throw Object.assign(new Error("unauthorized"), { code: "UNAUTHORIZED" });
+  }
+  return res;
+}
+
+function AdminLoginPage({ setPage }) {
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/admin/session", { credentials: "same-origin" })
+      .then((r) => r.json())
+      .then((d) => { if (d.authenticated) setPage("AdminIntakes"); })
+      .catch(() => {});
+  }, []);
+
+  async function submit(e) {
+    e.preventDefault();
+    setSubmitting(true);
+    setError("");
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        body: JSON.stringify({ password }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data.message || "Something went wrong. Please try again.");
+        setSubmitting(false);
+        return;
+      }
+      setPage("AdminIntakes");
+    } catch {
+      setError("A network error occurred. Please try again.");
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div>
+      <section className="page-head">
+        <p className="kicker">Admin</p>
+        <h1>Admin Login</h1>
+      </section>
+      <section className="section">
+        <form className="contact-form" style={{ maxWidth: "360px" }} onSubmit={submit} noValidate>
+          {error && <div className="upload-error" role="alert" aria-live="assertive">{error}</div>}
+          <label>
+            Password
+            <input type="password" required autoFocus value={password} onChange={(e) => setPassword(e.target.value)} />
+          </label>
+          <button className="btn-primary" type="submit" disabled={!password || submitting}>
+            {submitting ? "Signing in…" : "Sign In"}
+          </button>
+        </form>
+      </section>
+    </div>
+  );
+}
+
+function AdminIntakesPage({ setPage }) {
+  const [loading, setLoading] = useState(true);
+  const [intakes, setIntakes] = useState([]);
+  const [pendingCount, setPendingCount] = useState(0);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    adminFetch("/api/admin/intakes", {}, () => setPage("AdminLogin"))
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.intakes) { setIntakes(d.intakes); setPendingCount(d.pendingCount || 0); }
+        else setError(d.message || "Could not load intakes.");
+        setLoading(false);
+      })
+      .catch((err) => { if (err.code !== "UNAUTHORIZED") { setError("Could not load intakes."); setLoading(false); } });
+  }, []);
+
+  async function logout() {
+    await fetch("/api/admin/logout", { method: "POST", credentials: "same-origin" }).catch(() => {});
+    setPage("AdminLogin");
+  }
+
+  return (
+    <div>
+      <section className="page-head">
+        <p className="kicker">Admin</p>
+        <div className="admin-title-row">
+          <h1>Client Intakes</h1>
+          <button className="btn-secondary" onClick={logout}>Log Out</button>
+        </div>
+        <p className="hero-sub">{pendingCount} Pending</p>
+      </section>
+      <section className="section">
+        {error && <div className="upload-error" role="alert">{error}</div>}
+        {loading ? (
+          <p>Loading…</p>
+        ) : intakes.length === 0 ? (
+          <p>No intake requests yet.</p>
+        ) : (
+          <div className="admin-table-wrap">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Reference</th><th>Company</th><th>Primary Contact</th><th>Email</th><th>Submitted</th><th>Status</th><th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {intakes.map((i) => (
+                  <tr key={i.id}>
+                    <td>{i.referenceNumber}</td>
+                    <td>{i.company}</td>
+                    <td>{i.primaryContactName}</td>
+                    <td>{i.primaryContactEmail}</td>
+                    <td>{new Date(i.receivedAt).toLocaleDateString()}</td>
+                    <td><span className={"admin-status admin-status-" + i.status.replace(/\s+/g, "-").toLowerCase()}>{i.status}</span></td>
+                    <td>
+                      <a
+                        href={pathFor(adminIntakeDetailKey(i.id))}
+                        onClick={(e) => { e.preventDefault(); setPage(adminIntakeDetailKey(i.id)); }}
+                      >
+                        Review
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}
+
+function AdminIntakeDetailPage({ intakeId, setPage }) {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState("");
+  const [actionError, setActionError] = useState("");
+  const [confirmingApprove, setConfirmingApprove] = useState(false);
+  const [infoMessage, setInfoMessage] = useState("");
+  const [showInfoForm, setShowInfoForm] = useState(false);
+  const [rejectReason, setRejectReason] = useState("");
+  const [showRejectForm, setShowRejectForm] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [result, setResult] = useState(null);
+
+  function load() {
+    setLoading(true);
+    adminFetch(`/api/admin/intakes/${intakeId}`, {}, () => setPage("AdminLogin"))
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.intake) setData(d);
+        else setError(d.message || "Could not load this intake.");
+        setLoading(false);
+      })
+      .catch((err) => { if (err.code !== "UNAUTHORIZED") { setError("Could not load this intake."); setLoading(false); } });
+  }
+  useEffect(load, [intakeId]);
+
+  async function approve(force) {
+    setBusy(true);
+    setActionError("");
+    try {
+      const res = await adminFetch(`/api/admin/intakes/${intakeId}/approve`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ force: !!force }),
+      }, () => setPage("AdminLogin"));
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        if (d.error === "potential_duplicate") {
+          setActionError(`Potential existing client detected: ${d.duplicate.legalName} (${d.duplicate.clientNumber || d.duplicate.status}). Approve again to proceed anyway, or review manually.`);
+          setConfirmingApprove(false);
+          setBusy(false);
+          return;
+        }
+        setActionError(d.message || "Approval could not be completed.");
+        setBusy(false);
+        return;
+      }
+      setResult({ clientNumber: d.clientNumber });
+      setConfirmingApprove(false);
+      load();
+    } catch {
+      setBusy(false);
+    }
+    setBusy(false);
+  }
+
+  async function requestInfo() {
+    setBusy(true);
+    setActionError("");
+    try {
+      const res = await adminFetch(`/api/admin/intakes/${intakeId}/request-info`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: infoMessage }),
+      }, () => setPage("AdminLogin"));
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) { setActionError(d.message || "Could not send request."); setBusy(false); return; }
+      setShowInfoForm(false);
+      setInfoMessage("");
+      load();
+    } catch { /* handled by unauthorized redirect */ }
+    setBusy(false);
+  }
+
+  async function reject() {
+    setBusy(true);
+    setActionError("");
+    try {
+      const res = await adminFetch(`/api/admin/intakes/${intakeId}/reject`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reason: rejectReason }),
+      }, () => setPage("AdminLogin"));
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) { setActionError(d.message || "Could not reject this intake."); setBusy(false); return; }
+      setShowRejectForm(false);
+      load();
+    } catch { /* handled by unauthorized redirect */ }
+    setBusy(false);
+  }
+
+  if (loading) return <section className="section"><p>Loading…</p></section>;
+  if (error || !data) return <section className="section"><div className="upload-error">{error || "Not found."}</div></section>;
+
+  const { intake, authorizedContacts, potentialDuplicate } = data;
+  const canAct = intake.status === "PENDING REVIEW" || intake.status === "MORE INFORMATION REQUIRED";
+
+  return (
+    <div>
+      <section className="page-head">
+        <a className="btn-text back-link" href={pathFor("AdminIntakes")} onClick={(e) => { e.preventDefault(); setPage("AdminIntakes"); }}>&larr; All Intakes</a>
+        <p className="kicker">{intake.referenceNumber}</p>
+        <h1>{intake.legalName}</h1>
+        <p className="hero-sub"><span className={"admin-status admin-status-" + intake.status.replace(/\s+/g, "-").toLowerCase()}>{intake.status}</span></p>
+      </section>
+      <section className="section">
+        {result && (
+          <div className="admin-result-banner">Client created: {result.clientNumber}. An approval email has been sent.</div>
+        )}
+        {potentialDuplicate && !result && (
+          <div className="admin-warning-banner">
+            Potential existing client detected: {potentialDuplicate.legalName} ({potentialDuplicate.clientNumber || potentialDuplicate.status}).
+          </div>
+        )}
+        {actionError && <div className="upload-error" role="alert">{actionError}</div>}
+
+        <div className="admin-review-grid">
+          <div className="panel-block">
+            <h2>Company Information</h2>
+            <dl className="admin-dl">
+              <div><dt>Legal Name</dt><dd>{intake.legalName}</dd></div>
+              {intake.dbaName && <div><dt>DBA</dt><dd>{intake.dbaName}</dd></div>}
+              <div><dt>Industry</dt><dd>{intake.industry}</dd></div>
+              {intake.website && <div><dt>Website</dt><dd>{intake.website}</dd></div>}
+              <div><dt>Address</dt><dd>{intake.addressStreet}, {intake.addressCity}, {intake.addressState} {intake.addressZip}</dd></div>
+              <div><dt>Locations</dt><dd>{intake.numLocations}</dd></div>
+              {intake.numEmployees && <div><dt>Employees</dt><dd>{intake.numEmployees}</dd></div>}
+              {intake.yearEstablished && <div><dt>Established</dt><dd>{intake.yearEstablished}</dd></div>}
+            </dl>
+          </div>
+
+          <div className="panel-block">
+            <h2>Primary Contact</h2>
+            <dl className="admin-dl">
+              <div><dt>Name</dt><dd>{intake.primaryContactName}</dd></div>
+              <div><dt>Title</dt><dd>{intake.primaryContactTitle}</dd></div>
+              <div><dt>Email</dt><dd>{intake.primaryContactEmail}</dd></div>
+              <div><dt>Phone</dt><dd>{intake.primaryContactPhone}</dd></div>
+              {intake.preferredContactMethod && <div><dt>Prefers</dt><dd>{intake.preferredContactMethod}</dd></div>}
+              {intake.businessHours && <div><dt>Hours</dt><dd>{intake.businessHours}</dd></div>}
+              {intake.timezone && <div><dt>Time Zone</dt><dd>{intake.timezone}</dd></div>}
+              {intake.mainAdminContact && <div><dt>Admin Contact</dt><dd>{intake.mainAdminContact}</dd></div>}
+            </dl>
+          </div>
+
+          <div className="panel-block">
+            <h2>Authorized Contacts</h2>
+            {authorizedContacts.length ? authorizedContacts.map((c) => (
+              <div className="admin-contact-card" key={c.id}>
+                <strong>{c.fullName}</strong> {c.title && <span>— {c.title}</span>}
+                <div>{c.email}{c.phone ? ` · ${c.phone}` : ""}</div>
+                {c.notes && <div className="field-help">{c.notes}</div>}
+              </div>
+            )) : <p className="field-help">None provided.</p>}
+          </div>
+
+          <div className="panel-block">
+            <h2>Systems</h2>
+            <p>{(intake.systems || []).join(", ") || "None provided."}</p>
+            <h2>Administrative Areas</h2>
+            <p>{(intake.administrativeAreas || []).join(", ") || "None provided."}</p>
+          </div>
+
+          <div className="panel-block" style={{ gridColumn: "1 / -1" }}>
+            <h2>Business Notes</h2>
+            <p>{intake.businessNotes}</p>
+            {intake.recurringNotes && <p>{intake.recurringNotes}</p>}
+            {intake.additionalNotes && <p className="field-help">{intake.additionalNotes}</p>}
+          </div>
+
+          <div className="panel-block">
+            <h2>Submission Information</h2>
+            <dl className="admin-dl">
+              <div><dt>Source</dt><dd>{intake.source}</dd></div>
+              <div><dt>Received</dt><dd>{new Date(intake.receivedAt).toLocaleString()}</dd></div>
+              {intake.reviewedAt && <div><dt>Reviewed</dt><dd>{new Date(intake.reviewedAt).toLocaleString()}</dd></div>}
+            </dl>
+          </div>
+        </div>
+
+        {canAct && !result && (
+          <div className="admin-actions">
+            {!confirmingApprove ? (
+              <button className="btn-primary" onClick={() => setConfirmingApprove(true)} disabled={busy}>Approve Intake</button>
+            ) : (
+              <div className="admin-confirm-box">
+                <p>Approve this intake and create the client?</p>
+                <button className="btn-secondary" onClick={() => setConfirmingApprove(false)} disabled={busy}>Cancel</button>
+                <button className="btn-primary" onClick={() => approve(!!potentialDuplicate)} disabled={busy}>Approve &amp; Create Client</button>
+              </div>
+            )}
+            <button className="btn-secondary" onClick={() => setShowInfoForm((v) => !v)} disabled={busy}>Request More Information</button>
+            <button className="btn-secondary admin-reject-btn" onClick={() => setShowRejectForm((v) => !v)} disabled={busy}>Reject Intake</button>
+
+            {showInfoForm && (
+              <div className="admin-confirm-box">
+                <label>What additional information is needed?
+                  <textarea rows={3} value={infoMessage} onChange={(e) => setInfoMessage(e.target.value)} />
+                </label>
+                <button className="btn-primary" onClick={requestInfo} disabled={busy || !infoMessage.trim()}>Send Request</button>
+              </div>
+            )}
+            {showRejectForm && (
+              <div className="admin-confirm-box">
+                <p>Reject this intake? This cannot be undone.</p>
+                <label>Internal reason <span className="field-optional">(optional, not shared with client)</span>
+                  <textarea rows={2} value={rejectReason} onChange={(e) => setRejectReason(e.target.value)} />
+                </label>
+                <button className="btn-secondary" onClick={() => setShowRejectForm(false)} disabled={busy}>Cancel</button>
+                <button className="btn-primary admin-reject-btn" onClick={reject} disabled={busy}>Confirm Reject</button>
+              </div>
+            )}
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}
+
 export const SITE_NAME = "Aurum Ventura Enterprise LLC";
 const PAGE_TITLES = {
   Home: `${SITE_NAME} — Business Administrative Services`,
@@ -1049,6 +1718,9 @@ const PAGE_TITLES = {
   About: `About — ${SITE_NAME}`,
   Contact: `Contact — ${SITE_NAME}`,
   Upload: `Upload Documents — ${SITE_NAME}`,
+  ClientIntake: `Client Intake — ${SITE_NAME}`,
+  AdminLogin: `Admin — ${SITE_NAME}`,
+  AdminIntakes: `Client Intakes — ${SITE_NAME}`,
 };
 const PAGE_DESCRIPTIONS = {
   Home: "Outsourced administrative back-office support for small and growing businesses.",
@@ -1056,6 +1728,9 @@ const PAGE_DESCRIPTIONS = {
   About: "How Aurum Ventura works: a defined scope, reserved monthly capacity, and a monthly report on what moved.",
   Contact: "Request a consultation to see where administrative work is taking your time.",
   Upload: "Securely send documents and administrative requests to Aurum Ventura.",
+  ClientIntake: "Complete your company information so Aurum Ventura can begin setting up your administrative services.",
+  AdminLogin: "Internal Aurum Ventura administration.",
+  AdminIntakes: "Internal Aurum Ventura administration.",
 };
 
 // Title + meta description for a given page key or service slug — shared
@@ -1064,6 +1739,9 @@ export function metaFor(page) {
   if (PAGE_TITLES[page]) return { title: PAGE_TITLES[page], description: PAGE_DESCRIPTIONS[page] };
   const service = SERVICES.find((s) => s.slug === page);
   if (service) return { title: `${service.title} — ${SITE_NAME}`, description: service.summary };
+  if (typeof page === "string" && page.startsWith("admin-intake:")) {
+    return { title: `Intake Review — ${SITE_NAME}`, description: PAGE_DESCRIPTIONS.AdminIntakes };
+  }
   return { title: PAGE_TITLES.Home, description: PAGE_DESCRIPTIONS.Home };
 }
 
@@ -1102,9 +1780,16 @@ export default function App({ initialPath } = {}) {
     About: <AboutPage setPage={navigate} />,
     Contact: <ContactPage />,
     Upload: <UploadPage />,
+    ClientIntake: <ClientIntakePage />,
+    AdminLogin: <AdminLoginPage setPage={navigate} />,
+    AdminIntakes: <AdminIntakesPage setPage={navigate} />,
   };
   const service = SERVICES.find((s) => s.slug === page);
-  const content = pages[page] || (service ? <ServiceDetailPage slug={page} setPage={navigate} /> : pages.Home);
+  const isAdminIntakeDetail = typeof page === "string" && page.startsWith("admin-intake:");
+  const content = pages[page]
+    || (service ? <ServiceDetailPage slug={page} setPage={navigate} />
+    : isAdminIntakeDetail ? <AdminIntakeDetailPage intakeId={page.slice("admin-intake:".length)} setPage={navigate} />
+    : pages.Home);
 
   return (
     <div className="app">
@@ -1289,10 +1974,53 @@ export default function App({ initialPath } = {}) {
           .upload-layout { grid-template-columns: 1fr; }
         }
 
+        /* Client Intake */
+        .intake-form { max-width: 640px; }
+        .intake-section-title { font-size: 1.15rem; margin: 1.4rem 0 0.2rem; padding-top: 1.2rem; border-top: 1px solid #E4E9EF; }
+        .intake-form > .intake-section-title:first-of-type { border-top: none; padding-top: 0; margin-top: 0.4rem; }
+        .intake-contact-row { border: 1px solid #E4E9EF; padding: 0.9rem; display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 0.6rem; }
+        .intake-remove-contact { align-self: flex-start; background: none; border: none; color: #B3261E; font-size: 0.78rem; font-weight: 600; padding: 0; cursor: pointer; }
+        .intake-checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1rem; margin-bottom: 0.9rem; }
+        .intake-checkbox { display: flex !important; flex-direction: row !important; align-items: center; gap: 0.5rem; font-size: 0.85rem !important; font-weight: 500 !important; text-transform: none !important; color: ${COLORS.navy}; }
+        .intake-checkbox input { width: auto; }
+        @media (max-width: 560px) { .intake-checkbox-grid { grid-template-columns: 1fr; } }
+
+        /* Admin */
+        .admin-title-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+        .admin-table-wrap { overflow-x: auto; }
+        .admin-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .admin-table th { text-align: left; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: ${COLORS.slate}; padding: 0 0.7rem 0.6rem; border-bottom: 1.5px solid ${COLORS.navy}; white-space: nowrap; }
+        .admin-table td { padding: 0.7rem; border-bottom: 1px solid #E4E9EF; white-space: nowrap; }
+        .admin-table a { color: ${COLORS.teal}; font-weight: 600; }
+        .admin-status { display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; padding: 0.2rem 0.55rem; border-radius: 2px; }
+        .admin-status-pending-review { background: ${COLORS.ice}; color: ${COLORS.teal}; }
+        .admin-status-approved { background: #E5F5EA; color: #137333; }
+        .admin-status-rejected { background: #FBEAEA; color: #B3261E; }
+        .admin-status-more-information-required { background: #FEF2DE; color: #B45309; }
+        .admin-review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.6rem; }
+        .panel-block { border: 1px solid #E4E9EF; padding: 1rem 1.1rem; }
+        .panel-block h2 { font-size: 1rem; margin-bottom: 0.6rem; }
+        .panel-block p { margin-bottom: 0.5rem; }
+        .admin-dl div { display: flex; justify-content: space-between; gap: 1rem; padding: 0.35rem 0; border-bottom: 1px solid #F0F2F5; font-size: 0.85rem; }
+        .admin-dl dt { color: ${COLORS.slate}; flex-shrink: 0; }
+        .admin-dl dd { margin: 0; text-align: right; color: ${COLORS.navy}; }
+        .admin-contact-card { padding: 0.6rem 0; border-bottom: 1px solid #F0F2F5; font-size: 0.85rem; }
+        .admin-contact-card:last-child { border-bottom: none; }
+        .admin-actions { display: flex; gap: 0.7rem; flex-wrap: wrap; border-top: 1px solid #E4E9EF; padding-top: 1.2rem; }
+        .admin-reject-btn { border-color: #B3261E; color: #B3261E; }
+        .admin-confirm-box { border: 1px solid #E4E9EF; background: ${COLORS.ice}; padding: 1rem; display: flex; flex-direction: column; gap: 0.7rem; width: 100%; }
+        .admin-confirm-box label { display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.82rem; font-weight: 600; color: ${COLORS.navy}; }
+        .admin-confirm-box textarea { font-family: 'Montserrat', sans-serif; font-size: 0.88rem; padding: 0.5rem 0.6rem; border: 1px solid #C9D3DC; }
+        .admin-warning-banner { background: #FEF2DE; border-left: 3px solid #B45309; color: #7A4A0A; font-size: 0.85rem; padding: 0.75rem 0.9rem; margin-bottom: 1rem; }
+        .admin-result-banner { background: #E5F5EA; border-left: 3px solid #137333; color: #0E5226; font-size: 0.85rem; padding: 0.75rem 0.9rem; margin-bottom: 1rem; }
+        @media (max-width: 700px) {
+          .admin-review-grid { grid-template-columns: 1fr; }
+        }
+
         /* Footer */
         .footer { background: ${COLORS.navy}; color: ${COLORS.white}; padding: 3rem 1.5rem 1.5rem; margin-top: 1.5rem; }
         .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2.5rem; padding-bottom: 1.5rem; }
-        .footer-cols { display: flex; gap: 3.5rem; }
+        .footer-cols { display: flex; flex-wrap: wrap; gap: 1.8rem 3.5rem; }
         .footer-cols h3 { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: ${COLORS.aqua}; margin-bottom: 0.8rem; }
         .footer-cols a { display: block; background: none; border: none; color: rgba(255,255,255,0.8); font-size: 0.87rem; padding: 0.3rem 0; text-align: left; }
         .footer-cols a:hover { color: ${COLORS.white}; }

@@ -575,8 +575,9 @@ export default function App() {
         .section.alt { background: ${COLORS.ice}; max-width: none; }
         .section.alt > * { max-width: 1100px; margin-left: auto; margin-right: auto; }
         .section-lead { max-width: 620px; margin-bottom: 0.8rem; }
-        .page-head { max-width: 1100px; margin: 0 auto; padding: 2.8rem 1.5rem 1rem; }
-        .page-head .hero-sub { max-width: 640px; }
+        .page-head { max-width: 1100px; margin: 0 auto; padding: 2.8rem 1.5rem 0.5rem; }
+        .page-head .hero-sub { max-width: 640px; margin-bottom: 0.5rem; }
+        .page-head + .section { padding-top: 1.6rem; }
 
         .plain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.1rem 2.5rem; margin: 1.1rem 0 1.3rem; }
         .plain-grid-item { display: flex; gap: 0.7rem; align-items: baseline; padding: 0.6rem 0; border-bottom: 1px solid #E4E9EF; font-size: 0.92rem; color: ${COLORS.navy}; width: 100%; background: none; border-left: none; border-right: none; border-top: none; text-align: left; font-family: inherit; cursor: pointer; }

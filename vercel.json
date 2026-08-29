@@ -5,6 +5,6 @@
     { "source": "/admin/:path*", "destination": "/admin/index.html" }
   ],
   "crons": [
-    { "path": "/api/admin/agents/run-step", "schedule": "*/5 * * * *" }
+    { "path": "/api/admin/agents/run-step", "schedule": "17 13 * * *" }
   ]
 }

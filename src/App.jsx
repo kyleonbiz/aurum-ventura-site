@@ -142,6 +142,15 @@ const NOT_LIST = [
   "Compliance guarantees or regulatory determinations",
 ];
 
+const TIME_COST = [
+  ["Invoicing & payment follow-up", "2–3 hrs/wk"],
+  ["Filing & document organization", "2 hrs/wk"],
+  ["License & renewal tracking", "1 hr/wk"],
+  ["Vendor paperwork & records", "1–2 hrs/wk"],
+  ["Data entry & CRM updates", "2 hrs/wk"],
+  ["Pulling together reports", "2 hrs/wk"],
+];
+
 const TIME_SINKS = [
   { label: "Paperwork", slug: "forms-paperwork" },
   { label: "Invoices", slug: "invoice-administration" },
@@ -466,6 +475,7 @@ function ProcessSteps() {
 
 function HomePage({ setPage }) {
   const go = (key) => (e) => { e.preventDefault(); setPage(key); };
+  const costRef = useReveal();
   const handleRef = useReveal();
   const audienceRef = useReveal();
   const notRef = useReveal();
@@ -485,6 +495,26 @@ function HomePage({ setPage }) {
             <a className="btn-text" href={pathFor("Services")} onClick={go("Services")}>See our services &rarr;</a>
           </div>
         </div>
+      </section>
+
+      <section className="section alt">
+        <h2 ref={costRef}>What It's Actually Costing You</h2>
+        <p className="section-lead">
+          Every hour spent on paperwork is an hour not spent running the business. Here's roughly
+          where that time tends to go for a growing operation without dedicated admin staff:
+        </p>
+        <div className="cost-list">
+          {TIME_COST.map(([task, hours]) => (
+            <div className="cost-row" key={task}>
+              <span>{task}</span>
+              <span className="cost-hours">{hours}</span>
+            </div>
+          ))}
+        </div>
+        <p className="cost-total">
+          That's often 10+ hours a week — the better part of a full workday, gone before you've
+          touched the work only you can do.
+        </p>
       </section>
 
       <section className="section">
@@ -1877,6 +1907,12 @@ export default function App({ initialPath } = {}) {
         .plain-grid-item h3 { font: inherit; font-weight: inherit; color: inherit; margin: 0; }
         .plain-num { color: ${COLORS.teal}; font-weight: 600; font-size: 0.8rem; }
         @media (max-width: 640px) { .plain-grid { grid-template-columns: 1fr; } }
+
+        .cost-list { max-width: 620px; margin: 1.3rem 0 1.6rem; }
+        .cost-row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.65rem 0; border-bottom: 1px solid #D6E4EA; font-size: 0.92rem; color: ${COLORS.navy}; }
+        .cost-row:first-child { border-top: 1px solid #D6E4EA; }
+        .cost-hours { color: ${COLORS.teal}; font-weight: 600; white-space: nowrap; }
+        .cost-total { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.2rem, 2.6vw, 1.5rem); font-weight: 600; line-height: 1.4; color: ${COLORS.navy}; max-width: 620px; margin: 0; }
 
         .tag-list { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1rem; }
         .tag { border: 1px solid ${COLORS.teal}; color: ${COLORS.teal}; font-size: 0.82rem; font-weight: 500; padding: 0.35rem 0.9rem; }

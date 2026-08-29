@@ -31,15 +31,33 @@ export default async function handler(req, res) {
     const [prospectsToday] = await sql`select count(*)::int as n from prospects where created_at >= date_trunc('day', now())`;
     const [errorsOpen] = await sql`select count(*)::int as n from agent_errors where resolved = false`;
 
-    // Research/qualification/outreach counts default to 0 for Phase 1
-    // since those agents/tables don't exist yet — queried defensively
-    // so this endpoint doesn't break the moment they're added either.
-    const prospectsResearched = 0;
-    const highPriorityProspects = 0;
+    const [researched] = await sql`select count(*)::int as n from prospect_research where status = 'COMPLETED'`;
+    const [highPriority] = await sql`select count(*)::int as n from prospect_qualification where level = 'HIGH_PRIORITY'`;
+    const prospectsResearched = researched.n;
+    const highPriorityProspects = highPriority.n;
+    // Outreach drafts don't exist until Phase 3 ships that agent.
     const outreachDraftsCreated = 0;
     const draftsAwaitingReview = 0;
 
     const activeAgents = agents.filter((a) => ["RUNNING", "QUEUED", "WAITING"].includes(a.status)).length;
+
+    const today = await sql`
+      select
+        count(*) filter (where usage_type = 'AI_CALL')::int as ai_requests,
+        count(*) filter (where usage_type = 'SEARCH_API_CALL')::int as search_requests,
+        sum(estimated_cost_usd) filter (where usage_type = 'AI_CALL') as ai_cost,
+        count(*) filter (where usage_type = 'AI_CALL' and estimated_cost_usd is null)::int as ai_cost_unpriced
+      from agent_usage where created_at >= date_trunc('day', now())
+    `;
+    const monthCost = await sql`
+      select sum(estimated_cost_usd) as ai_cost, count(*) filter (where estimated_cost_usd is null)::int as unpriced
+      from agent_usage where usage_type = 'AI_CALL' and created_at >= date_trunc('month', now())
+    `;
+    const t = today[0];
+    // Only report a cost figure if every AI call this period actually had
+    // a priced model — otherwise a real number would understate spend.
+    const aiCostToday = t.ai_cost_unpriced > 0 ? "NOT AVAILABLE" : (t.ai_cost !== null ? `$${Number(t.ai_cost).toFixed(4)}` : (t.ai_requests > 0 ? "$0.0000" : "NOT AVAILABLE"));
+    const aiCostMonth = monthCost[0].unpriced > 0 ? "NOT AVAILABLE" : (monthCost[0].ai_cost !== null ? `$${Number(monthCost[0].ai_cost).toFixed(4)}` : "NOT AVAILABLE");
 
     return res.status(200).json({
       metrics: {
@@ -54,13 +72,10 @@ export default async function handler(req, res) {
         outreachDraftsCreated,
         draftsAwaitingReview,
         agentErrorsRequiringAttention: errorsOpen.n,
-        // AI/API usage & cost require agent_usage rows, which only start
-        // existing once the Research/Outreach agents (real AI-call
-        // sites) ship. Reported explicitly rather than guessed.
-        aiRequestsToday: "NOT AVAILABLE",
-        searchApiRequestsToday: "NOT AVAILABLE",
-        estimatedAiCostToday: "NOT AVAILABLE",
-        estimatedAiCostThisMonth: "NOT AVAILABLE",
+        aiRequestsToday: t.ai_requests,
+        searchApiRequestsToday: t.search_requests,
+        estimatedAiCostToday: aiCostToday,
+        estimatedAiCostThisMonth: aiCostMonth,
       },
       agents: agents.map((a) => ({
         agentId: a.agent_id,

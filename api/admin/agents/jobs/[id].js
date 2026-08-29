@@ -24,7 +24,20 @@ export default async function handler(req, res) {
     const tasks = await sql`select * from agent_tasks where job_id = ${id} order by created_at asc`;
     const events = await sql`select * from agent_events where job_id = ${id} order by created_at desc limit 200`;
     const errors = await sql`select * from agent_errors where job_id = ${id} order by created_at desc`;
-    const prospects = await sql`select id, business_name, pipeline_stage, address, phone, website, created_at from prospects where source_job_id = ${id} order by created_at desc`;
+
+    const isResearch = job.job_type === "RESEARCH";
+    const prospects = isResearch
+      ? await sql`
+          select p.id, p.business_name, p.pipeline_stage, p.address, p.phone, p.website, p.created_at,
+            r.status as research_status, r.summary as research_summary,
+            q.score as qualification_score, q.level as qualification_level, q.low_confidence
+          from prospect_research r
+          join prospects p on p.id = r.prospect_id
+          left join prospect_qualification q on q.prospect_id = p.id
+          where r.job_id = ${id}
+          order by p.created_at desc
+        `
+      : await sql`select id, business_name, pipeline_stage, address, phone, website, created_at from prospects where source_job_id = ${id} order by created_at desc`;
 
     return res.status(200).json({
       job: {
@@ -32,6 +45,7 @@ export default async function handler(req, res) {
         jobCode: job.job_code,
         agentId: job.agent_id,
         agentName: job.agent_name,
+        jobType: job.job_type,
         industry: job.industry,
         location: job.location,
         requestedCount: job.requested_count,

@@ -1,12 +1,12 @@
-# AI Agent Operations Dashboard — Phase 1 Setup
+# AI Agent Operations Dashboard — Setup
 
-This is Phase 1 of the "AI AGENT OPERATIONS" build: a real, working
-**Lead Finder Agent** plus a real dashboard in Admin OS to watch it run.
-The Business Research & Qualification Agent and Personalized Outreach
-Agent are registered (visible on the dashboard, status `IDLE`) but their
-actual logic is **not built yet** — see "What's NOT built yet" below.
-Nothing on the dashboard is fabricated: an agent that hasn't shipped
-shows honest zeros, not placeholder activity.
+Phase 1 shipped a real, working **Lead Finder Agent**. Phase 2 adds a
+real **Business Research & Qualification Agent** (Claude API) that
+automatically researches and scores whatever Lead Finder discovers.
+The **Personalized Outreach Agent** is registered (visible on the
+dashboard, status `IDLE`) but not built yet — see "What's NOT built
+yet" below. Nothing on the dashboard is fabricated: an agent that
+hasn't shipped shows honest zeros, not placeholder activity.
 
 ## 1. What this adds
 
@@ -22,16 +22,20 @@ shows honest zeros, not placeholder activity.
 
 ## 2. Database setup
 
-Run `db/003_agent_operations.sql` against the same Postgres database
+Run both migrations, in order, against the same Postgres database
 already used for the intake/upload features (see `UPLOAD_SETUP.md` §6
 if that isn't set up yet):
 
 ```bash
 psql "$DATABASE_URL" -f db/003_agent_operations.sql
+psql "$DATABASE_URL" -f db/004_research_qualification.sql
 ```
 
-It's idempotent (`create table if not exists`, `on conflict do nothing`)
-— safe to re-run.
+`003` is idempotent (`create table if not exists`, `on conflict do
+nothing`) — safe to re-run. `004` adds a `check` constraint via a plain
+`alter table ... add constraint`, which is **not** safe to re-run (it
+will error the second time) — matching the existing convention in
+`002_client_intake.sql`. Run each migration file once.
 
 ## 3. Environment variables
 
@@ -52,6 +56,18 @@ One new variable:
   cookie. If you don't set it, cron-triggered runs won't be authorized
   — the dashboard's manual **"Run Next Step"** button (admin session)
   still works either way.
+- `ANTHROPIC_API_KEY` — required for the Research & Qualification
+  Agent. Without it, a research job will run its first step, hit
+  `AI_PROVIDER_NOT_CONFIGURED`, and stop itself in
+  `NEEDS_ADMIN_ATTENTION` (it won't burn through the whole queue
+  retrying an error that can't succeed) — Discovery jobs still work
+  fine without this key, they just won't get auto-researched until it's
+  set and the job is retried.
+- `CLAUDE_RESEARCH_MODEL` — optional, defaults to `claude-haiku-4-5-20251001`.
+  Haiku was chosen because this agent runs once per prospect at
+  potentially high volume and the research/scoring task doesn't need a
+  larger model; override this if you want stronger research at higher
+  cost per prospect.
 
 ## 4. Vercel Cron — plan limitation
 
@@ -78,25 +94,39 @@ If lead quality/coverage becomes a bottleneck, swap
 (e.g. Google Places) — nothing else in the pipeline depends on OSM
 specifically.
 
-## 6. What's NOT built yet (honest scope)
+## 6. The qualification rubric
 
-- Business Research & Qualification Agent (AI-based, would use the
-  Claude API) — not implemented. Its dashboard card shows `IDLE` and
-  zeros because there is nothing to report.
-- Personalized Outreach Agent (Claude API draft generation) — same.
-- Everything downstream of discovery in the original spec: research,
-  qualification scoring, outreach drafts, admin approval queue,
-  AI/API usage & cost tracking, budget guards, admin override history,
-  and most of the wider dashboard (Work Queue, Job History filters,
-  Pipeline visualization, System Health, Prospect Journey, etc.).
+`api/_lib/research.js`'s `RESEARCH_SYSTEM_PROMPT` is the entire rubric,
+in one place, in plain English — read it before trusting scores. In
+short, from public signals only: no/thin/dated website is treated as a
+*good* fit signal (suggests an under-resourced back office), industry
+fit (property management, construction, professional services, etc.),
+business-size signals, and basic contactability. Score bands: ≥80
+`HIGH_PRIORITY`, 60–79 `GOOD_PROSPECT`, 40–59 `POSSIBLE_FIT`, <40
+`LOW_PRIORITY`. A prospect scored without a fetchable website is
+flagged `low_confidence` in the dashboard rather than hidden — treat
+those scores as weaker evidence. This rubric is a starting point, not
+a fixed spec; tune the prompt as real results come in.
+
+## 7. What's NOT built yet (honest scope)
+
+- Personalized Outreach Agent (Claude API draft generation) — not
+  implemented. Its dashboard card shows `IDLE` and zeros because there
+  is nothing to report.
+- Everything downstream of qualification in the original spec: outreach
+  drafts, the admin approval queue, admin override *history* (schema
+  exists — `agent_admin_overrides` — but nothing writes to it yet since
+  there's no admin-editable AI output until Outreach ships), budget
+  guards, and most of the wider dashboard (Work Queue, Job History
+  filters, Pipeline visualization, System Health, Prospect Journey,
+  etc.).
 - These were deliberately deferred rather than half-built with fake
-  data, per "do not create fake statistics." Phase 2 adds the Research
-  & Qualification Agent and its slice of the dashboard; Phase 3 adds
-  Outreach + the admin approval queue.
+  data, per "do not create fake statistics." Phase 3 adds the Outreach
+  Agent, the admin approval queue, and override tracking.
 
-## 7. Using it today
+## 8. Using it today
 
-1. Deploy with the env vars above set and the migration run.
+1. Deploy with the env vars above set and both migrations run.
 2. Open `/admin` → **AI Agents** in the sidebar → log in with
    `ADMIN_PASSWORD`.
 3. Overview tab → **Start Prospecting Job** → enter an industry (e.g.
@@ -106,3 +136,10 @@ specifically.
    job move from `QUEUED` → `RUNNING` → `COMPLETED`, with real
    discovered businesses landing in the **Jobs** tab's job detail page
    and the **Activity** tab's feed.
+5. Once a discovery job completes, it automatically queues a Research
+   job for its new prospects — keep clicking **Run Next Step** (or wait
+   for cron) to watch that job research and score each one. Open it
+   from the Jobs tab to see each prospect's score, level, and summary.
+   Prospects that existed before this shipped (or somehow missed
+   auto-queueing) can be picked up via **Queue Unresearched Prospects**
+   on the Overview tab.

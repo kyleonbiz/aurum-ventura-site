@@ -35,6 +35,15 @@ export async function nextJobCode(sql) {
   return `AGJ-${ymd}-${seq}`;
 }
 
+export async function logUsage(sql, { agentId, jobId, prospectId, usageType, provider, model, purpose, inputTokens, outputTokens, estimatedCostUsd, durationMs, success, error }) {
+  const totalTokens = (inputTokens ?? null) !== null && (outputTokens ?? null) !== null ? inputTokens + outputTokens : null;
+  await sql`
+    insert into agent_usage (agent_id, job_id, prospect_id, usage_type, provider, model, purpose, input_tokens, output_tokens, total_tokens, estimated_cost_usd, duration_ms, success, error)
+    values (${agentId || null}, ${jobId || null}, ${prospectId || null}, ${usageType}, ${provider}, ${model || null}, ${purpose || null},
+            ${inputTokens ?? null}, ${outputTokens ?? null}, ${totalTokens}, ${estimatedCostUsd ?? null}, ${durationMs ?? null}, ${success}, ${error || null})
+  `;
+}
+
 export function getDb() {
   return db();
 }

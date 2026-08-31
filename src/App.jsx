@@ -484,7 +484,6 @@ function HomePage({ setPage }) {
       <section className="hero">
         <Swoosh style={{ position: "absolute", top: "8%", right: "-5%", width: "560px", height: "220px", opacity: 0.35, zIndex: 0 }} />
         <div className="hero-inner">
-          <span style={{ display: "none" }} data-deploy-test="2026-08-30-attempt-3">deploy-test-marker</span>
           <p className="kicker">Business Administrative Services</p>
           <h1>Your Business.<br />Our Back Office.</h1>
           <p className="hero-sub">

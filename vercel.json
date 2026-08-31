@@ -2,7 +2,28 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/admin/:path*", "destination": "/admin/index.html" }
+    { "source": "/admin/:path*", "destination": "/admin/index.html" },
+
+    { "source": "/api/upload/init", "destination": "/api/upload?step=init" },
+    { "source": "/api/upload/file", "destination": "/api/upload?step=file" },
+    { "source": "/api/upload/complete", "destination": "/api/upload?step=complete" },
+
+    { "source": "/api/admin/login", "destination": "/api/admin/auth?action=login" },
+    { "source": "/api/admin/logout", "destination": "/api/admin/auth?action=logout" },
+    { "source": "/api/admin/session", "destination": "/api/admin/auth" },
+
+    { "source": "/api/admin/intakes/:id/approve", "destination": "/api/admin/intakes?id=:id&action=approve" },
+    { "source": "/api/admin/intakes/:id/reject", "destination": "/api/admin/intakes?id=:id&action=reject" },
+    { "source": "/api/admin/intakes/:id/request-info", "destination": "/api/admin/intakes?id=:id&action=request-info" },
+    { "source": "/api/admin/intakes/:id", "destination": "/api/admin/intakes?id=:id" },
+
+    { "source": "/api/admin/agents/jobs/:id/retry", "destination": "/api/admin/agents?view=jobs&id=:id&action=retry" },
+    { "source": "/api/admin/agents/jobs/:id", "destination": "/api/admin/agents?view=jobs&id=:id" },
+    { "source": "/api/admin/agents/jobs", "destination": "/api/admin/agents?view=jobs" },
+    { "source": "/api/admin/agents/overview", "destination": "/api/admin/agents?view=overview" },
+    { "source": "/api/admin/agents/activity", "destination": "/api/admin/agents?view=activity" },
+    { "source": "/api/admin/agents/errors", "destination": "/api/admin/agents?view=errors" },
+    { "source": "/api/admin/agents/research/queue-unresearched", "destination": "/api/admin/agents?view=research-queue" }
   ],
   "crons": [
     { "path": "/api/admin/agents/run-step", "schedule": "17 13 * * *" }

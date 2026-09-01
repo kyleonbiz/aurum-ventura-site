@@ -608,9 +608,14 @@ function Testimonials() {
           <blockquote className="testimonial-card" key={t.name}>
             <p className="testimonial-quote">&ldquo;{t.quote}&rdquo;</p>
             <footer>
-              <span className="testimonial-name">{t.name}</span>
-              <span className="testimonial-business">{t.business}</span>
-              <span className="testimonial-industry">{t.industry}</span>
+              <span className="testimonial-avatar" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4" /><path d="M4 20c0-4.4 3.6-7 8-7s8 2.6 8 7v1H4v-1z" /></svg>
+              </span>
+              <span className="testimonial-attribution">
+                <span className="testimonial-name">{t.name}</span>
+                <span className="testimonial-business">{t.business}</span>
+                <span className="testimonial-industry">{t.industry}</span>
+              </span>
             </footer>
           </blockquote>
         ))}
@@ -2177,7 +2182,10 @@ export default function App({ initialPath } = {}) {
         .testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 1.4rem; }
         .testimonial-card { background: ${COLORS.white}; border-left: 3px solid ${COLORS.aqua}; border-radius: 4px; padding: 1.4rem 1.5rem; margin: 0; box-shadow: 0 1px 3px rgba(4,25,68,0.06); }
         .testimonial-quote { font-style: italic; font-size: 0.92rem; line-height: 1.6; color: ${COLORS.navy}; margin: 0 0 1rem; }
-        .testimonial-card footer { display: flex; flex-direction: column; }
+        .testimonial-card footer { display: flex; align-items: center; gap: 0.8rem; }
+        .testimonial-avatar { flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%; background: ${COLORS.ice}; color: ${COLORS.teal}; display: flex; align-items: center; justify-content: center; }
+        .testimonial-avatar svg { width: 22px; height: 22px; }
+        .testimonial-attribution { display: flex; flex-direction: column; }
         .testimonial-name { font-weight: 600; font-size: 0.88rem; color: ${COLORS.navy}; }
         .testimonial-business { font-size: 0.82rem; color: ${COLORS.teal}; }
         .testimonial-industry { font-size: 0.75rem; color: ${COLORS.slate}; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 0.2rem; }

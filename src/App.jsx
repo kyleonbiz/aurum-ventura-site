@@ -264,7 +264,7 @@ function Swoosh({ style }) {
 }
 
 function Nav({ page, setPage }) {
-  const items = ["Home", "Services", "About", "Upload"];
+  const items = ["Home", "Services", "About"];
   const [open, setOpen] = useState(false);
   const isServiceDetail = SERVICES.some((s) => s.slug === page);
   const isActive = (it) => page === it || (it === "Services" && isServiceDetail);

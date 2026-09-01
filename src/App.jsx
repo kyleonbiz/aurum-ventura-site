@@ -231,6 +231,8 @@ export function pathFor(key) {
     case "Home": return "/";
     case "Services": return "/services";
     case "About": return "/about";
+    case "Industries": return "/industries";
+    case "HowItWorks": return "/how-it-works";
     case "Security": return "/security";
     case "Privacy": return "/privacy";
     case "Terms": return "/terms";
@@ -248,6 +250,8 @@ export function pageFromPath(pathname) {
   if (path === "/") return "Home";
   if (path === "/services") return "Services";
   if (path === "/about") return "About";
+  if (path === "/industries") return "Industries";
+  if (path === "/how-it-works") return "HowItWorks";
   if (path === "/security") return "Security";
   if (path === "/privacy") return "Privacy";
   if (path === "/terms") return "Terms";
@@ -284,8 +288,10 @@ function Swoosh({ style }) {
   );
 }
 
+const NAV_LABELS = { HowItWorks: "How It Works", Upload: "Upload Documents" };
+
 function Nav({ page, setPage }) {
-  const items = ["Home", "Services", "About"];
+  const items = ["Home", "Services", "Industries", "HowItWorks", "About"];
   const [open, setOpen] = useState(false);
   const isServiceDetail = SERVICES.some((s) => s.slug === page);
   const isActive = (it) => page === it || (it === "Services" && isServiceDetail);
@@ -312,7 +318,7 @@ function Nav({ page, setPage }) {
               href={pathFor(it)}
               onClick={go(it)}
             >
-              {it === "Upload" ? "Upload Documents" : it}
+              {NAV_LABELS[it] || it}
             </a>
           ))}
           <a
@@ -320,7 +326,7 @@ function Nav({ page, setPage }) {
             href={pathFor("Contact")}
             onClick={go("Contact")}
           >
-            Request a Consultation
+            Contact
           </a>
         </nav>
         <button
@@ -342,7 +348,7 @@ function Nav({ page, setPage }) {
               href={pathFor(it)}
               onClick={go(it, true)}
             >
-              {it === "Upload" ? "Upload Documents" : it}
+              {NAV_LABELS[it] || it}
             </a>
           ))}
           <a
@@ -350,7 +356,7 @@ function Nav({ page, setPage }) {
             href={pathFor("Contact")}
             onClick={go("Contact", true)}
           >
-            Request a Consultation
+            Contact
           </a>
         </div>
       )}
@@ -368,6 +374,8 @@ function Footer({ setPage }) {
             <h3>Company</h3>
             <a href={pathFor("About")} onClick={go("About")}>About</a>
             <a href={pathFor("Services")} onClick={go("Services")}>Services</a>
+            <a href={pathFor("Industries")} onClick={go("Industries")}>Industries</a>
+            <a href={pathFor("HowItWorks")} onClick={go("HowItWorks")}>How It Works</a>
             <a href={pathFor("Security")} onClick={go("Security")}>Security &amp; Confidentiality</a>
           </div>
           <div>
@@ -697,8 +705,8 @@ function ServiceDetailPage({ slug, setPage }) {
 }
 
 function AboutPage({ setPage }) {
-  const processRef = useReveal();
   const staysRef = useReveal();
+  const go = (key) => (e) => { e.preventDefault(); setPage(key); };
   return (
     <div>
       <section className="page-head">
@@ -711,10 +719,6 @@ function AboutPage({ setPage }) {
           the paperwork moving.
         </p>
       </section>
-      <section className="section">
-        <h2 ref={processRef}>Our Process</h2>
-        <ProcessSteps />
-      </section>
       <section className="section alt">
         <h2 ref={staysRef}>What Stays With You</h2>
         <p className="section-lead">
@@ -722,10 +726,77 @@ function AboutPage({ setPage }) {
           all times. We execute administrative work based on what you tell us — the underlying
           decisions, and your legal and regulatory obligations, stay with you.
         </p>
+        <a className="btn-text" href={pathFor("HowItWorks")} onClick={go("HowItWorks")}>See our full process and how pricing works &rarr;</a>
       </section>
       <section className="cta-band">
         <h2>Ready to talk?</h2>
         <p>A short consultation to see if this is a fit — no pressure, no commitment.</p>
+        <a className="btn-primary" href={pathFor("Contact")} onClick={(e) => { e.preventDefault(); setPage("Contact"); }}>Request a Consultation</a>
+      </section>
+    </div>
+  );
+}
+
+function HowItWorksPage({ setPage }) {
+  const processRef = useReveal();
+  const pricingRef = useReveal();
+  return (
+    <div>
+      <section className="page-head">
+        <p className="kicker">How It Works</p>
+        <h1>How It Works</h1>
+        <p className="hero-sub">
+          From first conversation to active service, here's exactly what happens — and how your
+          monthly investment is put together before you ever commit to anything.
+        </p>
+      </section>
+      <section className="section">
+        <h2 ref={processRef}>Our Process</h2>
+        <ProcessSteps />
+      </section>
+      <section className="section alt">
+        <h2 ref={pricingRef}>How Pricing Works</h2>
+        <p className="section-lead">
+          No two businesses have the same administrative workload, so we don't sell fixed
+          packages. After an initial consultation, we assess the responsibilities you need
+          support with — the volume of work, the systems you use, and the level of ongoing
+          support required — then define a clear scope and a fixed monthly quote for your
+          approval before any work begins.
+        </p>
+        <div className="callout">
+          <strong>No surprise hourly billing.</strong> Your agreed scope and monthly service fee
+          are set before work begins. Anything outside that agreed scope is quoted separately, not
+          billed to you automatically.
+        </div>
+      </section>
+      <section className="cta-band">
+        <h2>Ready to see what it would cost?</h2>
+        <p>A short consultation gets you a defined scope and a fixed monthly quote.</p>
+        <a className="btn-primary" href={pathFor("Contact")} onClick={(e) => { e.preventDefault(); setPage("Contact"); }}>Request a Consultation</a>
+      </section>
+    </div>
+  );
+}
+
+function IndustriesPage({ setPage }) {
+  const ref = useReveal();
+  return (
+    <div>
+      <section className="page-head">
+        <p className="kicker">Industries</p>
+        <h1>Who We Work With</h1>
+        <p className="hero-sub">
+          Businesses with real administrative volume but no dedicated staff to own it — growing
+          operations that need consistency, not a full-time hire.
+        </p>
+      </section>
+      <section className="section">
+        <h2 ref={ref}>Industries We Serve</h2>
+        <IndustryPanel />
+      </section>
+      <section className="cta-band">
+        <h2>Don't see your industry?</h2>
+        <p>We work with a range of service and operational businesses beyond this list — tell us what you do.</p>
         <a className="btn-primary" href={pathFor("Contact")} onClick={(e) => { e.preventDefault(); setPage("Contact"); }}>Request a Consultation</a>
       </section>
     </div>
@@ -2002,6 +2073,8 @@ const PAGE_TITLES = {
   Home: `${SITE_NAME} — Business Administrative Services`,
   Services: `Services — ${SITE_NAME}`,
   About: `About — ${SITE_NAME}`,
+  Industries: `Industries — ${SITE_NAME}`,
+  HowItWorks: `How It Works — ${SITE_NAME}`,
   Security: `Security & Confidentiality — ${SITE_NAME}`,
   Privacy: `Privacy Policy — ${SITE_NAME}`,
   Terms: `Terms of Service — ${SITE_NAME}`,
@@ -2015,6 +2088,8 @@ const PAGE_DESCRIPTIONS = {
   Home: "Outsourced administrative back-office support for small and growing businesses.",
   Services: "Nine core categories of administrative support — document prep, invoicing, license tracking, vendor admin, data management, and more.",
   About: "How Aurum Ventura works: a defined scope, reserved monthly capacity, and a monthly report on what moved.",
+  Industries: "Industries and business types Aurum Ventura works with, and examples of what we handle for each.",
+  HowItWorks: "Our process from consultation to active service, and how custom monthly pricing is put together.",
   Security: "How Aurum Ventura handles the confidentiality, storage, and retention of your business documents and information.",
   Privacy: "What information Aurum Ventura collects through this site and its client forms, and how it's used.",
   Terms: "The terms governing use of this website and Aurum Ventura's administrative services.",
@@ -2070,6 +2145,8 @@ export default function App({ initialPath } = {}) {
     Home: <HomePage setPage={navigate} />,
     Services: <ServicesPage setPage={navigate} />,
     About: <AboutPage setPage={navigate} />,
+    Industries: <IndustriesPage setPage={navigate} />,
+    HowItWorks: <HowItWorksPage setPage={navigate} />,
     Security: <SecurityPage setPage={navigate} />,
     Privacy: <PrivacyPage setPage={navigate} />,
     Terms: <TermsPage setPage={navigate} />,
@@ -2162,6 +2239,8 @@ export default function App({ initialPath } = {}) {
         .section.alt { background: ${COLORS.ice}; max-width: none; }
         .section.alt > * { max-width: 1100px; margin-left: auto; margin-right: auto; }
         .section-lead { max-width: 620px; margin-bottom: 0.8rem; }
+        .callout { max-width: 620px; background: ${COLORS.white}; border-left: 3px solid ${COLORS.aqua}; border-radius: 4px; padding: 1.1rem 1.4rem; font-size: 0.92rem; line-height: 1.6; color: ${COLORS.navy}; }
+        .callout strong { color: ${COLORS.teal}; }
         .page-head { max-width: 1100px; margin: 0 auto; padding: 2.8rem 1.5rem 0.5rem; }
         .page-head .hero-sub { max-width: 640px; margin-bottom: 0.5rem; }
         .page-head + .section { padding-top: 1.6rem; }

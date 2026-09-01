@@ -211,6 +211,8 @@ export function pathFor(key) {
     case "Services": return "/services";
     case "About": return "/about";
     case "Security": return "/security";
+    case "Privacy": return "/privacy";
+    case "Terms": return "/terms";
     case "Contact": return "/contact";
     case "Upload": return "/upload";
     case "ClientIntake": return "/client-intake";
@@ -226,6 +228,8 @@ export function pageFromPath(pathname) {
   if (path === "/services") return "Services";
   if (path === "/about") return "About";
   if (path === "/security") return "Security";
+  if (path === "/privacy") return "Privacy";
+  if (path === "/terms") return "Terms";
   if (path === "/contact") return "Contact";
   if (path === "/upload") return "Upload";
   if (path === "/client-intake") return "ClientIntake";
@@ -359,9 +363,20 @@ function Footer({ setPage }) {
         </div>
       </div>
       <Swoosh style={{ width: "140px", height: "46px", opacity: 0.5, margin: "0 auto" }} />
-      <p className="footer-legal">
-        &copy; {new Date().getFullYear()} Aurum Ventura Enterprise LLC. Business Administrative Services.
-      </p>
+      <div className="footer-legal-bar">
+        <p className="footer-legal">
+          &copy; {new Date().getFullYear()} Aurum Ventura Enterprise LLC. Remote administrative support for businesses nationwide.
+        </p>
+        <p className="footer-legal-links">
+          <a href={pathFor("About")} onClick={go("About")}>About</a>
+          <span aria-hidden="true">&middot;</span>
+          <a href={pathFor("Security")} onClick={go("Security")}>Security &amp; Confidentiality</a>
+          <span aria-hidden="true">&middot;</span>
+          <a href={pathFor("Privacy")} onClick={go("Privacy")}>Privacy Policy</a>
+          <span aria-hidden="true">&middot;</span>
+          <a href={pathFor("Terms")} onClick={go("Terms")}>Terms of Service</a>
+        </p>
+      </div>
     </footer>
   );
 }
@@ -728,6 +743,132 @@ function SecurityPage({ setPage }) {
         <a className="btn-primary" href={pathFor("Contact")} onClick={(e) => { e.preventDefault(); setPage("Contact"); }}>Request a Consultation</a>
       </section>
     </div>
+  );
+}
+
+function LegalPage({ kicker, title, updated, children }) {
+  return (
+    <div>
+      <section className="page-head">
+        <p className="kicker">{kicker}</p>
+        <h1>{title}</h1>
+        <p className="hero-sub legal-updated">Last updated {updated}</p>
+      </section>
+      <section className="section legal-body">{children}</section>
+    </div>
+  );
+}
+
+function PrivacyPage({ setPage }) {
+  const go = (key) => (e) => { e.preventDefault(); setPage(key); };
+  return (
+    <LegalPage kicker="Privacy Policy" title="Privacy Policy" updated="September 2026">
+      <h2>What We Collect</h2>
+      <p>
+        We collect the information you choose to give us: your name, business name, email, and
+        phone number when you request a consultation; company and contact details when you
+        complete client intake; and the files and descriptions you provide when you submit
+        documents or administrative requests. We don't collect information about you from any
+        other source.
+      </p>
+      <h2>How We Use It</h2>
+      <p>
+        We use this information to respond to your inquiry, set up and deliver the administrative
+        services you've engaged us for, and communicate with you about your account. We don't use
+        it for advertising, and we don't sell or rent it to anyone.
+      </p>
+      <h2>Who We Share It With</h2>
+      <p>
+        We share information only with the service providers that make our operations possible —
+        Dropbox for document storage, a database provider for records related to your account, and
+        an email delivery provider for transactional messages (like confirming a submission). These
+        providers process information on our behalf; they don't use it for their own purposes. See
+        our <a href={pathFor("Security")} onClick={go("Security")}>Security &amp; Confidentiality</a> page
+        for more on how documents are handled and retained.
+      </p>
+      <h2>Cookies &amp; Tracking</h2>
+      <p>
+        This site does not use third-party analytics, advertising, or tracking cookies. The only
+        cookie in this system is a private, employee-only session cookie used to secure our
+        internal administrative login — it is never set for site visitors or clients using the
+        public-facing forms.
+      </p>
+      <h2>Your Choices</h2>
+      <p>
+        You can ask us what information we have about you, or ask us to correct or delete it, by
+        emailing <a href="mailto:admin@aurumventura.net">admin@aurumventura.net</a>. If you're an
+        active client, document retention after your engagement ends is handled per our{" "}
+        <a href={pathFor("Security")} onClick={go("Security")}>Security &amp; Confidentiality</a> policy.
+      </p>
+      <h2>Changes to This Policy</h2>
+      <p>
+        If this policy changes, we'll update the date at the top of this page. Continued use of
+        this site or our services after a change means you accept the updated policy.
+      </p>
+      <h2>Contact</h2>
+      <p>
+        Questions about this policy? Email <a href="mailto:admin@aurumventura.net">admin@aurumventura.net</a> or
+        call <a href="tel:+18506537797">850-653-7797</a>.
+      </p>
+    </LegalPage>
+  );
+}
+
+function TermsPage({ setPage }) {
+  const go = (key) => (e) => { e.preventDefault(); setPage(key); };
+  return (
+    <LegalPage kicker="Terms of Service" title="Terms of Service" updated="September 2026">
+      <h2>Using This Site</h2>
+      <p>
+        This website provides information about Aurum Ventura Enterprise LLC's administrative
+        services and lets you request a consultation, complete client intake, or submit documents.
+        You agree to provide accurate information through these forms and not to use the site for
+        any unlawful purpose.
+      </p>
+      <h2>Our Services Are Governed Separately</h2>
+      <p>
+        Browsing this site or submitting a form doesn't create a services agreement. Paid
+        administrative services begin only once a Master Agreement and a Scope &amp; Service Level
+        Exhibit have been reviewed and signed by both parties, as described on our{" "}
+        <a href={pathFor("About")} onClick={go("About")}>About</a> page. Those signed
+        documents — not this page — govern the actual scope, pricing, and terms of service delivery.
+      </p>
+      <h2>What Stays With You</h2>
+      <p>
+        As a client, you retain ownership and control of your accounts, systems, and business
+        decisions at all times. We carry out administrative work based on your instructions and
+        within your defined scope; the underlying decisions, and your legal and regulatory
+        obligations, remain yours.
+      </p>
+      <h2>Not Professional Advice</h2>
+      <p>
+        Aurum Ventura provides administrative and back-office support. Nothing we do or say
+        constitutes legal, tax, financial, or other professional advice, and you should consult a
+        licensed professional for those matters.
+      </p>
+      <h2>Intellectual Property</h2>
+      <p>
+        The content of this site — text, design, and graphics — belongs to Aurum Ventura Enterprise
+        LLC unless otherwise noted, and may not be copied or reused without permission.
+      </p>
+      <h2>Limitation of Liability</h2>
+      <p>
+        This site and its content are provided as-is. To the fullest extent permitted by law, Aurum
+        Ventura Enterprise LLC is not liable for indirect, incidental, or consequential damages
+        arising from your use of this site. This section does not limit liability arising from a
+        signed services agreement, which is governed by its own terms.
+      </p>
+      <h2>Changes to These Terms</h2>
+      <p>
+        If these terms change, we'll update the date at the top of this page. Continued use of this
+        site after a change means you accept the updated terms.
+      </p>
+      <h2>Contact</h2>
+      <p>
+        Questions about these terms? Email <a href="mailto:admin@aurumventura.net">admin@aurumventura.net</a> or
+        call <a href="tel:+18506537797">850-653-7797</a>.
+      </p>
+    </LegalPage>
   );
 }
 
@@ -1813,6 +1954,8 @@ const PAGE_TITLES = {
   Services: `Services — ${SITE_NAME}`,
   About: `About — ${SITE_NAME}`,
   Security: `Security & Confidentiality — ${SITE_NAME}`,
+  Privacy: `Privacy Policy — ${SITE_NAME}`,
+  Terms: `Terms of Service — ${SITE_NAME}`,
   Contact: `Contact — ${SITE_NAME}`,
   Upload: `Upload Documents — ${SITE_NAME}`,
   ClientIntake: `Client Intake — ${SITE_NAME}`,
@@ -1824,6 +1967,8 @@ const PAGE_DESCRIPTIONS = {
   Services: "Nine core categories of administrative support — document prep, invoicing, license tracking, vendor admin, data management, and more.",
   About: "How Aurum Ventura works: a defined scope, reserved monthly capacity, and a monthly report on what moved.",
   Security: "How Aurum Ventura handles the confidentiality, storage, and retention of your business documents and information.",
+  Privacy: "What information Aurum Ventura collects through this site and its client forms, and how it's used.",
+  Terms: "The terms governing use of this website and Aurum Ventura's administrative services.",
   Contact: "Request a consultation to see where administrative work is taking your time.",
   Upload: "Securely send documents and administrative requests to Aurum Ventura.",
   ClientIntake: "Complete your company information so Aurum Ventura can begin setting up your administrative services.",
@@ -1877,6 +2022,8 @@ export default function App({ initialPath } = {}) {
     Services: <ServicesPage setPage={navigate} />,
     About: <AboutPage setPage={navigate} />,
     Security: <SecurityPage setPage={navigate} />,
+    Privacy: <PrivacyPage setPage={navigate} />,
+    Terms: <TermsPage setPage={navigate} />,
     Contact: <ContactPage />,
     Upload: <UploadPage />,
     ClientIntake: <ClientIntakePage />,
@@ -1969,6 +2116,12 @@ export default function App({ initialPath } = {}) {
         .page-head { max-width: 1100px; margin: 0 auto; padding: 2.8rem 1.5rem 0.5rem; }
         .page-head .hero-sub { max-width: 640px; margin-bottom: 0.5rem; }
         .page-head + .section { padding-top: 1.6rem; }
+        .legal-updated { color: ${COLORS.slate}; font-size: 0.85rem; }
+        .legal-body { max-width: 720px; }
+        .legal-body h2 { font-size: 1.15rem; margin: 1.8rem 0 0.6rem; }
+        .legal-body h2:first-child { margin-top: 0; }
+        .legal-body p { font-size: 0.95rem; line-height: 1.65; color: ${COLORS.slate}; margin: 0 0 1rem; }
+        .legal-body a { color: ${COLORS.teal}; text-decoration: underline; }
 
         .plain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.1rem 2.5rem; margin: 1.1rem 0 1.3rem; }
         .plain-grid-item { display: flex; gap: 0.7rem; align-items: baseline; padding: 0.6rem 0; border-bottom: 1px solid #E4E9EF; font-size: 0.92rem; color: ${COLORS.navy}; width: 100%; background: none; border-left: none; border-right: none; border-top: none; text-align: left; font-family: inherit; cursor: pointer; }
@@ -2123,14 +2276,19 @@ export default function App({ initialPath } = {}) {
         }
 
         /* Footer */
-        .footer { background: ${COLORS.navy}; color: ${COLORS.white}; padding: 3rem 1.5rem 1.5rem; margin-top: 1.5rem; }
+        .footer { background: ${COLORS.navy}; color: ${COLORS.white}; padding: 3rem 1.5rem 0; margin-top: 1.5rem; }
         .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2.5rem; padding-bottom: 1.5rem; }
         .footer-cols { display: flex; flex-wrap: wrap; gap: 1.8rem 3.5rem; }
         .footer-cols h3 { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: ${COLORS.aqua}; margin-bottom: 0.8rem; }
         .footer-cols a { display: block; background: none; border: none; color: rgba(255,255,255,0.8); font-size: 0.87rem; padding: 0.3rem 0; text-align: left; }
         .footer-cols a:hover { color: ${COLORS.white}; }
         .footer-contact { color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-top: 0.3rem; }
-        .footer-legal { text-align: center; color: rgba(255,255,255,0.45); font-size: 0.78rem; margin-top: 1.2rem; }
+        .footer-legal-bar { width: 100%; margin-top: 1.5rem; padding: 1.4rem 1.5rem 1.6rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .footer-legal { color: rgba(255,255,255,0.55); font-size: 0.78rem; margin: 0; }
+        .footer-legal-links { margin: 0.6rem 0 0; font-size: 0.82rem; }
+        .footer-legal-links a { color: rgba(255,255,255,0.8); text-decoration: underline; text-underline-offset: 2px; }
+        .footer-legal-links a:hover { color: ${COLORS.white}; }
+        .footer-legal-links span { color: rgba(255,255,255,0.35); margin: 0 0.6rem; }
       ` }} />
 
       <Nav page={page} setPage={navigate} />

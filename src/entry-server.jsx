@@ -8,6 +8,8 @@ export const ROUTES = [
   "Services",
   "About",
   "Security",
+  "Privacy",
+  "Terms",
   "Contact",
   "Upload",
   "ClientIntake",

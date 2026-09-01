@@ -119,6 +119,17 @@ export const SERVICES = [
       "Flagging anything outside scope for your approval before it begins",
     ],
   },
+  {
+    slug: "business-file-reset",
+    title: "Business File Reset",
+    oneTime: true,
+    summary: "A one-time cleanup and organization service designed to bring structure to your existing digital files, folders, and document systems. Every project is custom-scoped and quoted based on the condition and complexity of your current setup.",
+    examples: [
+      "Auditing and reorganizing a messy shared drive or folder structure",
+      "Standardizing file and folder naming conventions across your business",
+      "Archiving outdated files and consolidating duplicates into a clean system",
+    ],
+  },
 ];
 
 const AUDIENCE = [
@@ -571,6 +582,7 @@ function HomePage({ setPage }) {
             <a className="plain-grid-item" key={s.slug} href={pathFor(s.slug)} onClick={go(s.slug)}>
               <span className="plain-num">{String(i + 1).padStart(2, "0")}</span>
               <h3>{s.title}</h3>
+              {s.oneTime && <span className="badge-one-time">One-Time</span>}
             </a>
           ))}
         </div>
@@ -638,7 +650,10 @@ function ServiceRow({ slug, index, setPage }) {
   const go = (e) => { e.preventDefault(); setPage(slug); };
   return (
     <a className="service-row" href={pathFor(slug)} onClick={go} ref={ref}>
-      <h2>{String(index + 1).padStart(2, "0")} &middot; {service.title}</h2>
+      <h2>
+        {String(index + 1).padStart(2, "0")} &middot; {service.title}
+        {service.oneTime && <span className="badge-one-time">One-Time Project</span>}
+      </h2>
       <p>{service.summary}</p>
       <span className="service-row-link">View examples &rarr;</span>
     </a>
@@ -653,8 +668,9 @@ function ServicesPage({ setPage }) {
         <p className="kicker">Services</p>
         <h1>What We Do</h1>
         <p className="hero-sub">
-          Our services fall into nine core categories. Your Scope of Services is built from the
-          categories you actually need — you're never paying for the ones you don't.
+          Our recurring services fall into core categories — your Scope of Services is built from
+          the ones you actually need — plus a one-time Business File Reset project if you just need
+          your existing files organized.
         </p>
       </section>
       <section className="section">
@@ -686,7 +702,7 @@ function ServiceDetailPage({ slug, setPage }) {
       <section className="page-head">
         <a className="btn-text back-link" href={pathFor("Services")} onClick={go("Services")}>&larr; All Services</a>
         <p className="kicker">{String(index + 1).padStart(2, "0")} &middot; Services</p>
-        <h1>{service.title}</h1>
+        <h1>{service.title}{service.oneTime && <span className="badge-one-time badge-one-time-h1">One-Time Project</span>}</h1>
         <p className="hero-sub">{service.summary}</p>
       </section>
       <section className="section">
@@ -696,8 +712,17 @@ function ServiceDetailPage({ slug, setPage }) {
         </ul>
       </section>
       <section className="cta-band">
-        <h2>Want this handled for you?</h2>
-        <p>We'll fold it into a Scope of Services built around what you actually need.</p>
+        {service.oneTime ? (
+          <>
+            <h2>Want your files organized?</h2>
+            <p>We'll quote it as a fixed, one-time project based on your current setup — no ongoing commitment required.</p>
+          </>
+        ) : (
+          <>
+            <h2>Want this handled for you?</h2>
+            <p>We'll fold it into a Scope of Services built around what you actually need.</p>
+          </>
+        )}
         <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Request a Consultation</a>
       </section>
     </div>
@@ -2086,7 +2111,7 @@ const PAGE_TITLES = {
 };
 const PAGE_DESCRIPTIONS = {
   Home: "Outsourced administrative back-office support for small and growing businesses.",
-  Services: "Nine core categories of administrative support — document prep, invoicing, license tracking, vendor admin, data management, and more.",
+  Services: "Recurring administrative support — document prep, invoicing, license tracking, vendor admin, data management, and more — plus a one-time Business File Reset project.",
   About: "How Aurum Ventura works: a defined scope, reserved monthly capacity, and a monthly report on what moved.",
   Industries: "Industries and business types Aurum Ventura works with, and examples of what we handle for each.",
   HowItWorks: "Our process from consultation to active service, and how custom monthly pricing is put together.",
@@ -2256,6 +2281,8 @@ export default function App({ initialPath } = {}) {
         .plain-grid-item:hover { color: ${COLORS.teal}; border-bottom-color: ${COLORS.teal}; }
         .plain-grid-item h3 { font: inherit; font-weight: inherit; color: inherit; margin: 0; }
         .plain-num { color: ${COLORS.teal}; font-weight: 600; font-size: 0.8rem; }
+        .badge-one-time { display: inline-block; margin-left: 0.6rem; background: ${COLORS.ice}; color: ${COLORS.teal}; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 20px; vertical-align: middle; }
+        .badge-one-time-h1 { font-size: 0.68rem; vertical-align: super; margin-left: 0.8rem; }
         @media (max-width: 640px) { .plain-grid { grid-template-columns: 1fr; } }
 
         .testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 1.4rem; }

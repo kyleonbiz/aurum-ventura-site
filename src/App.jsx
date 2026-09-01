@@ -386,11 +386,14 @@ function Footer({ setPage }) {
             <a href={pathFor("About")} onClick={go("About")}>About</a>
             <a href={pathFor("Services")} onClick={go("Services")}>Services</a>
             <a href={pathFor("Industries")} onClick={go("Industries")}>Industries</a>
+          </div>
+          <div>
+            <h3>How We Work</h3>
             <a href={pathFor("HowItWorks")} onClick={go("HowItWorks")}>How It Works</a>
             <a href={pathFor("Security")} onClick={go("Security")}>Security &amp; Confidentiality</a>
           </div>
           <div>
-            <h3>Get in touch</h3>
+            <h3>Get in Touch</h3>
             <a href={pathFor("Contact")} onClick={go("Contact")}>Request a Consultation</a>
             <p className="footer-contact">admin@aurumventura.net</p>
             <p className="footer-contact">850-653-7797</p>
@@ -2444,8 +2447,9 @@ export default function App({ initialPath } = {}) {
 
         /* Footer */
         .footer { background: ${COLORS.navy}; color: ${COLORS.white}; padding: 3rem 1.5rem 0; margin-top: 1.5rem; }
-        .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2.5rem; padding-bottom: 1.5rem; }
-        .footer-cols { display: flex; flex-wrap: wrap; gap: 1.8rem 3.5rem; }
+        .footer-inner { max-width: 1100px; margin: 0 auto; padding-bottom: 1.5rem; }
+        .footer-cols { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem 1.5rem; width: 100%; }
+        .footer-cols > div { flex: 1 1 180px; }
         .footer-cols h3 { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: ${COLORS.aqua}; margin-bottom: 0.8rem; }
         .footer-cols a { display: block; background: none; border: none; color: rgba(255,255,255,0.8); font-size: 0.87rem; padding: 0.3rem 0; text-align: left; }
         .footer-cols a:hover { color: ${COLORS.white}; }

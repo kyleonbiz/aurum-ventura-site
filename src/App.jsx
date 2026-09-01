@@ -151,6 +151,27 @@ const TIME_COST = [
   ["Pulling together reports", "2 hrs/wk"],
 ];
 
+const TESTIMONIALS = [
+  {
+    quote: "Aurum Ventura has helped bring more structure to the administrative side of our business. Having support with organization, documentation, and day-to-day back-office tasks allows us to stay focused on serving our customers and growing the company.",
+    name: "Clayton Fleming",
+    business: "At Your Service Janitorial",
+    industry: "Cleaning & Landscaping",
+  },
+  {
+    quote: "Running a restaurant means there are always a lot of moving pieces behind the scenes. Aurum Ventura helps keep the administrative side organized so we can spend more time focused on our operation, our staff, and our guests.",
+    name: "Raven Robinson",
+    business: "Catch Land & Sea",
+    industry: "Restaurant",
+  },
+  {
+    quote: "Aurum Ventura provides the kind of administrative support that makes managing properties more organized and efficient. Having someone help keep documents, records, and ongoing tasks in order gives me more time to focus on tenants, properties, and the bigger picture.",
+    name: "Jenny Atkins",
+    business: "Independent Property Manager",
+    industry: "Property Management",
+  },
+];
+
 const TIME_SINKS = [
   { label: "Paperwork", slug: "forms-paperwork" },
   { label: "Invoices", slug: "invoice-administration" },
@@ -570,8 +591,31 @@ function HomePage({ setPage }) {
         <a className="btn-text" href={pathFor("About")} onClick={go("About")}>Learn how we work &rarr;</a>
       </section>
 
+      <Testimonials />
+
       <TimeSelector setPage={setPage} />
     </div>
+  );
+}
+
+function Testimonials() {
+  const ref = useReveal();
+  return (
+    <section className="section alt">
+      <h2 ref={ref}>What Clients Say</h2>
+      <div className="testimonial-grid">
+        {TESTIMONIALS.map((t) => (
+          <blockquote className="testimonial-card" key={t.name}>
+            <p className="testimonial-quote">&ldquo;{t.quote}&rdquo;</p>
+            <footer>
+              <span className="testimonial-name">{t.name}</span>
+              <span className="testimonial-business">{t.business}</span>
+              <span className="testimonial-industry">{t.industry}</span>
+            </footer>
+          </blockquote>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -2129,6 +2173,15 @@ export default function App({ initialPath } = {}) {
         .plain-grid-item h3 { font: inherit; font-weight: inherit; color: inherit; margin: 0; }
         .plain-num { color: ${COLORS.teal}; font-weight: 600; font-size: 0.8rem; }
         @media (max-width: 640px) { .plain-grid { grid-template-columns: 1fr; } }
+
+        .testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 1.4rem; }
+        .testimonial-card { background: ${COLORS.white}; border-left: 3px solid ${COLORS.aqua}; border-radius: 4px; padding: 1.4rem 1.5rem; margin: 0; box-shadow: 0 1px 3px rgba(4,25,68,0.06); }
+        .testimonial-quote { font-style: italic; font-size: 0.92rem; line-height: 1.6; color: ${COLORS.navy}; margin: 0 0 1rem; }
+        .testimonial-card footer { display: flex; flex-direction: column; }
+        .testimonial-name { font-weight: 600; font-size: 0.88rem; color: ${COLORS.navy}; }
+        .testimonial-business { font-size: 0.82rem; color: ${COLORS.teal}; }
+        .testimonial-industry { font-size: 0.75rem; color: ${COLORS.slate}; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 0.2rem; }
+        @media (max-width: 860px) { .testimonial-grid { grid-template-columns: 1fr; } }
 
         .cost-list { max-width: 620px; margin: 1.3rem 0 1.6rem; }
         .cost-row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.65rem 0; border-bottom: 1px solid #D6E4EA; font-size: 0.92rem; color: ${COLORS.navy}; }

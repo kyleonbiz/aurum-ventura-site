@@ -7,6 +7,7 @@ export const ROUTES = [
   "Home",
   "Services",
   "About",
+  "Security",
   "Contact",
   "Upload",
   "ClientIntake",

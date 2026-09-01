@@ -9,7 +9,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const SITE_URL = "https://www.aurumventura.net";
-const TOP_LEVEL_PATHS = new Set(["/services", "/about", "/contact"]);
+const TOP_LEVEL_PATHS = new Set(["/services", "/about", "/security", "/contact"]);
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");

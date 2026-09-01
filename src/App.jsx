@@ -210,6 +210,7 @@ export function pathFor(key) {
     case "Home": return "/";
     case "Services": return "/services";
     case "About": return "/about";
+    case "Security": return "/security";
     case "Contact": return "/contact";
     case "Upload": return "/upload";
     case "ClientIntake": return "/client-intake";
@@ -224,6 +225,7 @@ export function pageFromPath(pathname) {
   if (path === "/") return "Home";
   if (path === "/services") return "Services";
   if (path === "/about") return "About";
+  if (path === "/security") return "Security";
   if (path === "/contact") return "Contact";
   if (path === "/upload") return "Upload";
   if (path === "/client-intake") return "ClientIntake";
@@ -341,6 +343,7 @@ function Footer({ setPage }) {
             <h3>Company</h3>
             <a href={pathFor("About")} onClick={go("About")}>About</a>
             <a href={pathFor("Services")} onClick={go("Services")}>Services</a>
+            <a href={pathFor("Security")} onClick={go("Security")}>Security &amp; Confidentiality</a>
           </div>
           <div>
             <h3>Get in touch</h3>
@@ -659,6 +662,69 @@ function AboutPage({ setPage }) {
       <section className="cta-band">
         <h2>Ready to talk?</h2>
         <p>A short consultation to see if this is a fit — no pressure, no commitment.</p>
+        <a className="btn-primary" href={pathFor("Contact")} onClick={(e) => { e.preventDefault(); setPage("Contact"); }}>Request a Consultation</a>
+      </section>
+    </div>
+  );
+}
+
+function SecurityPage({ setPage }) {
+  const handlingRef = useReveal();
+  const retentionRef = useReveal();
+  const controlRef = useReveal();
+  return (
+    <div>
+      <section className="page-head">
+        <p className="kicker">Security &amp; Confidentiality</p>
+        <h1>How We Protect Your Information</h1>
+        <p className="hero-sub">
+          Client documents and business information pass through Aurum Ventura in the course of
+          normal administrative work. Here's exactly how that information is handled, who can see
+          it, and what happens to it when an engagement ends.
+        </p>
+      </section>
+
+      <section className="section">
+        <h2>Confidentiality, By Default</h2>
+        <p className="section-lead">
+          Every team member who works with client documents or data signs a confidentiality
+          agreement before doing so. Access to a client's files and information is limited to the
+          staff actually working that account — not shared broadly across the team.
+        </p>
+      </section>
+
+      <section className="section alt">
+        <h2 ref={handlingRef}>How Your Documents Are Handled</h2>
+        <ul className="plain-list industry-examples">
+          <li>Documents are stored in Dropbox, a business-grade storage provider that encrypts data both in transit and at rest.</li>
+          <li>All communication with our systems — document uploads, client intake, administrative requests — is encrypted in transit (HTTPS/TLS).</li>
+          <li>Internal administrative access to reviewed intake and request data requires a login, and is protected against repeated automated login attempts.</li>
+          <li>Actions taken on your account inside our internal systems are logged, so there's a record of what happened and when.</li>
+        </ul>
+      </section>
+
+      <section className="section">
+        <h2 ref={retentionRef}>Data Retention &amp; Offboarding</h2>
+        <p className="section-lead">
+          Your documents and information are retained for the duration of your active engagement.
+          If you end services with Aurum Ventura, your documents are deleted or returned to you
+          (your choice) within 90 days of offboarding — just let us know at offboarding which you'd
+          prefer.
+        </p>
+      </section>
+
+      <section className="section alt">
+        <h2 ref={controlRef}>What Stays With You</h2>
+        <p className="section-lead">
+          You retain ownership and control of your accounts, systems, and business decisions at all
+          times. We act on your instructions and within the scope you've defined — we don't use
+          your information for any purpose outside the administrative work you've asked us to do.
+        </p>
+      </section>
+
+      <section className="cta-band">
+        <h2>Questions about how we handle your information?</h2>
+        <p>We're glad to walk through this in more detail before you send us anything.</p>
         <a className="btn-primary" href={pathFor("Contact")} onClick={(e) => { e.preventDefault(); setPage("Contact"); }}>Request a Consultation</a>
       </section>
     </div>
@@ -1746,6 +1812,7 @@ const PAGE_TITLES = {
   Home: `${SITE_NAME} — Business Administrative Services`,
   Services: `Services — ${SITE_NAME}`,
   About: `About — ${SITE_NAME}`,
+  Security: `Security & Confidentiality — ${SITE_NAME}`,
   Contact: `Contact — ${SITE_NAME}`,
   Upload: `Upload Documents — ${SITE_NAME}`,
   ClientIntake: `Client Intake — ${SITE_NAME}`,
@@ -1756,6 +1823,7 @@ const PAGE_DESCRIPTIONS = {
   Home: "Outsourced administrative back-office support for small and growing businesses.",
   Services: "Nine core categories of administrative support — document prep, invoicing, license tracking, vendor admin, data management, and more.",
   About: "How Aurum Ventura works: a defined scope, reserved monthly capacity, and a monthly report on what moved.",
+  Security: "How Aurum Ventura handles the confidentiality, storage, and retention of your business documents and information.",
   Contact: "Request a consultation to see where administrative work is taking your time.",
   Upload: "Securely send documents and administrative requests to Aurum Ventura.",
   ClientIntake: "Complete your company information so Aurum Ventura can begin setting up your administrative services.",
@@ -1808,6 +1876,7 @@ export default function App({ initialPath } = {}) {
     Home: <HomePage setPage={navigate} />,
     Services: <ServicesPage setPage={navigate} />,
     About: <AboutPage setPage={navigate} />,
+    Security: <SecurityPage setPage={navigate} />,
     Contact: <ContactPage />,
     Upload: <UploadPage />,
     ClientIntake: <ClientIntakePage />,

@@ -9,6 +9,15 @@ import { logAudit } from "../_lib/audit.js";
 import { isSameOriginRequest } from "../_lib/auth.js";
 
 export default async function handler(req, res) {
+  // CORS: Allow Admin OS from localhost:9999
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:9999');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Handle CORS preflight
+  if (req.method === "OPTIONS") return res.status(200).end();
+
   if (req.method === "GET") return handleSession(req, res);
   if (req.method !== "POST") return res.status(405).json({ error: "method_not_allowed" });
   if (!isSameOriginRequest(req)) return res.status(403).json({ error: "forbidden" });

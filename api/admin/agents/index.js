@@ -18,6 +18,15 @@ import { logEvent, nextJobCode } from "../../_lib/agents.js";
 const MAX_REQUESTED_COUNT = 100; // budget guard: max businesses per job
 
 export default async function handler(req, res) {
+  // CORS: Allow Admin OS from localhost:9999
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:9999');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Handle CORS preflight
+  if (req.method === "OPTIONS") return res.status(200).end();
+
   if (!requireAdmin(req, res)) return;
   const { view, id, action } = req.query;
 

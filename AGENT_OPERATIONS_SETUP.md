@@ -1,41 +1,49 @@
 # AI Agent Operations Dashboard — Setup
 
-Phase 1 shipped a real, working **Lead Finder Agent**. Phase 2 adds a
-real **Business Research & Qualification Agent** (Claude API) that
-automatically researches and scores whatever Lead Finder discovers.
-The **Personalized Outreach Agent** is registered (visible on the
-dashboard, status `IDLE`) but not built yet — see "What's NOT built
-yet" below. Nothing on the dashboard is fabricated: an agent that
-hasn't shipped shows honest zeros, not placeholder activity.
+Phase 1 shipped a real, working **Lead Finder Agent** (OSM discovery).
+Phase 2 adds a real **Business Research & Qualification Agent** (Claude
+API research + scoring). Phase 3 adds the **Personalized Outreach Agent**
+(Claude API draft generation + Resend sending + admin approval queue).
+Nothing on the dashboard is fabricated: an agent that hasn't shipped
+shows honest zeros, not placeholder activity.
 
 ## 1. What this adds
 
-- `db/003_agent_operations.sql` — new tables: `agents`, `agent_jobs`,
-  `agent_tasks`, `prospects`, `agent_events`, `agent_errors`.
-- `api/_lib/agents.js`, `api/_lib/leadFinder.js` — shared logic.
-- `api/admin/agents/*` — the dashboard's API (all admin-auth protected,
-  reusing the existing `ADMIN_PASSWORD` / session cookie system).
-- `admin-os/app.js` + `admin-os/index.html` — a new **AI Agents** nav
-  item in Admin OS: Overview, Jobs, Activity, and Errors tabs.
-- `vercel.json` — a cron entry that advances the Lead Finder Agent
-  automatically.
+**Phase 1–3 (Lead Finder + Research + Outreach):**
+
+- `db/003_agent_operations.sql` — agent registry, jobs, tasks, prospects,
+  events, errors; seeded with all three agents.
+- `db/004_research_qualification.sql` — prospect research/qualification
+  tables + agent usage tracking.
+- `db/005_outreach_agent.sql` — outreach_drafts + outreach_history tables,
+  contact_email column on prospects.
+- `api/_lib/agents.js`, `api/_lib/leadFinder.js`, `api/_lib/research.js`,
+  `api/_lib/outreach.js` — agent libraries.
+- `api/admin/agents/run-step.js` — unified orchestrator: discovery → research
+  → outreach chaining, each agent type with its own step handler.
+- `api/admin/agents/outreach/drafts.js` — admin approval queue: GET to list
+  pending drafts, POST to approve + send via Resend.
+- `admin-os/app.js` + `admin-os/index.html` — **AI Agents** nav item in Admin
+  OS (tabs: Overview, Jobs, Activity, Errors; Outreach tab UI not yet built).
+- `vercel.json` — cron entry advancing run-step automatically.
 
 ## 2. Database setup
 
-Run both migrations, in order, against the same Postgres database
+Run all three migrations, in order, against the same Postgres database
 already used for the intake/upload features (see `UPLOAD_SETUP.md` §6
 if that isn't set up yet):
 
 ```bash
 psql "$DATABASE_URL" -f db/003_agent_operations.sql
 psql "$DATABASE_URL" -f db/004_research_qualification.sql
+psql "$DATABASE_URL" -f db/005_outreach_agent.sql
 ```
 
-`003` is idempotent (`create table if not exists`, `on conflict do
-nothing`) — safe to re-run. `004` adds a `check` constraint via a plain
-`alter table ... add constraint`, which is **not** safe to re-run (it
-will error the second time) — matching the existing convention in
-`002_client_intake.sql`. Run each migration file once.
+All three are idempotent at the table-creation layer (`create table if
+not exists`, `on conflict do nothing`), but include constraints that are
+not safe to re-run — run each migration file once against a fresh or
+properly initialized database. If you've already run 003 and 004 for an
+earlier deployment, 005 is a new file and runs standalone.
 
 ## 3. Environment variables
 
@@ -110,36 +118,57 @@ a fixed spec; tune the prompt as real results come in.
 
 ## 7. What's NOT built yet (honest scope)
 
-- Personalized Outreach Agent (Claude API draft generation) — not
-  implemented. Its dashboard card shows `IDLE` and zeros because there
-  is nothing to report.
-- Everything downstream of qualification in the original spec: outreach
-  drafts, the admin approval queue, admin override *history* (schema
-  exists — `agent_admin_overrides` — but nothing writes to it yet since
-  there's no admin-editable AI output until Outreach ships), budget
-  guards, and most of the wider dashboard (Work Queue, Job History
-  filters, Pipeline visualization, System Health, Prospect Journey,
-  etc.).
+**Phase 3 is complete:** Outreach Agent generates personalized drafts
+via Claude API, auto-queues after research (score ≥60), and provides an
+admin approval endpoint (`POST /api/admin/agents/outreach/drafts?action=approve`)
+that sends via Resend + records in history.
+
+**Still deferred for Phase 4+:**
+- Admin UI tabs for the Outreach section (pending drafts queue, approve
+  buttons) in admin-os/app.js — the backend endpoints are ready, just
+  needs frontend tabs to call them.
+- Admin override *history* tracking: schema exists (`agent_admin_overrides`)
+  but nothing writes to it yet.
+- Budget guards, broader dashboard (Work Queue filters, Pipeline
+  visualization, System Health, Prospect Journey, etc.).
 - These were deliberately deferred rather than half-built with fake
-  data, per "do not create fake statistics." Phase 3 adds the Outreach
-  Agent, the admin approval queue, and override tracking.
+  data, per "do not create fake statistics."
 
 ## 8. Using it today
 
-1. Deploy with the env vars above set and both migrations run.
+### Phase 1–2 (Discovery + Research): Using the dashboard
+
+1. Deploy with the env vars above set and all three migrations run.
 2. Open `/admin` → **AI Agents** in the sidebar → log in with
    `ADMIN_PASSWORD`.
-3. Overview tab → **Start Prospecting Job** → enter an industry (e.g.
-   "Property Management") and location (e.g. "Nashville, TN") and a
+3. **Overview** tab → **Start Prospecting Job** → enter an industry
+   (e.g. "Property Management") and location (e.g. "Nashville, TN") and
    target count.
-4. Click **Run Next Step** repeatedly (or wait for cron) to watch the
-   job move from `QUEUED` → `RUNNING` → `COMPLETED`, with real
-   discovered businesses landing in the **Jobs** tab's job detail page
-   and the **Activity** tab's feed.
-5. Once a discovery job completes, it automatically queues a Research
-   job for its new prospects — keep clicking **Run Next Step** (or wait
-   for cron) to watch that job research and score each one. Open it
-   from the Jobs tab to see each prospect's score, level, and summary.
-   Prospects that existed before this shipped (or somehow missed
-   auto-queueing) can be picked up via **Queue Unresearched Prospects**
-   on the Overview tab.
+4. Click **Run Next Step** repeatedly (or wait for cron) to advance
+   jobs: `QUEUED` → `RUNNING` → `COMPLETED`.
+5. Discovery completes → automatically queues Research for new prospects.
+6. Research completes → automatically queues Outreach for prospects with
+   score ≥60 (HIGH_PRIORITY + GOOD_PROSPECT).
+7. See discovered businesses in **Jobs** tab, real-time logs in
+   **Activity** tab, errors in **Errors** tab.
+
+### Phase 3 (Outreach): Approving and sending
+
+The Outreach Agent generates personalized cold-email drafts in the
+background via the orchestrator. To review and send them:
+
+**Via API directly:**
+```bash
+# List pending drafts (status = DRAFT)
+curl -X GET https://www.aurumventura.net/api/admin/agents/outreach/drafts \
+  -H "Cookie: admin_session=<your_session_cookie>"
+
+# Approve a draft and send the email
+curl -X POST 'https://www.aurumventura.net/api/admin/agents/outreach/drafts?draftId=<id>&action=approve' \
+  -H "Cookie: admin_session=<your_session_cookie>"
+```
+
+**Via Admin OS dashboard (UI not yet built, but the backend is ready):**
+An **Outreach** tab in Admin OS will list pending drafts with approve
+buttons once the frontend is built — the backend endpoints are fully
+functional and waiting for UI integration.

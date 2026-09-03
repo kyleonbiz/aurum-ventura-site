@@ -6,9 +6,9 @@ alter table prospects
   add column if not exists contact_email text;
 
 create table if not exists outreach_drafts (
-  id bigserial primary key,
-  job_id bigint not null references agent_jobs(id) on delete cascade,
-  prospect_id bigint not null references prospects(id) on delete cascade,
+  id uuid primary key default gen_random_uuid(),
+  job_id uuid not null references agent_jobs(id) on delete cascade,
+  prospect_id uuid not null references prospects(id) on delete cascade,
   draft_text text not null,
   status text not null default 'DRAFT', -- DRAFT, APPROVED, SENT, FAILED
   created_at timestamptz not null default now(),
@@ -23,9 +23,9 @@ create index if not exists idx_outreach_drafts_prospect_id on outreach_drafts(pr
 create index if not exists idx_outreach_drafts_status on outreach_drafts(status);
 
 create table if not exists outreach_history (
-  id bigserial primary key,
-  prospect_id bigint not null references prospects(id) on delete cascade,
-  draft_id bigint not null references outreach_drafts(id) on delete cascade,
+  id uuid primary key default gen_random_uuid(),
+  prospect_id uuid not null references prospects(id) on delete cascade,
+  draft_id uuid not null references outreach_drafts(id) on delete cascade,
   sent_to_email text not null,
   sent_at timestamptz not null default now(),
   response_status text -- DELIVERED, BOUNCED, COMPLAINED, etc. (from Resend webhook, future)

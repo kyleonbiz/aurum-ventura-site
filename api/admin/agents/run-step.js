@@ -14,6 +14,7 @@ import { requireAdmin } from "../../_lib/adminAuth.js";
 import { logEvent, logError, logUsage, nextJobCode } from "../../_lib/agents.js";
 import { discoverBusinesses, dedupeKeyFor } from "../../_lib/leadFinder.js";
 import { fetchWebsiteText, researchAndQualify, estimateCostUsd } from "../../_lib/research.js";
+import { generateOutreachDraft, estimateOutreachCost } from "../../_lib/outreach.js";
 
 const RESEARCH_MAX_ATTEMPTS = 3;
 
@@ -54,6 +55,9 @@ function advanceJob(sql, job) {
   }
   if (job.job_type === "RESEARCH") {
     return processOneResearchCandidate(sql, job);
+  }
+  if (job.job_type === "OUTREACH") {
+    return processOneOutreachCandidate(sql, job);
   }
   return { ranStep: false, message: `Unknown job_type ${job.job_type}` };
 }
@@ -312,6 +316,150 @@ async function completeResearchJob(sql, job) {
   await logEvent(sql, {
     agentId: "research_qualification", jobId: job.id, eventType: "JOB_COMPLETED", status: "SUCCESS",
     message: `Research job ${job.job_code} ${status.toLowerCase().replace("_", " ")}: ${completed} researched, ${failed} failed.`,
+    startedAt: job.started_at, completedAt,
+  });
+
+  // Auto-queue Outreach job for any newly-qualified prospects (score >= 60)
+  // that don't already have a draft from this research cycle.
+  const qualifiedProspects = await sql`
+    select p.id, p.business_name, p.location, p.industry, p.website, p.estimated_size,
+           pq.score, pr.summary
+    from prospects p
+    join prospect_qualification pq on p.id = pq.prospect_id
+    left join prospect_research pr on p.id = pr.prospect_id and pr.job_id = ${job.id}
+    where p.pipeline_stage = 'QUALIFICATION_SCORED'
+      and pq.score >= 60
+      and not exists (select 1 from outreach_drafts where prospect_id = p.id and job_id = ${job.id})
+    order by pq.score desc
+  `;
+
+  if (qualifiedProspects.length > 0) {
+    const prospectIds = qualifiedProspects.map((p) => p.id);
+    const jobCode = await nextJobCode(sql);
+    const [outreachJob] = await sql`
+      insert into agent_jobs (job_code, agent_id, job_type, industry, location, requested_count, status, cursor, created_by)
+      values (${jobCode}, 'personalized_outreach', 'OUTREACH', ${job.industry}, ${job.location}, ${prospectIds.length}, 'QUEUED', ${sql.json({ prospectIds, index: 0, researchJobId: job.id })}, 'system')
+      returning id
+    `;
+    await sql`update prospects set pipeline_stage = 'OUTREACH_DRAFT_QUEUED', updated_at = now() where id in ${sql(prospectIds)}`;
+    await logEvent(sql, {
+      agentId: "personalized_outreach", jobId: outreachJob.id, eventType: "JOB_QUEUED", status: "INFO",
+      message: `Outreach job ${jobCode} auto-queued for ${prospectIds.length} qualified prospect(s) (score ≥60) from research ${job.job_code}.`,
+    });
+  }
+
+  return { ranStep: true, action: "job_completed", jobId: job.id, status };
+}
+
+/* =============== Personalized Outreach Agent =============== */
+
+async function processOneOutreachCandidate(sql, job) {
+  if (job.status === "QUEUED") {
+    const startedAt = new Date();
+    await sql`update agent_jobs set status = 'RUNNING', started_at = ${startedAt}, updated_at = now() where id = ${job.id}`;
+    await sql`update agents set status = 'RUNNING', current_job_id = ${job.id}, last_started_at = ${startedAt}, updated_at = now() where agent_id = 'personalized_outreach'`;
+    await logEvent(sql, { agentId: "personalized_outreach", jobId: job.id, eventType: "JOB_STARTED", status: "INFO", message: `Outreach job ${job.job_code} started for ${job.requested_count} prospect(s).` });
+    job = { ...job, status: "RUNNING", started_at: startedAt };
+  }
+
+  const cursor = job.cursor || { prospectIds: [], index: 0, researchJobId: null };
+  const { prospectIds, index } = cursor;
+  if (index >= prospectIds.length) {
+    return await completeOutreachJob(sql, job);
+  }
+
+  const prospectId = prospectIds[index];
+  const [prospect] = await sql`select * from prospects where id = ${prospectId}`;
+  if (!prospect) {
+    await sql`update agent_jobs set cursor = ${sql.json({ ...cursor, index: index + 1 })}, updated_at = now() where id = ${job.id}`;
+    return { ranStep: true, action: "prospect_missing_skipped", jobId: job.id };
+  }
+
+  // Get research summary for context in the draft
+  const [research] = await sql`select summary from prospect_research where prospect_id = ${prospectId} order by completed_at desc limit 1`;
+  const researchSummary = research?.summary || "";
+
+  const startedAt = new Date();
+  try {
+    const { draftText, inputTokens, outputTokens } = await generateOutreachDraft({
+      prospect: {
+        id: prospect.id,
+        business_name: prospect.business_name,
+        location: prospect.location,
+        industry: prospect.industry,
+        website: prospect.website,
+        estimated_size: prospect.estimated_size,
+      },
+      researchSummary,
+      db: sql,
+      logger: { log: (type, msg, data) => console.log(`[${type}]`, msg, data) },
+    });
+
+    const cost = estimateOutreachCost(inputTokens, outputTokens);
+    const model = process.env.CLAUDE_RESEARCH_MODEL || "claude-haiku-4-5-20251001";
+    await logUsage(sql, {
+      agentId: "personalized_outreach", jobId: job.id, prospectId, usageType: "AI_CALL", provider: "anthropic",
+      model, purpose: "GENERATE_OUTREACH_DRAFT", inputTokens, outputTokens,
+      estimatedCostUsd: cost, durationMs: 0, success: true,
+    });
+
+    const completedAt = new Date();
+    await sql`
+      insert into outreach_drafts (job_id, prospect_id, draft_text, status, created_at)
+      values (${job.id}, ${prospectId}, ${draftText}, 'DRAFT', ${completedAt})
+    `;
+    await sql`update prospects set pipeline_stage = 'OUTREACH_DRAFT_GENERATED', updated_at = now() where id = ${prospectId}`;
+    await sql`update agents set records_processed = records_processed + 1, updated_at = now() where agent_id = 'personalized_outreach'`;
+    await logEvent(sql, {
+      agentId: "personalized_outreach", jobId: job.id, prospectId, eventType: "OUTREACH_DRAFT_GENERATED", status: "SUCCESS",
+      message: `Outreach draft generated for ${prospect.business_name}.`,
+      startedAt, completedAt,
+    });
+
+    await sql`update agent_jobs set cursor = ${sql.json({ ...cursor, index: index + 1 })}, updated_at = now() where id = ${job.id}`;
+    return { ranStep: true, action: "draft_generated", jobId: job.id, prospectId };
+  } catch (err) {
+    const usage = err.usage || {};
+    await logUsage(sql, {
+      agentId: "personalized_outreach", jobId: job.id, prospectId, usageType: "AI_CALL", provider: "anthropic",
+      model: usage.model, purpose: "GENERATE_OUTREACH_DRAFT", inputTokens: usage.inputTokens, outputTokens: usage.outputTokens,
+      estimatedCostUsd: null, durationMs: usage.durationMs, success: false, error: err.message,
+    });
+
+    if (err.code === "AI_PROVIDER_NOT_CONFIGURED") {
+      await sql`update agent_jobs set status = 'NEEDS_ADMIN_ATTENTION', updated_at = now() where id = ${job.id}`;
+      await sql`update agents set status = 'NEEDS_ADMIN_ATTENTION', last_failure_at = now(), updated_at = now() where agent_id = 'personalized_outreach'`;
+      await logError(sql, { agentId: "personalized_outreach", jobId: job.id, prospectId, errorType: "AI_PROVIDER_NOT_CONFIGURED", description: "ANTHROPIC_API_KEY is not set.", retryAvailable: true, adminActionRequired: true });
+      await logEvent(sql, { agentId: "personalized_outreach", jobId: job.id, prospectId, eventType: "JOB_STEP_FAILED", status: "ERROR", message: "Outreach job paused: AI provider not configured." });
+      return { ranStep: true, action: "job_needs_attention", jobId: job.id, reason: "AI_NOT_CONFIGURED" };
+    }
+
+    await logError(sql, { agentId: "personalized_outreach", jobId: job.id, prospectId, errorType: "DRAFT_GENERATION_FAILED", description: err.message, adminActionRequired: false });
+    await logEvent(sql, {
+      agentId: "personalized_outreach", jobId: job.id, prospectId, eventType: "DRAFT_GENERATION_FAILED", status: "ERROR",
+      message: `Draft generation failed for ${prospect.business_name}: ${err.message}`,
+    });
+
+    // Skip to next prospect on generation failure (don't retry)
+    await sql`update agent_jobs set cursor = ${sql.json({ ...cursor, index: index + 1 })}, updated_at = now() where id = ${job.id}`;
+    return { ranStep: true, action: "draft_failed", jobId: job.id, prospectId };
+  }
+}
+
+async function completeOutreachJob(sql, job) {
+  const completedAt = new Date();
+  const [{ drafted }] = await sql`select count(*)::int as drafted from outreach_drafts where job_id = ${job.id} and status = 'DRAFT'`;
+  const status = "COMPLETED";
+
+  await sql`update agent_jobs set status = ${status}, completed_at = ${completedAt}, updated_at = now() where id = ${job.id}`;
+  await sql`
+    update agents set status = 'IDLE', current_job_id = null, last_completed_at = ${completedAt},
+      last_success_at = ${completedAt}, jobs_completed = jobs_completed + 1, updated_at = now()
+    where agent_id = 'personalized_outreach'
+  `;
+  await logEvent(sql, {
+    agentId: "personalized_outreach", jobId: job.id, eventType: "JOB_COMPLETED", status: "SUCCESS",
+    message: `Outreach job ${job.job_code} completed: ${drafted} draft(s) generated, awaiting admin approval.`,
     startedAt: job.started_at, completedAt,
   });
   return { ranStep: true, action: "job_completed", jobId: job.id, status };

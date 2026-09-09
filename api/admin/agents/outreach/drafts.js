@@ -1,13 +1,29 @@
 // GET /api/admin/agents/outreach/drafts — list pending outreach drafts awaiting approval
 // POST /api/admin/agents/outreach/drafts/:id/approve — approve a draft and send it
+// Header: X-Admin-Password: [password]
 
 import { db } from "../../../_lib/db.js";
-import { requireAdmin } from "../../../_lib/adminAuth.js";
 import { logEvent, logError } from "../../../_lib/agents.js";
 import { sendOutreachEmail } from "../../../_lib/outreach.js";
 
+// Verify admin password from header
+function verifyAdminPassword(req) {
+  const password = req.headers["x-admin-password"];
+  const expectedPassword = process.env.ADMIN_OUTREACH_PASSWORD;
+
+  if (!expectedPassword) {
+    console.error("ADMIN_OUTREACH_PASSWORD not configured");
+    return false;
+  }
+
+  return password === expectedPassword;
+}
+
 export default async function handler(req, res) {
-  if (!requireAdmin(req, res)) return;
+  // Verify admin password
+  if (!verifyAdminPassword(req)) {
+    return res.status(401).json({ error: "unauthorized", authenticated: false });
+  }
 
   let sql;
   try {

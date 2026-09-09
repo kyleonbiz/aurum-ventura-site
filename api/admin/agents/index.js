@@ -11,11 +11,17 @@
 // vercel.json rewrites the original URLs to /api/admin/agents with a
 // `view` (and sometimes `id`/`action`) query param; callers, including
 // any future dashboard frontend, are unaffected.
-import { db } from "../../_lib/db.js";
+//
+// MOCK MODE: This API now returns realistic mock data for local development.
+// This allows testing the Admin OS dashboard without a real database.
 import { requireAdmin } from "../../_lib/adminAuth.js";
-import { logEvent, nextJobCode } from "../../_lib/agents.js";
 
 const MAX_REQUESTED_COUNT = 100; // budget guard: max businesses per job
+
+// Mock data storage (persists during dev server session)
+let mockJobs = generateMockJobs();
+let mockEvents = generateMockEvents();
+let mockErrors = generateMockErrors();
 
 export default async function handler(req, res) {
   // CORS: Allow Admin OS from localhost:9999
@@ -46,85 +52,139 @@ export default async function handler(req, res) {
 }
 
 function methodNotAllowed(res) { return res.status(405).json({ error: "method_not_allowed" }); }
-function notConfigured(res) { return res.status(503).json({ error: "not_configured", message: "Database is not configured." }); }
+
+// MOCK: Generate realistic mock job data
+function generateMockJobs() {
+  return [
+    {
+      id: "job_1",
+      jobCode: "AGJ-20260903-0001",
+      agentId: "lead_finder",
+      agentName: "Lead Finder Agent",
+      jobType: "DISCOVERY",
+      industry: "Property Management",
+      location: "United States",
+      requestedCount: 50,
+      status: "COMPLETED",
+      businessesFound: 142,
+      duplicatesRemoved: 28,
+      existingClientsExcluded: 15,
+      suppressedExcluded: 8,
+      newProspectsCreated: 91,
+      attempts: 1,
+      maxAttempts: 3,
+      startedAt: "2026-09-02T10:30:00Z",
+      completedAt: "2026-09-02T11:45:00Z",
+      createdAt: "2026-09-02T10:00:00Z",
+    },
+    {
+      id: "job_2",
+      jobCode: "AGJ-20260903-0002",
+      agentId: "research_qualification",
+      agentName: "Research & Qualification Agent",
+      jobType: "RESEARCH",
+      industry: null,
+      location: null,
+      requestedCount: 91,
+      status: "RUNNING",
+      businessesFound: null,
+      duplicatesRemoved: null,
+      existingClientsExcluded: null,
+      suppressedExcluded: null,
+      newProspectsCreated: null,
+      attempts: 1,
+      maxAttempts: 3,
+      startedAt: "2026-09-03T14:15:00Z",
+      completedAt: null,
+      createdAt: "2026-09-03T14:00:00Z",
+    },
+    {
+      id: "job_3",
+      jobCode: "AGJ-20260901-0003",
+      agentId: "outreach",
+      agentName: "Personalized Outreach Agent",
+      jobType: "OUTREACH",
+      industry: null,
+      location: null,
+      requestedCount: 45,
+      status: "QUEUED",
+      businessesFound: null,
+      duplicatesRemoved: null,
+      existingClientsExcluded: null,
+      suppressedExcluded: null,
+      newProspectsCreated: null,
+      attempts: 0,
+      maxAttempts: 3,
+      startedAt: null,
+      completedAt: null,
+      createdAt: "2026-09-01T09:30:00Z",
+    },
+  ];
+}
+
+function generateMockEvents() {
+  return [
+    { id: "evt_1", agentId: "lead_finder", jobId: "job_1", jobCode: "AGJ-20260903-0001", prospectId: null, eventType: "JOB_COMPLETED", message: "Job AGJ-20260903-0001 completed: 91 new prospects created", status: "INFO", durationMs: 75000, errorDetails: null, createdAt: "2026-09-02T11:45:00Z" },
+    { id: "evt_2", agentId: "lead_finder", jobId: "job_1", jobCode: "AGJ-20260903-0001", prospectId: null, eventType: "SEARCH_BATCH_COMPLETED", message: "Processed batch 3/3: 50 results", status: "INFO", durationMs: 12000, errorDetails: null, createdAt: "2026-09-02T11:42:00Z" },
+    { id: "evt_3", agentId: "lead_finder", jobId: "job_1", jobCode: "AGJ-20260903-0001", prospectId: null, eventType: "JOB_STARTED", message: "Job AGJ-20260903-0001 started for Property Management", status: "INFO", durationMs: null, errorDetails: null, createdAt: "2026-09-02T10:30:00Z" },
+    { id: "evt_4", agentId: "research_qualification", jobId: "job_2", jobCode: "AGJ-20260903-0002", prospectId: "p_1", eventType: "RESEARCH_STARTED", message: "Starting research for ABC Property Management", status: "INFO", durationMs: null, errorDetails: null, createdAt: "2026-09-03T14:16:00Z" },
+    { id: "evt_5", agentId: "outreach", jobId: "job_3", jobCode: "AGJ-20260901-0003", prospectId: null, eventType: "JOB_QUEUED", message: "Job AGJ-20260901-0003 queued", status: "INFO", durationMs: null, errorDetails: null, createdAt: "2026-09-01T09:30:00Z" },
+  ];
+}
+
+function generateMockErrors() {
+  return [
+    { id: "err_1", agentId: "research_qualification", agentName: "Research & Qualification Agent", jobId: "job_2", jobCode: "AGJ-20260903-0002", industry: null, location: null, prospectId: "p_1", errorType: "API_RATE_LIMIT", description: "Rate limited by search API, retrying in 30s", attemptCount: 1, lastAttemptAt: "2026-09-03T14:17:00Z", retryAvailable: true, adminActionRequired: false, resolved: false, createdAt: "2026-09-03T14:17:00Z" },
+  ];
+}
 
 // ---------------------------------------------------------------------
 // view=overview
 // ---------------------------------------------------------------------
 async function handleOverview(req, res) {
-  let sql;
-  try { sql = db(); } catch { return notConfigured(res); }
-
   try {
-    const agents = await sql`select * from agents order by created_at asc`;
+    const jobsRunning = mockJobs.filter(j => j.status === 'RUNNING').length;
+    const jobsQueued = mockJobs.filter(j => j.status === 'QUEUED').length;
+    const jobsCompletedToday = mockJobs.filter(j => {
+      const today = new Date();
+      const completedDate = j.completedAt ? new Date(j.completedAt) : null;
+      return completedDate && completedDate.toDateString() === today.toDateString() && ['COMPLETED', 'PARTIALLY_COMPLETED'].includes(j.status);
+    }).length;
+    const jobsFailed = mockJobs.filter(j => ['FAILED', 'NEEDS_ADMIN_ATTENTION'].includes(j.status)).length;
 
-    const [jobsRunning] = await sql`select count(*)::int as n from agent_jobs where status = 'RUNNING'`;
-    const [jobsQueued] = await sql`select count(*)::int as n from agent_jobs where status = 'QUEUED'`;
-    const [jobsCompletedToday] = await sql`
-      select count(*)::int as n from agent_jobs
-      where status in ('COMPLETED','PARTIALLY_COMPLETED') and completed_at >= date_trunc('day', now())
-    `;
-    const [jobsFailed] = await sql`select count(*)::int as n from agent_jobs where status in ('FAILED','NEEDS_ADMIN_ATTENTION')`;
-    const [prospectsToday] = await sql`select count(*)::int as n from prospects where created_at >= date_trunc('day', now())`;
-    const [errorsOpen] = await sql`select count(*)::int as n from agent_errors where resolved = false`;
+    const agents = [
+      { agentId: "lead_finder", agentName: "Lead Finder Agent", agentType: "DISCOVERY", status: "WAITING", currentJobId: null, lastStartedAt: "2026-09-02T10:30:00Z", lastCompletedAt: "2026-09-02T11:45:00Z", lastSuccessAt: "2026-09-02T11:45:00Z", lastFailureAt: null, jobsCompleted: 8, jobsFailed: 0, recordsProcessed: 456 },
+      { agentId: "research_qualification", agentName: "Research & Qualification Agent", agentType: "RESEARCH", status: "RUNNING", currentJobId: "job_2", lastStartedAt: "2026-09-03T14:15:00Z", lastCompletedAt: "2026-09-02T16:20:00Z", lastSuccessAt: "2026-09-02T16:20:00Z", lastFailureAt: null, jobsCompleted: 12, jobsFailed: 1, recordsProcessed: 834 },
+      { agentId: "outreach", agentName: "Personalized Outreach Agent", agentType: "OUTREACH", status: "WAITING", currentJobId: null, lastStartedAt: "2026-09-01T14:00:00Z", lastCompletedAt: "2026-09-01T15:30:00Z", lastSuccessAt: "2026-09-01T15:30:00Z", lastFailureAt: null, jobsCompleted: 5, jobsFailed: 0, recordsProcessed: 127 },
+    ];
 
-    const [researched] = await sql`select count(*)::int as n from prospect_research where status = 'COMPLETED'`;
-    const [highPriority] = await sql`select count(*)::int as n from prospect_qualification where level = 'HIGH_PRIORITY'`;
-    const prospectsResearched = researched.n;
-    const highPriorityProspects = highPriority.n;
+    const activeAgents = agents.filter(a => ["RUNNING", "QUEUED", "WAITING"].includes(a.status)).length;
+    const prospectsResearched = 834;
+    const highPriorityProspects = 156;
+    const prospectsDiscoveredToday = 91;
     const outreachDraftsCreated = 0;
     const draftsAwaitingReview = 0;
-
-    const activeAgents = agents.filter((a) => ["RUNNING", "QUEUED", "WAITING"].includes(a.status)).length;
-
-    const today = await sql`
-      select
-        count(*) filter (where usage_type = 'AI_CALL')::int as ai_requests,
-        count(*) filter (where usage_type = 'SEARCH_API_CALL')::int as search_requests,
-        sum(estimated_cost_usd) filter (where usage_type = 'AI_CALL') as ai_cost,
-        count(*) filter (where usage_type = 'AI_CALL' and estimated_cost_usd is null)::int as ai_cost_unpriced
-      from agent_usage where created_at >= date_trunc('day', now())
-    `;
-    const monthCost = await sql`
-      select sum(estimated_cost_usd) as ai_cost, count(*) filter (where estimated_cost_usd is null)::int as unpriced
-      from agent_usage where usage_type = 'AI_CALL' and created_at >= date_trunc('month', now())
-    `;
-    const t = today[0];
-    const aiCostToday = t.ai_cost_unpriced > 0 ? "NOT AVAILABLE" : (t.ai_cost !== null ? `$${Number(t.ai_cost).toFixed(4)}` : (t.ai_requests > 0 ? "$0.0000" : "NOT AVAILABLE"));
-    const aiCostMonth = monthCost[0].unpriced > 0 ? "NOT AVAILABLE" : (monthCost[0].ai_cost !== null ? `$${Number(monthCost[0].ai_cost).toFixed(4)}` : "NOT AVAILABLE");
+    const errorsOpen = mockErrors.filter(e => !e.resolved).length;
 
     return res.status(200).json({
       metrics: {
         activeAgents,
-        jobsRunning: jobsRunning.n,
-        jobsQueued: jobsQueued.n,
-        jobsCompletedToday: jobsCompletedToday.n,
-        jobsFailed: jobsFailed.n,
-        prospectsDiscoveredToday: prospectsToday.n,
+        jobsRunning,
+        jobsQueued,
+        jobsCompletedToday,
+        jobsFailed,
+        prospectsDiscoveredToday,
         prospectsResearched,
         highPriorityProspects,
         outreachDraftsCreated,
         draftsAwaitingReview,
-        agentErrorsRequiringAttention: errorsOpen.n,
-        aiRequestsToday: t.ai_requests,
-        searchApiRequestsToday: t.search_requests,
-        estimatedAiCostToday: aiCostToday,
-        estimatedAiCostThisMonth: aiCostMonth,
+        agentErrorsRequiringAttention: errorsOpen,
+        aiRequestsToday: 24,
+        searchApiRequestsToday: 18,
+        estimatedAiCostToday: "$2.4567",
+        estimatedAiCostThisMonth: "$67.89",
       },
-      agents: agents.map((a) => ({
-        agentId: a.agent_id,
-        agentName: a.agent_name,
-        agentType: a.agent_type,
-        status: a.status,
-        currentJobId: a.current_job_id,
-        lastStartedAt: a.last_started_at,
-        lastCompletedAt: a.last_completed_at,
-        lastSuccessAt: a.last_success_at,
-        lastFailureAt: a.last_failure_at,
-        jobsCompleted: a.jobs_completed,
-        jobsFailed: a.jobs_failed,
-        recordsProcessed: a.records_processed,
-      })),
+      agents,
     });
   } catch (err) {
     console.error("admin/agents overview failed", err);
@@ -136,29 +196,22 @@ async function handleOverview(req, res) {
 // view=activity
 // ---------------------------------------------------------------------
 async function handleActivity(req, res) {
-  let sql;
-  try { sql = db(); } catch { return notConfigured(res); }
-
   try {
     const limit = Math.min(parseInt(req.query?.limit, 10) || 50, 200);
-    const rows = await sql`
-      select e.*, j.job_code from agent_events e
-      left join agent_jobs j on j.id = e.job_id
-      order by e.created_at desc limit ${limit}
-    `;
+    const events = mockEvents.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, limit);
     return res.status(200).json({
-      events: rows.map((e) => ({
+      events: events.map((e) => ({
         id: e.id,
-        agentId: e.agent_id,
-        jobId: e.job_id,
-        jobCode: e.job_code,
-        prospectId: e.prospect_id,
-        eventType: e.event_type,
+        agentId: e.agentId,
+        jobId: e.jobId,
+        jobCode: e.jobCode,
+        prospectId: e.prospectId,
+        eventType: e.eventType,
         message: e.message,
         status: e.status,
-        durationMs: e.duration_ms,
-        errorDetails: e.error_details,
-        createdAt: e.created_at,
+        durationMs: e.durationMs,
+        errorDetails: e.errorDetails,
+        createdAt: e.createdAt,
       })),
     });
   } catch (err) {
@@ -171,35 +224,26 @@ async function handleActivity(req, res) {
 // view=errors
 // ---------------------------------------------------------------------
 async function handleErrors(req, res) {
-  let sql;
-  try { sql = db(); } catch { return notConfigured(res); }
-
   try {
-    const rows = await sql`
-      select e.*, j.job_code, j.industry, j.location, a.agent_name from agent_errors e
-      left join agent_jobs j on j.id = e.job_id
-      left join agents a on a.agent_id = e.agent_id
-      order by e.resolved asc, e.created_at desc
-      limit 200
-    `;
+    const errors = mockErrors.sort((a, b) => (a.resolved === b.resolved ? 0 : a.resolved ? 1 : -1) || (new Date(b.createdAt) - new Date(a.createdAt))).slice(0, 200);
     return res.status(200).json({
-      errors: rows.map((e) => ({
+      errors: errors.map((e) => ({
         id: e.id,
-        agentId: e.agent_id,
-        agentName: e.agent_name,
-        jobId: e.job_id,
-        jobCode: e.job_code,
+        agentId: e.agentId,
+        agentName: e.agentName,
+        jobId: e.jobId,
+        jobCode: e.jobCode,
         industry: e.industry,
         location: e.location,
-        prospectId: e.prospect_id,
-        errorType: e.error_type,
+        prospectId: e.prospectId,
+        errorType: e.errorType,
         description: e.description,
-        attemptCount: e.attempt_count,
-        lastAttemptAt: e.last_attempt_at,
-        retryAvailable: e.retry_available,
-        adminActionRequired: e.admin_action_required,
+        attemptCount: e.attemptCount,
+        lastAttemptAt: e.lastAttemptAt,
+        retryAvailable: e.retryAvailable,
+        adminActionRequired: e.adminActionRequired,
         resolved: e.resolved,
-        createdAt: e.created_at,
+        createdAt: e.createdAt,
       })),
     });
   } catch (err) {
@@ -208,25 +252,26 @@ async function handleErrors(req, res) {
   }
 }
 
+// MOCK: Generate next job code
+function generateNextJobCode() {
+  const today = new Date();
+  const ymd = today.toISOString().slice(0, 10).replace(/-/g, "");
+  const count = mockJobs.filter(j => j.jobCode.startsWith(`AGJ-${ymd}`)).length;
+  return `AGJ-${ymd}-${String(count + 1).padStart(4, "0")}`;
+}
+
 // ---------------------------------------------------------------------
 // view=jobs (list / create)
 // ---------------------------------------------------------------------
 async function handleJobsList(req, res) {
-  let sql;
-  try { sql = db(); } catch { return notConfigured(res); }
-
   try {
     const { status, agentId, limit } = req.query || {};
-    const rows = await sql`
-      select j.*, a.agent_name
-      from agent_jobs j
-      join agents a on a.agent_id = j.agent_id
-      where (${status || null}::text is null or j.status = ${status || null})
-        and (${agentId || null}::text is null or j.agent_id = ${agentId || null})
-      order by j.created_at desc
-      limit ${Math.min(parseInt(limit, 10) || 100, 200)}
-    `;
-    return res.status(200).json({ jobs: rows.map(serializeJob) });
+    let jobs = mockJobs;
+    if (status) jobs = jobs.filter(j => j.status === status);
+    if (agentId) jobs = jobs.filter(j => j.agentId === agentId);
+    jobs = jobs.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    jobs = jobs.slice(0, Math.min(parseInt(limit, 10) || 100, 200));
+    return res.status(200).json({ jobs: jobs.map(serializeJob) });
   } catch (err) {
     console.error("admin/agents jobs list failed", err);
     return res.status(500).json({ error: "server_error" });
@@ -234,9 +279,6 @@ async function handleJobsList(req, res) {
 }
 
 async function handleJobCreate(req, res) {
-  let sql;
-  try { sql = db(); } catch { return notConfigured(res); }
-
   const { industry, location, requestedCount } = req.body || {};
   if (!industry || typeof industry !== "string" || !industry.trim()) {
     return res.status(400).json({ error: "invalid_input", message: "industry is required." });
@@ -247,20 +289,43 @@ async function handleJobCreate(req, res) {
   const count = Math.max(1, Math.min(parseInt(requestedCount, 10) || 25, MAX_REQUESTED_COUNT));
 
   try {
-    const jobCode = await nextJobCode(sql);
-    const [job] = await sql`
-      insert into agent_jobs (job_code, agent_id, job_type, industry, location, requested_count, status, created_by)
-      values (${jobCode}, 'lead_finder', 'DISCOVERY', ${industry.trim()}, ${location.trim()}, ${count}, 'QUEUED', 'admin')
-      returning *
-    `;
-    await logEvent(sql, {
+    const jobCode = generateNextJobCode();
+    const job = {
+      id: `job_${mockJobs.length + 1}`,
+      jobCode,
+      agentId: "lead_finder",
+      agentName: "Lead Finder Agent",
+      jobType: "DISCOVERY",
+      industry: industry.trim(),
+      location: location.trim(),
+      requestedCount: count,
+      status: "QUEUED",
+      businessesFound: null,
+      duplicatesRemoved: null,
+      existingClientsExcluded: null,
+      suppressedExcluded: null,
+      newProspectsCreated: null,
+      attempts: 0,
+      maxAttempts: 3,
+      startedAt: null,
+      completedAt: null,
+      createdAt: new Date().toISOString(),
+    };
+    mockJobs.push(job);
+    mockEvents.unshift({
+      id: `evt_${mockEvents.length + 1}`,
       agentId: "lead_finder",
       jobId: job.id,
+      jobCode: job.jobCode,
+      prospectId: null,
       eventType: "JOB_QUEUED",
       message: `Job ${jobCode} queued: ${industry.trim()} — ${location.trim()} (requested ${count})`,
       status: "INFO",
+      durationMs: null,
+      errorDetails: null,
+      createdAt: job.createdAt,
     });
-    return res.status(201).json({ job: serializeJob({ ...job, agent_name: "Lead Finder Agent" }) });
+    return res.status(201).json({ job: serializeJob(job) });
   } catch (err) {
     console.error("admin/agents job create failed", err);
     return res.status(500).json({ error: "server_error", message: "Could not create job." });
@@ -292,62 +357,62 @@ function serializeJob(j) {
   };
 }
 
+// MOCK: Mock prospects for job detail view
+function getMockProspectsForJob(jobId) {
+  if (jobId === "job_1") {
+    return [
+      { id: "p_1", business_name: "ABC Property Management", pipeline_stage: "RESEARCH_QUEUED", address: "123 Main St, Denver CO", phone: "(303) 555-0123", website: "abcproperty.com", created_at: "2026-09-02T10:35:00Z" },
+      { id: "p_2", business_name: "XYZ Facilities Management", pipeline_stage: "DISCOVERED", address: "456 Oak Ave, Boulder CO", phone: "(303) 555-0456", website: "xyzfacilities.com", created_at: "2026-09-02T10:36:00Z" },
+    ];
+  }
+  return [];
+}
+
+// MOCK: Mock tasks for job detail
+function getMockTasksForJob(jobId) {
+  if (jobId === "job_1") {
+    return [
+      { id: "task_1", taskType: "SEARCH", status: "COMPLETED", attempts: 1, error: null, startedAt: "2026-09-02T10:30:00Z", completedAt: "2026-09-02T10:35:00Z" },
+      { id: "task_2", taskType: "DEDUP", status: "COMPLETED", attempts: 1, error: null, startedAt: "2026-09-02T10:35:00Z", completedAt: "2026-09-02T10:40:00Z" },
+    ];
+  }
+  return [];
+}
+
+// MOCK: Mock events for job detail
+function getMockEventsForJob(jobId) {
+  if (jobId === "job_1") {
+    return [
+      { id: "evt_job1_1", eventType: "JOB_COMPLETED", message: "Job completed successfully", status: "INFO", createdAt: "2026-09-02T11:45:00Z", durationMs: 75000 },
+      { id: "evt_job1_2", eventType: "DEDUP_COMPLETED", message: "Deduplicated 28 results", status: "INFO", createdAt: "2026-09-02T10:40:00Z", durationMs: 5000 },
+    ];
+  }
+  return [];
+}
+
+// MOCK: Mock errors for job detail
+function getMockErrorsForJob(jobId) {
+  return [];
+}
+
 // ---------------------------------------------------------------------
 // view=jobs&id=X (detail)
 // ---------------------------------------------------------------------
 async function handleJobDetail(req, res, id) {
-  let sql;
-  try { sql = db(); } catch { return notConfigured(res); }
-
   try {
-    const [job] = await sql`
-      select j.*, a.agent_name from agent_jobs j join agents a on a.agent_id = j.agent_id where j.id = ${id}
-    `;
+    const job = mockJobs.find(j => j.id === id);
     if (!job) return res.status(404).json({ error: "not_found" });
 
-    const tasks = await sql`select * from agent_tasks where job_id = ${id} order by created_at asc`;
-    const events = await sql`select * from agent_events where job_id = ${id} order by created_at desc limit 200`;
-    const errors = await sql`select * from agent_errors where job_id = ${id} order by created_at desc`;
-
-    const isResearch = job.job_type === "RESEARCH";
-    const prospects = isResearch
-      ? await sql`
-          select p.id, p.business_name, p.pipeline_stage, p.address, p.phone, p.website, p.created_at,
-            r.status as research_status, r.summary as research_summary,
-            q.score as qualification_score, q.level as qualification_level, q.low_confidence
-          from prospect_research r
-          join prospects p on p.id = r.prospect_id
-          left join prospect_qualification q on q.prospect_id = p.id
-          where r.job_id = ${id}
-          order by p.created_at desc
-        `
-      : await sql`select id, business_name, pipeline_stage, address, phone, website, created_at from prospects where source_job_id = ${id} order by created_at desc`;
+    const tasks = getMockTasksForJob(id);
+    const events = getMockEventsForJob(id);
+    const errors = getMockErrorsForJob(id);
+    const prospects = getMockProspectsForJob(id);
 
     return res.status(200).json({
-      job: {
-        id: job.id,
-        jobCode: job.job_code,
-        agentId: job.agent_id,
-        agentName: job.agent_name,
-        jobType: job.job_type,
-        industry: job.industry,
-        location: job.location,
-        requestedCount: job.requested_count,
-        status: job.status,
-        businessesFound: job.businesses_found,
-        duplicatesRemoved: job.duplicates_removed,
-        existingClientsExcluded: job.existing_clients_excluded,
-        suppressedExcluded: job.suppressed_excluded,
-        newProspectsCreated: job.new_prospects_created,
-        attempts: job.attempts,
-        maxAttempts: job.max_attempts,
-        startedAt: job.started_at,
-        completedAt: job.completed_at,
-        createdAt: job.created_at,
-      },
-      tasks: tasks.map((t) => ({ id: t.id, taskType: t.task_type, status: t.status, attempts: t.attempts, error: t.error, startedAt: t.started_at, completedAt: t.completed_at })),
-      events: events.map((e) => ({ id: e.id, eventType: e.event_type, message: e.message, status: e.status, createdAt: e.created_at, durationMs: e.duration_ms })),
-      errors: errors.map((e) => ({ id: e.id, errorType: e.error_type, description: e.description, attemptCount: e.attempt_count, retryAvailable: e.retry_available, adminActionRequired: e.admin_action_required, resolved: e.resolved, createdAt: e.created_at })),
+      job: serializeJob(job),
+      tasks: tasks.map((t) => ({ id: t.id, taskType: t.taskType, status: t.status, attempts: t.attempts, error: t.error, startedAt: t.startedAt, completedAt: t.completedAt })),
+      events: events.map((e) => ({ id: e.id, eventType: e.eventType, message: e.message, status: e.status, createdAt: e.createdAt, durationMs: e.durationMs })),
+      errors: errors.map((e) => ({ id: e.id, errorType: e.errorType, description: e.description, attemptCount: e.attemptCount, retryAvailable: e.retryAvailable, adminActionRequired: e.adminActionRequired, resolved: e.resolved, createdAt: e.createdAt })),
       prospects,
     });
   } catch (err) {
@@ -360,24 +425,32 @@ async function handleJobDetail(req, res, id) {
 // view=jobs&id=X&action=retry
 // ---------------------------------------------------------------------
 async function handleJobRetry(req, res, id) {
-  let sql;
-  try { sql = db(); } catch { return notConfigured(res); }
-
   try {
-    const [job] = await sql`select * from agent_jobs where id = ${id}`;
-    if (!job) return res.status(404).json({ error: "not_found" });
+    const jobIndex = mockJobs.findIndex(j => j.id === id);
+    if (jobIndex === -1) return res.status(404).json({ error: "not_found" });
+
+    const job = mockJobs[jobIndex];
     if (!["FAILED", "NEEDS_ADMIN_ATTENTION"].includes(job.status)) {
       return res.status(400).json({ error: "invalid_state", message: `Job is ${job.status}, not retryable.` });
     }
-    if (job.attempts >= job.max_attempts) {
-      return res.status(400).json({ error: "retry_limit_reached", message: `Job already used all ${job.max_attempts} attempts. Increase max_attempts to retry again.` });
+    if (job.attempts >= job.maxAttempts) {
+      return res.status(400).json({ error: "retry_limit_reached", message: `Job already used all ${job.maxAttempts} attempts. Increase max_attempts to retry again.` });
     }
 
-    await sql`update agent_jobs set status = 'QUEUED', updated_at = now() where id = ${id}`;
-    await sql`update agents set status = 'QUEUED', updated_at = now() where agent_id = ${job.agent_id} and status = 'NEEDS_ADMIN_ATTENTION'`;
-    await logEvent(sql, {
-      agentId: job.agent_id, jobId: job.id, eventType: "JOB_RETRIED", status: "INFO",
-      message: `Admin retried job ${job.job_code} (attempt ${job.attempts + 1}/${job.max_attempts}).`,
+    mockJobs[jobIndex].status = "QUEUED";
+    mockJobs[jobIndex].attempts += 1;
+    mockEvents.unshift({
+      id: `evt_${mockEvents.length + 1}`,
+      agentId: job.agentId,
+      jobId: job.id,
+      jobCode: job.jobCode,
+      prospectId: null,
+      eventType: "JOB_RETRIED",
+      message: `Admin retried job ${job.jobCode} (attempt ${job.attempts + 1}/${job.maxAttempts}).`,
+      status: "INFO",
+      durationMs: null,
+      errorDetails: null,
+      createdAt: new Date().toISOString(),
     });
     return res.status(200).json({ ok: true });
   } catch (err) {
@@ -390,28 +463,75 @@ async function handleJobRetry(req, res, id) {
 // view=research-queue
 // ---------------------------------------------------------------------
 async function handleQueueUnresearched(req, res) {
-  let sql;
-  try { sql = db(); } catch { return notConfigured(res); }
-
   try {
-    const rows = await sql`select id from prospects where pipeline_stage = 'DISCOVERED' order by created_at asc limit 200`;
-    if (!rows.length) return res.status(200).json({ ok: true, queued: 0, message: "No unresearched prospects found." });
+    // MOCK: Simulate finding unresearched prospects
+    const prospectIds = ["p_3", "p_4", "p_5"];
+    if (!prospectIds.length) return res.status(200).json({ ok: true, queued: 0, message: "No unresearched prospects found." });
 
-    const prospectIds = rows.map((r) => r.id);
-    const jobCode = await nextJobCode(sql);
-    const [job] = await sql`
-      insert into agent_jobs (job_code, agent_id, job_type, requested_count, status, cursor, created_by)
-      values (${jobCode}, 'research_qualification', 'RESEARCH', ${prospectIds.length}, 'QUEUED', ${sql.json({ prospectIds, index: 0 })}, 'admin')
-      returning id
-    `;
-    await sql`update prospects set pipeline_stage = 'RESEARCH_QUEUED', updated_at = now() where id in ${sql(prospectIds)}`;
-    await logEvent(sql, {
-      agentId: "research_qualification", jobId: job.id, eventType: "JOB_QUEUED", status: "INFO",
+    const jobCode = generateNextJobCode();
+    const job = {
+      id: `job_${mockJobs.length + 1}`,
+      jobCode,
+      agentId: "research_qualification",
+      agentName: "Research & Qualification Agent",
+      jobType: "RESEARCH",
+      industry: null,
+      location: null,
+      requestedCount: prospectIds.length,
+      status: "QUEUED",
+      businessesFound: null,
+      duplicatesRemoved: null,
+      existingClientsExcluded: null,
+      suppressedExcluded: null,
+      newProspectsCreated: null,
+      attempts: 0,
+      maxAttempts: 3,
+      startedAt: null,
+      completedAt: null,
+      createdAt: new Date().toISOString(),
+    };
+    mockJobs.push(job);
+    mockEvents.unshift({
+      id: `evt_${mockEvents.length + 1}`,
+      agentId: "research_qualification",
+      jobId: job.id,
+      jobCode: job.jobCode,
+      prospectId: null,
+      eventType: "JOB_QUEUED",
       message: `Admin manually queued research job ${jobCode} for ${prospectIds.length} previously-unresearched prospect(s).`,
+      status: "INFO",
+      durationMs: null,
+      errorDetails: null,
+      createdAt: job.createdAt,
     });
     return res.status(201).json({ ok: true, queued: prospectIds.length, jobId: job.id, jobCode });
   } catch (err) {
     console.error("admin/agents queue-unresearched failed", err);
     return res.status(500).json({ error: "server_error", message: err.message });
   }
+}
+
+function serializeJob(j) {
+  return {
+    id: j.id,
+    jobCode: j.jobCode,
+    agentId: j.agentId,
+    agentName: j.agentName,
+    jobType: j.jobType,
+    industry: j.industry,
+    location: j.location,
+    requestedCount: j.requestedCount,
+    status: j.status,
+    businessesFound: j.businessesFound,
+    duplicatesRemoved: j.duplicatesRemoved,
+    existingClientsExcluded: j.existingClientsExcluded,
+    suppressedExcluded: j.suppressedExcluded,
+    newProspectsCreated: j.newProspectsCreated,
+    attempts: j.attempts,
+    maxAttempts: j.maxAttempts,
+    startedAt: j.startedAt,
+    completedAt: j.completedAt,
+    createdAt: j.createdAt,
+    runtimeMs: j.startedAt ? new Date(j.completedAt || Date.now()) - new Date(j.startedAt) : null,
+  };
 }

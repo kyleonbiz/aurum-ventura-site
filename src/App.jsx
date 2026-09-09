@@ -746,14 +746,19 @@ function AboutPage({ setPage }) {
 
       <section className="section">
         <h2>Our Mission</h2>
-        <p className="section-lead">
-          Aurum Ventura Enterprise LLC was created to help small and growing businesses reduce the administrative workload that often goes untracked, unmanaged, and ultimately becomes an unnecessary labor cost.
-        </p>
+        <div className="mission-statement">
+          <p>
+            Our mission is to help small and growing businesses operate more efficiently by reducing administrative burden, eliminating unnecessary labor hours, and creating organized digital systems that support long-term growth.
+          </p>
+          <p>
+            We combine modern technology with human oversight to deliver dependable, precise, and practical back-office support — giving business owners and teams more time to focus on operating, serving customers, and moving their businesses forward.
+          </p>
+        </div>
         <p>
           Many businesses spend countless hours managing paperwork, organizing documents, tracking invoices, maintaining vendor records, monitoring renewals, updating systems, and completing routine administrative tasks. Those hours add up quickly and often pull owners, managers, and team members away from the work that directly moves the business forward.
         </p>
         <p>
-          Aurum Ventura provides a structured, outsourced back-office solution designed to help businesses operate more efficiently, stay organized, and make better use of modern digital systems. Our goal is simple: reduce administrative friction so businesses can focus more time and resources on growth.
+          Aurum Ventura provides a structured, outsourced back-office solution designed to help businesses operate more efficiently, stay organized, and make better use of modern digital systems.
         </p>
       </section>
 
@@ -2373,6 +2378,9 @@ export default function App({ initialPath } = {}) {
         .section-lead { max-width: 620px; margin-bottom: 0.8rem; }
         .callout { max-width: 620px; background: ${COLORS.white}; border-left: 3px solid ${COLORS.aqua}; border-radius: 4px; padding: 1.1rem 1.4rem; font-size: 0.92rem; line-height: 1.6; color: ${COLORS.navy}; }
         .callout strong { color: ${COLORS.teal}; }
+        .mission-statement { max-width: 620px; background: ${COLORS.ice}; border-left: 3px solid ${COLORS.teal}; border-radius: 4px; padding: 1.3rem 1.5rem; margin: 1rem 0 1.5rem; }
+        .mission-statement p { font-size: 1rem; line-height: 1.65; color: ${COLORS.navy}; margin-bottom: 0.9rem; }
+        .mission-statement p:last-child { margin-bottom: 0; }
         .page-head { max-width: 1100px; margin: 0 auto; padding: 2.8rem 1.5rem 0.5rem; }
         .page-head .hero-sub { max-width: 640px; margin-bottom: 0.5rem; }
         .page-head + .section { padding-top: 1.6rem; }

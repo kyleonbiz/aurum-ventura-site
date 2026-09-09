@@ -153,6 +153,16 @@ const NOT_LIST = [
   "Compliance guarantees or regulatory determinations",
 ];
 
+const CONFIDENTIALITY_PRINCIPLES = [
+  ["Limited access", "Client information is accessed only as needed to perform agreed administrative services."],
+  ["Purpose-based handling", "Documents and business information are used only for the administrative responsibilities authorized by the client."],
+  ["Organized digital workflows", "We encourage structured digital document management rather than unnecessary duplication or uncontrolled distribution of business information."],
+  ["Client control", "Clients determine what information Aurum Ventura receives and which administrative responsibilities we are authorized to manage."],
+  ["Responsible communication", "Sensitive business information is not intentionally shared with unauthorized third parties."],
+  ["Human oversight", "Technology may assist with organization, classification, or routine processing, but sensitive administrative work remains subject to human review where appropriate."],
+  ["Clear offboarding", "When a client relationship ends, access to client systems, documents, folders, and administrative resources is reviewed and removed as appropriate."],
+];
+
 const TIME_COST = [
   ["Invoicing & payment follow-up", "2–3 hrs/wk"],
   ["Filing & document organization", "2 hrs/wk"],
@@ -405,6 +415,7 @@ function Footer({ setPage }) {
           </div>
         </div>
       </div>
+      <p className="footer-tagline">Human-Led. Technology-Supported.</p>
       <Swoosh style={{ width: "140px", height: "46px", opacity: 0.5, margin: "0 auto" }} />
       <div className="footer-legal-bar">
         <p className="footer-legal">
@@ -754,12 +765,6 @@ function AboutPage({ setPage }) {
             We combine modern technology with human oversight to deliver dependable, precise, and practical back-office support — giving business owners and teams more time to focus on operating, serving customers, and moving their businesses forward.
           </p>
         </div>
-        <p>
-          Many businesses spend countless hours managing paperwork, organizing documents, tracking invoices, maintaining vendor records, monitoring renewals, updating systems, and completing routine administrative tasks. Those hours add up quickly and often pull owners, managers, and team members away from the work that directly moves the business forward.
-        </p>
-        <p>
-          Aurum Ventura provides a structured, outsourced back-office solution designed to help businesses operate more efficiently, stay organized, and make better use of modern digital systems.
-        </p>
       </section>
 
       <section className="section alt">
@@ -792,7 +797,7 @@ function AboutPage({ setPage }) {
       </section>
 
       <section className="section alt">
-        <h2>Technology Supported. Human Managed.</h2>
+        <h2>Human-Led. Technology-Supported.</h2>
         <p className="section-lead">
           We operate in an era where artificial intelligence and automation can make business operations faster and more efficient. At Aurum Ventura, we embrace those tools — but we do not believe technology should replace human judgment.
         </p>
@@ -818,15 +823,17 @@ function AboutPage({ setPage }) {
         <p className="section-lead">
           Business records and documents should only be accessed when they are necessary to complete an authorized administrative task.
         </p>
-        <ul className="plain-list industry-examples">
-          <li><strong>Limited access:</strong> Client information is accessed only as needed to perform agreed administrative services.</li>
-          <li><strong>Purpose-based handling:</strong> Documents and business information are used only for the administrative responsibilities authorized by the client.</li>
-          <li><strong>Organized digital workflows:</strong> We encourage structured digital document management rather than unnecessary duplication or uncontrolled distribution of business information.</li>
-          <li><strong>Client control:</strong> Clients determine what information Aurum Ventura receives and which administrative responsibilities we are authorized to manage.</li>
-          <li><strong>Responsible communication:</strong> Sensitive business information is not intentionally shared with unauthorized third parties.</li>
-          <li><strong>Human oversight:</strong> Technology may assist with organization, classification, or routine processing, but sensitive administrative work remains subject to human review where appropriate.</li>
-          <li><strong>Clear offboarding:</strong> When a client relationship ends, access to client systems, documents, folders, and administrative resources is reviewed and removed as appropriate.</li>
-        </ul>
+        <div className="principle-grid">
+          {CONFIDENTIALITY_PRINCIPLES.map(([label, text], i) => (
+            <div className="principle-item" key={label}>
+              <span className="principle-num">{String(i + 1).padStart(2, "0")}</span>
+              <div>
+                <h3>{label}</h3>
+                <p>{text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
         <p>
           Confidentiality is not treated as an additional service. It is part of how we operate.
         </p>
@@ -835,21 +842,14 @@ function AboutPage({ setPage }) {
       <section className="section alt">
         <h2>Nashville Based. Nationwide Service.</h2>
         <p className="section-lead">
-          Aurum Ventura Enterprise LLC is based in Nashville, Tennessee. Because our administrative services operate through a remote business model, we are able to support businesses throughout the United States.
+          Aurum Ventura Enterprise LLC is based in Nashville, Tennessee. Because our administrative services operate through a remote business model, we support businesses throughout the United States without requiring an additional employee physically located in your office.
         </p>
-        <p>
-          Whether a company is located in Nashville or across the country, our model is designed to provide structured administrative support without requiring an additional employee to be physically located in the client's office.
-        </p>
-        <p>
-          Our remote model also allows clients to maintain their existing workflows while receiving administrative support from a dedicated back-office resource.
-        </p>
-      </section>
-
-      <section className="section">
-        <h2>Established and Insured</h2>
-        <p className="section-lead">
-          Aurum Ventura Enterprise LLC operates as a registered limited liability company and maintains business insurance as part of our commitment to operating professionally and responsibly.
-        </p>
+        <div className="trust-facts">
+          <span>Nashville, TN — headquartered</span>
+          <span>Nationwide — remote service model</span>
+          <span>Tennessee-registered LLC</span>
+          <span>Business insurance maintained</span>
+        </div>
         <p>
           We believe businesses should feel confident not only in the services they receive, but also in the company they choose to trust with their administrative operations. Our goal is to build long-term working relationships based on organization, consistency, professionalism, confidentiality, and accountability.
         </p>
@@ -2400,6 +2400,16 @@ export default function App({ initialPath } = {}) {
         .badge-one-time-h1 { font-size: 0.68rem; vertical-align: super; margin-left: 0.8rem; }
         @media (max-width: 640px) { .plain-grid { grid-template-columns: 1fr; } }
 
+        .principle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 2.5rem; margin: 1.3rem 0 1.5rem; }
+        .principle-item { display: flex; gap: 0.7rem; padding: 0.8rem 0; border-bottom: 1px solid #E4E9EF; }
+        .principle-item h3 { font-family: inherit; font-weight: 600; font-size: 0.92rem; color: ${COLORS.navy}; margin: 0 0 0.25rem; }
+        .principle-item p { font-size: 0.85rem; color: ${COLORS.slate}; line-height: 1.5; margin: 0; }
+        .principle-num { flex-shrink: 0; color: ${COLORS.teal}; font-weight: 600; font-size: 0.8rem; padding-top: 0.2rem; }
+        @media (max-width: 640px) { .principle-grid { grid-template-columns: 1fr; } }
+
+        .trust-facts { display: flex; flex-wrap: wrap; gap: 0.6rem 1.6rem; margin: 1.2rem 0 1.4rem; padding: 1rem 0; border-top: 1px solid #D6E4EA; border-bottom: 1px solid #D6E4EA; }
+        .trust-facts span { font-size: 0.85rem; font-weight: 600; color: ${COLORS.navy}; }
+
         .testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 1.4rem; }
         .testimonial-card { background: ${COLORS.white}; border-left: 3px solid ${COLORS.aqua}; border-radius: 4px; padding: 1.4rem 1.5rem; margin: 0; box-shadow: 0 1px 3px rgba(4,25,68,0.06); }
         .testimonial-quote { font-style: italic; font-size: 0.92rem; line-height: 1.6; color: ${COLORS.navy}; margin: 0 0 1rem; }
@@ -2566,6 +2576,7 @@ export default function App({ initialPath } = {}) {
         .footer-cols a { display: block; background: none; border: none; color: rgba(255,255,255,0.8); font-size: 0.87rem; padding: 0.3rem 0; text-align: left; }
         .footer-cols a:hover { color: ${COLORS.white}; }
         .footer-contact { color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-top: 0.3rem; }
+        .footer-tagline { text-align: center; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: ${COLORS.aqua}; margin: 0 0 1.2rem; }
         .footer-legal-bar { width: 100%; margin-top: 1.5rem; padding: 1.4rem 1.5rem 1.6rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; }
         .footer-legal { color: rgba(255,255,255,0.55); font-size: 0.78rem; margin: 0; }
         .footer-legal-links { margin: 0.6rem 0 0; font-size: 0.82rem; }

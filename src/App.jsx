@@ -733,29 +733,133 @@ function ServiceDetailPage({ slug, setPage }) {
 }
 
 function AboutPage({ setPage }) {
-  const staysRef = useReveal();
   const go = (key) => (e) => { e.preventDefault(); setPage(key); };
   return (
     <div>
       <section className="page-head">
         <p className="kicker">About</p>
-        <h1>How We Work</h1>
+        <h1>About Aurum Ventura Enterprise LLC</h1>
         <p className="hero-sub">
-          Aurum Ventura Enterprise LLC handles the administrative work that accumulates behind a
-          growing business — organized within a defined scope, tracked against reserved capacity,
-          and reported on every month. You stay responsible for the business decisions; we keep
-          the paperwork moving.
+          Built to Make Business Administration More Efficient
         </p>
       </section>
-      <section className="section alt">
-        <h2 ref={staysRef}>What Stays With You</h2>
+
+      <section className="section">
+        <h2>Our Mission</h2>
         <p className="section-lead">
-          You retain ownership and control of your accounts, systems, and business decisions at
-          all times. We execute administrative work based on what you tell us — the underlying
-          decisions, and your legal and regulatory obligations, stay with you.
+          Aurum Ventura Enterprise LLC was created to help small and growing businesses reduce the administrative workload that often goes untracked, unmanaged, and ultimately becomes an unnecessary labor cost.
         </p>
-        <a className="btn-text" href={pathFor("HowItWorks")} onClick={go("HowItWorks")}>See our full process and how pricing works &rarr;</a>
+        <p>
+          Many businesses spend countless hours managing paperwork, organizing documents, tracking invoices, maintaining vendor records, monitoring renewals, updating systems, and completing routine administrative tasks. Those hours add up quickly and often pull owners, managers, and team members away from the work that directly moves the business forward.
+        </p>
+        <p>
+          Aurum Ventura provides a structured, outsourced back-office solution designed to help businesses operate more efficiently, stay organized, and make better use of modern digital systems. Our goal is simple: reduce administrative friction so businesses can focus more time and resources on growth.
+        </p>
       </section>
+
+      <section className="section alt">
+        <h2>Leadership</h2>
+        <p className="section-lead">
+          Aurum Ventura Enterprise LLC is led by Kyle Fulwood Jr.
+        </p>
+        <p>
+          Kyle brings more than 10 years of administrative and general management experience, including experience managing business operations, documentation, team processes, organizational systems, and day-to-day administrative responsibilities.
+        </p>
+        <p>
+          That operational experience helped shape Aurum Ventura into more than a traditional administrative support service. The company is designed around understanding how administrative work affects the entire operation of a business — from productivity and organization to labor costs and management time.
+        </p>
+      </section>
+
+      <section className="section">
+        <h2>Why Aurum Ventura Was Built</h2>
+        <p className="section-lead">
+          Businesses often account for payroll, materials, equipment, marketing, and other obvious operating expenses. Administrative time is different.
+        </p>
+        <p>
+          Hours spent searching for documents, organizing files, updating spreadsheets, processing routine paperwork, tracking expiration dates, handling invoices, and maintaining records are frequently spread across owners, managers, supervisors, and employees without the true cost ever being measured.
+        </p>
+        <p>
+          Aurum Ventura was built to help reduce those unaccounted administrative hours and hidden labor costs. We also help businesses move away from outdated, paper-heavy processes by creating more organized digital workflows that make important information easier to locate, manage, and maintain.
+        </p>
+        <p>
+          Instead of paperwork sitting in filing cabinets, vehicles, desks, inboxes, or scattered folders, we help businesses develop a more structured administrative environment. The goal is not simply to digitize paperwork. It is to help businesses create better systems around the administrative work they already have.
+        </p>
+      </section>
+
+      <section className="section alt">
+        <h2>Technology Supported. Human Managed.</h2>
+        <p className="section-lead">
+          We operate in an era where artificial intelligence and automation can make business operations faster and more efficient. At Aurum Ventura, we embrace those tools — but we do not believe technology should replace human judgment.
+        </p>
+        <p>
+          Administrative work often involves context, attention to detail, communication, exceptions, and decisions that cannot always be reduced to an automated process. Technology can misunderstand information, overlook context, or produce incorrect results.
+        </p>
+        <p>
+          That is why our approach remains human-led and technology-supported. We use modern digital tools, automation, and artificial intelligence to reduce repetitive work, improve organization, support administrative workflows, and help routine processes move more efficiently.
+        </p>
+        <p>
+          However, our clients' administrative needs remain under human oversight. Documents are reviewed. Questions are evaluated in context. Exceptions are handled individually. Administrative responsibilities are approached with actual thought and attention rather than relying entirely on an automated system to make every decision.
+        </p>
+        <p>
+          Our goal is not to remove people from business administration. It is to give people better tools to manage it. For our clients, that means the efficiency of modern technology combined with the accountability, judgment, and attention of real people working behind the scenes.
+        </p>
+      </section>
+
+      <section className="section">
+        <h2>Our Approach to Confidentiality</h2>
+        <p className="section-lead">
+          Our clients trust us with information that is important to their businesses, and we treat that responsibility seriously. Aurum Ventura follows a need-to-access approach to client information.
+        </p>
+        <p className="section-lead">
+          Business records and documents should only be accessed when they are necessary to complete an authorized administrative task.
+        </p>
+        <ul className="plain-list industry-examples">
+          <li><strong>Limited access:</strong> Client information is accessed only as needed to perform agreed administrative services.</li>
+          <li><strong>Purpose-based handling:</strong> Documents and business information are used only for the administrative responsibilities authorized by the client.</li>
+          <li><strong>Organized digital workflows:</strong> We encourage structured digital document management rather than unnecessary duplication or uncontrolled distribution of business information.</li>
+          <li><strong>Client control:</strong> Clients determine what information Aurum Ventura receives and which administrative responsibilities we are authorized to manage.</li>
+          <li><strong>Responsible communication:</strong> Sensitive business information is not intentionally shared with unauthorized third parties.</li>
+          <li><strong>Human oversight:</strong> Technology may assist with organization, classification, or routine processing, but sensitive administrative work remains subject to human review where appropriate.</li>
+          <li><strong>Clear offboarding:</strong> When a client relationship ends, access to client systems, documents, folders, and administrative resources is reviewed and removed as appropriate.</li>
+        </ul>
+        <p>
+          Confidentiality is not treated as an additional service. It is part of how we operate.
+        </p>
+      </section>
+
+      <section className="section alt">
+        <h2>Nashville Based. Nationwide Service.</h2>
+        <p className="section-lead">
+          Aurum Ventura Enterprise LLC is based in Nashville, Tennessee. Because our administrative services operate through a remote business model, we are able to support businesses throughout the United States.
+        </p>
+        <p>
+          Whether a company is located in Nashville or across the country, our model is designed to provide structured administrative support without requiring an additional employee to be physically located in the client's office.
+        </p>
+        <p>
+          Our remote model also allows clients to maintain their existing workflows while receiving administrative support from a dedicated back-office resource.
+        </p>
+      </section>
+
+      <section className="section">
+        <h2>Established and Insured</h2>
+        <p className="section-lead">
+          Aurum Ventura Enterprise LLC operates as a registered limited liability company and maintains business insurance as part of our commitment to operating professionally and responsibly.
+        </p>
+        <p>
+          We believe businesses should feel confident not only in the services they receive, but also in the company they choose to trust with their administrative operations. Our goal is to build long-term working relationships based on organization, consistency, professionalism, confidentiality, and accountability.
+        </p>
+      </section>
+
+      <section className="section alt">
+        <h2>Your Business. Our Back Office.</h2>
+        <p className="section-lead">
+          Aurum Ventura exists to help business owners and teams spend less time managing administrative work and more time operating, serving customers, and growing their businesses. We provide the structure behind the scenes so your business can continue moving forward.
+        </p>
+        <p>
+          Human-led. Technology-supported. Built for better business operations.
+        </p>
+      </section>
+
       <section className="cta-band">
         <h2>Ready to talk?</h2>
         <p>A short consultation to see if this is a fit — no pressure, no commitment.</p>

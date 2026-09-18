@@ -416,6 +416,7 @@ function Footer({ setPage }) {
         </div>
       </div>
       <p className="footer-tagline">Human-Led. Technology-Supported.</p>
+      <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.6)", marginTop: "0.6rem", marginBottom: "0.8rem" }}>Powered by ProWorx</p>
       <Swoosh style={{ width: "140px", height: "46px", opacity: 0.5, margin: "0 auto" }} />
       <div className="footer-legal-bar">
         <p className="footer-legal">
@@ -434,6 +435,7 @@ function Footer({ setPage }) {
     </footer>
   );
 }
+
 
 function IndustryPanel() {
   const [active, setActive] = useState(0);

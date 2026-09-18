@@ -133,8 +133,8 @@ export const SERVICES = [
 ];
 
 const AUDIENCE = [
-  "Service businesses", "Property management", "Real estate", "Hospitality & restaurants",
-  "Cleaning & landscaping", "Contractors", "Retailers", "Professional service firms",
+  "Contractors & Trades", "Property Management", "Cleaning & Facility Services", "Construction/Subcontractors",
+  "Staffing & Recruiting", "Real Estate", "Professional Services",
 ];
 
 const STEPS = [
@@ -151,6 +151,7 @@ const NOT_LIST = [
   "Debt collection",
   "Legal, tax, or accounting advice",
   "Compliance guarantees or regulatory determinations",
+  "We also don't replace your accounting, legal, or industry-specific professionals — we support the administrative work around them.",
 ];
 
 const CONFIDENTIALITY_PRINCIPLES = [
@@ -203,14 +204,13 @@ const TIME_SINKS = [
 ];
 
 const INDUSTRY_EXAMPLES = {
-  "Service businesses": ["Invoice administration", "CRM & data updates", "Recurring status reporting", "Forms & paperwork"],
-  "Property management": ["Property & vendor records", "Vendor documentation", "Monthly reporting", "CRM updates"],
-  "Real estate": ["Transaction paperwork", "Document organization", "CRM updates", "Vendor records"],
-  "Hospitality & restaurants": ["Vendor administration", "Invoice records", "License & renewal tracking", "Forms & paperwork"],
-  "Cleaning & landscaping": ["Vendor records", "Invoice administration", "Project administration", "Scheduling paperwork"],
-  "Contractors": ["Certificates of insurance", "Vendor records", "Project documents", "License tracking"],
-  "Retailers": ["Vendor administration", "Invoice records", "Data entry", "Recurring reporting"],
-  "Professional service firms": ["CRM updates", "Document management", "Invoice administration", "Status reporting"],
+  "Contractors & Trades": ["Invoice administration", "CRM & data updates", "Recurring status reporting", "Forms & paperwork"],
+  "Property Management": ["Property & vendor records", "Vendor documentation", "Monthly reporting", "CRM updates"],
+  "Cleaning & Facility Services": ["Client invoicing", "Service scheduling", "Equipment tracking", "Performance reports"],
+  "Construction/Subcontractors": ["Project documentation", "Subcontractor management", "Job costing", "Compliance records"],
+  "Staffing & Recruiting": ["Candidate tracking", "Placement documentation", "Client reporting", "Contract management"],
+  "Real Estate": ["Transaction paperwork", "Document organization", "CRM updates", "Vendor records"],
+  "Professional Services": ["CRM updates", "Document management", "Invoice administration", "Status reporting"],
 };
 
 // Fades an element in as it scrolls into view. Content already visible on
@@ -492,7 +492,7 @@ function TimeSelector({ setPage }) {
           ? "Pick a few areas above to see what we can take off your plate."
           : `Aurum Ventura can take ${selected.length} of those administrative area${selected.length > 1 ? "s" : ""} off your plate.`}
       </p>
-      <a className="btn-primary" href={pathFor("Contact")} onClick={go}>Discuss My Administrative Needs &rarr;</a>
+      <a className="btn-primary" href={pathFor("Contact")} onClick={go}>Let's Improve My Back Office &rarr;</a>
     </section>
   );
 }
@@ -545,6 +545,28 @@ function ProcessSteps() {
   );
 }
 
+function PeopleProcessTechnology() {
+  return (
+    <section className="section alt">
+      <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+        <h2>People. Process. Technology.</h2>
+        <p style={{ fontSize: "1.02rem", marginBottom: "1rem", maxWidth: "620px" }}>
+          Strong back-office support takes more than completing tasks. Aurum Ventura combines human administrative 
+          support with organized workflows and business technology designed to keep information, jobs, and day-to-day 
+          operations connected. For qualifying service-business workflows, specialized technology platforms may be 
+          incorporated when they improve efficiency and visibility.
+        </p>
+        <p style={{ fontStyle: "italic", color: "#57677F", marginBottom: "1.5rem", maxWidth: "620px" }}>
+          The systems organize the operation. Aurum provides the support behind it.
+        </p>
+        <p style={{ maxWidth: "620px", color: "#57677F" }}>
+          <strong>Technology partner for service-business operations:</strong> ProWorx.
+        </p>
+      </div>
+    </section>
+  );
+}
+
 function HomePage({ setPage }) {
   const go = (key) => (e) => { e.preventDefault(); setPage(key); };
   const costRef = useReveal();
@@ -559,9 +581,11 @@ function HomePage({ setPage }) {
           <p className="kicker">Business Administrative Services</p>
           <h1>Your Business.<br />Our Back Office.</h1>
           <p className="hero-sub">
-            Aurum Ventura Enterprise LLC is an outsourced administrative back office for small and
-            growing businesses — documents, invoices, license and renewal tracking, vendor files,
-            data entry, and routine reporting, handled within a defined scope and reserved capacity.
+            Aurum Ventura provides managed back-office support for small and growing businesses, combining 
+            hands-on administrative support, organized processes, and modern business systems to keep operations 
+            moving behind the scenes. Document management, invoicing, license and renewal tracking, vendor 
+            administration, CRM data, project administration, and reporting — all handled within a defined 
+            scope and reserved capacity.
           </p>
           <div className="hero-cta">
             <a className="btn-text" href={pathFor("Services")} onClick={go("Services")}>See our services &rarr;</a>
@@ -572,8 +596,8 @@ function HomePage({ setPage }) {
       <section className="section alt">
         <h2 ref={costRef}>What It's Actually Costing You</h2>
         <p className="section-lead">
-          Every hour spent on paperwork is an hour not spent running the business. Here's roughly
-          where that time tends to go for a growing operation without dedicated admin staff:
+          Every hour spent on paperwork is an hour not spent running the business. Depending on the business, 
+          administrative tasks typically consume hours each week:
         </p>
         <div className="cost-list">
           {TIME_COST.map(([task, hours]) => (
@@ -584,8 +608,8 @@ function HomePage({ setPage }) {
           ))}
         </div>
         <p className="cost-total">
-          That's often 10+ hours a week — the better part of a full workday, gone before you've
-          touched the work only you can do.
+          Depending on your operation, this can easily add up to 8+ hours weekly across invoicing, records, 
+          renewals, CRM, vendor paperwork, and reporting.
         </p>
       </section>
 
@@ -602,12 +626,17 @@ function HomePage({ setPage }) {
         </div>
       </section>
 
+      <PeopleProcessTechnology />
+
       <section className="section alt">
         <h2 ref={audienceRef}>Who We Work With</h2>
         <p className="section-lead">
-          Businesses with real administrative volume but no dedicated staff to own it —
-          growing operations that need consistency, not a full-time hire. Select an industry to
-          see examples of what we handle.
+          Businesses with real administrative volume but no dedicated staff to own it — growing operations that 
+          need consistency, not a full-time hire. Select an industry to see examples of what we handle.
+        </p>
+        <p style={{ fontSize: "0.9rem", backgroundColor: "#E6F3F9", border: "none", borderLeft: "3px solid #09748B", borderRadius: "4px", padding: "1rem 1.2rem", maxWidth: "620px", marginBottom: "1.3rem", color: "#041944" }}>
+          <strong>Best fit:</strong> Aurum is a strong fit for growing businesses with recurring administrative 
+          volume, multiple customers or projects, and no dedicated team to consistently own the back office.
         </p>
         <IndustryPanel />
         <a className="btn-text" href={pathFor("Services")} onClick={go("Services")}>See the full list of services &rarr;</a>
@@ -616,8 +645,8 @@ function HomePage({ setPage }) {
       <section className="section">
         <h2 ref={notRef}>What We're Not</h2>
         <p className="section-lead">
-          We're an administrative back office, not a virtual assistant marketplace, a law firm,
-          or an accounting firm. To keep that boundary clear, we don't provide:
+          We're an administrative back office, not a virtual assistant marketplace, a law firm, or an accounting 
+          firm. To keep that boundary clear, we don't provide:
         </p>
         <ul className="plain-list">
           {NOT_LIST.map((n) => <li key={n}>{n}</li>)}

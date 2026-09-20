@@ -213,10 +213,6 @@ const INDUSTRY_EXAMPLES = {
   "Professional Services": ["CRM updates", "Document management", "Invoice administration", "Status reporting"],
 };
 
-// Fades an element in as it scrolls into view. Content already visible on
-// load (or any element, before JS runs at all) stays fully visible — this
-// only ever hides something after confirming, client-side, that it's below
-// the fold. No effect on the prerendered/no-JS HTML crawlers see.
 function useReveal() {
   const ref = useRef(null);
   useEffect(() => {
@@ -225,7 +221,7 @@ function useReveal() {
     if (typeof IntersectionObserver === "undefined") return;
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight && rect.bottom > 0) return; // already visible, skip
+    if (rect.top < window.innerHeight && rect.bottom > 0) return;
     el.classList.add("reveal-pending");
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -242,8 +238,6 @@ function useReveal() {
   return ref;
 }
 
-// Real, shareable URLs for every page. Home/Services/About/Contact map to
-// fixed paths; anything else is treated as a service slug under /services/.
 export function adminIntakeDetailKey(id) { return `admin-intake:${id}`; }
 
 export function pathFor(key) {
@@ -251,6 +245,7 @@ export function pathFor(key) {
   switch (key) {
     case "Home": return "/";
     case "Services": return "/services";
+    case "ProgramsPartnerships": return "/programs-partnerships";
     case "About": return "/about";
     case "Industries": return "/industries";
     case "HowItWorks": return "/how-it-works";
@@ -270,6 +265,7 @@ export function pageFromPath(pathname) {
   const path = pathname.replace(/\/+$/, "") || "/";
   if (path === "/") return "Home";
   if (path === "/services") return "Services";
+  if (path === "/programs-partnerships") return "ProgramsPartnerships";
   if (path === "/about") return "About";
   if (path === "/industries") return "Industries";
   if (path === "/how-it-works") return "HowItWorks";
@@ -309,10 +305,10 @@ function Swoosh({ style }) {
   );
 }
 
-const NAV_LABELS = { HowItWorks: "How It Works", Upload: "Upload Documents" };
+const NAV_LABELS = { HowItWorks: "How It Works", ProgramsPartnerships: "Programs & Partnerships", Upload: "Upload Documents" };
 
 function Nav({ page, setPage }) {
-  const items = ["Home", "Services", "Industries", "HowItWorks", "About"];
+  const items = ["Home", "Services", "ProgramsPartnerships", "Industries", "HowItWorks", "About"];
   const [open, setOpen] = useState(false);
   const isServiceDetail = SERVICES.some((s) => s.slug === page);
   const isActive = (it) => page === it || (it === "Services" && isServiceDetail);
@@ -435,7 +431,6 @@ function Footer({ setPage }) {
     </footer>
   );
 }
-
 
 function IndustryPanel() {
   const [active, setActive] = useState(0);
@@ -591,6 +586,31 @@ function HomePage({ setPage }) {
           </p>
           <div className="hero-cta">
             <a className="btn-text" href={pathFor("Services")} onClick={go("Services")}>See our services &rarr;</a>
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <h2>Supporting Businesses — and the Programs That Build Them.</h2>
+        <p className="section-lead">
+          Aurum Ventura provides back-office operations support in two ways:
+        </p>
+        <div className="two-path-grid">
+          <div className="two-path-card">
+            <h3>Direct Business Support</h3>
+            <p>
+              Additional back-office capacity for growing businesses that need administrative and operational 
+              support without immediately adding another full-time internal position.
+            </p>
+            <a className="btn-text" href={pathFor("Services")} onClick={go("Services")}>Explore Business Support &rarr;</a>
+          </div>
+          <div className="two-path-card">
+            <h3>Programs & Partnerships</h3>
+            <p>
+              Hands-on operational implementation for entrepreneurship, workforce, economic development, and 
+              small-business programs.
+            </p>
+            <a className="btn-text" href={pathFor("ProgramsPartnerships")} onClick={go("ProgramsPartnerships")}>Explore Partnerships &rarr;</a>
           </div>
         </div>
       </section>
@@ -774,6 +794,165 @@ function ServiceDetailPage({ slug, setPage }) {
   );
 }
 
+function ProgramsPartnershipsPage({ setPage }) {
+  const go = (key) => (e) => { e.preventDefault(); setPage(key); };
+  const ref1 = useReveal();
+  const ref2 = useReveal();
+  const ref3 = useReveal();
+  const ref4 = useReveal();
+
+  const PARTNER_TYPES = [
+    "Economic Development Organizations",
+    "Workforce Development Programs",
+    "Entrepreneurship Programs",
+    "Startup Incubators & Accelerators",
+    "Chambers & Business Organizations",
+    "Colleges & Universities",
+    "Community & Nonprofit Programs",
+    "Corporate Small-Business Initiatives",
+  ];
+
+  const IMPLEMENTATION_SYSTEMS = [
+    "Client intake workflows",
+    "CRM structure and setup",
+    "Digital document organization",
+    "Administrative workflows",
+    "Invoice administration workflows",
+    "Vendor tracking and administration",
+    "Project tracking systems",
+    "License and renewal tracking",
+    "Forms and paperwork systems",
+    "Internal administrative SOPs",
+    "Data tracking and reporting",
+    "Business file organization",
+    "Onboarding workflows",
+    "General back-office operational structure",
+  ];
+
+  const PROCESS_STEPS = [
+    ["Assess", "Review the participant's current operational structure and identify gaps."],
+    ["Build", "Create the appropriate administrative systems and workflows."],
+    ["Implement", "Help put those systems into active use within the business."],
+    ["Train", "Show the business owner or team how to maintain and use the systems."],
+    ["Support", "Provide limited post-implementation support where appropriate."],
+  ];
+
+  return (
+    <div>
+      <section className="hero">
+        <Swoosh style={{ position: "absolute", top: "8%", right: "-5%", width: "560px", height: "220px", opacity: 0.35, zIndex: 0 }} />
+        <div className="hero-inner">
+          <p className="kicker">Programs & Partnerships</p>
+          <h1>From Business Education<br />to Business Implementation.</h1>
+          <p className="hero-sub">
+            Aurum Ventura partners with organizations that support entrepreneurs and growing businesses by providing hands-on operational and back-office implementation. While your programs provide education, coaching, and resources, Aurum Ventura helps participants actually implement the systems needed to run their businesses.
+          </p>
+          <div className="hero-cta">
+            <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Explore an Implementation Partnership</a>
+            <a className="btn-text" href="#pilot-section" style={{ marginLeft: "1rem" }}>Discuss a Pilot Program &rarr;</a>
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <h2 ref={ref1}>An Implementation Layer for Business Support Programs</h2>
+        <p className="section-lead">
+          Entrepreneurship and business development programs provide tremendous value — education, coaching, resources, funding access, and business development support. But participant businesses often still struggle with one critical piece: actually building the operational systems needed to run consistently.
+        </p>
+        <p>
+          Many business owners know what they need to do. They've learned it in a program, from a mentor, from a workshop. But implementing administrative systems, setting up workflows, organizing documents, and building operational infrastructure takes time, expertise, and dedicated effort.
+        </p>
+        <p>
+          That's the gap Aurum Ventura fills. We work alongside your programs, not against them. Your organization provides the education and guidance. Aurum Ventura provides the implementation expertise and hands-on work to help participants turn that guidance into working systems.
+        </p>
+      </section>
+
+      <section className="section alt">
+        <h2 ref={ref2}>Who We Partner With</h2>
+        <p className="section-lead">
+          Aurum Ventura works with organizations of all types that support entrepreneurs and growing businesses.
+        </p>
+        <div className="partner-grid">
+          {PARTNER_TYPES.map((type) => (
+            <div className="partner-card" key={type}>
+              <h3>{type}</h3>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="section">
+        <h2 ref={ref3}>What We Help Implement</h2>
+        <p className="section-lead">
+          Every participant's needs are different. Here are the systems and structures Aurum Ventura can help implement:
+        </p>
+        <div className="systems-grid">
+          {IMPLEMENTATION_SYSTEMS.map((system) => (
+            <div className="system-item" key={system}>
+              <span className="system-bullet">•</span>
+              <span>{system}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="section alt">
+        <h2 ref={ref4}>Our Implementation Process</h2>
+        <p className="section-lead">
+          Every implementation partnership follows the same structured approach, adapted to your program's needs and participant's situation:
+        </p>
+        <div className="process-steps">
+          {PROCESS_STEPS.map(([step, description], index) => (
+            <div className="process-step" key={step}>
+              <div className="step-number">{String(index + 1).padStart(2, "0")}</div>
+              <div className="step-content">
+                <h3>{step}</h3>
+                <p>{description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="section" id="pilot-section">
+        <h2>Start With a Pilot</h2>
+        <p className="section-lead">
+          Not sure if an implementation partnership is the right fit? Start small.
+        </p>
+        <div className="pilot-box">
+          <p>
+            Aurum Ventura can work with a defined pilot cohort of entrepreneurs or businesses within your program. We implement operational systems with that group, document the outcomes, and evaluate the effectiveness of the model before expanding into a larger or recurring program.
+          </p>
+          <p>
+            A pilot lets you assess whether implementation partnerships create value for your participants without committing to a full program launch.
+          </p>
+        </div>
+      </section>
+
+      <section className="section alt">
+        <h2>Custom Program Partnerships</h2>
+        <p className="section-lead">
+          Every partnership is custom, based on your program size, scope, participant needs, and implementation requirements.
+        </p>
+        <div className="custom-note">
+          <p>
+            We don't offer fixed program pricing. Instead, we work with you to understand your program's goals and structure a partnership that makes sense for your organization and the entrepreneurs you serve.
+          </p>
+          <p>
+            The right program model depends on cohort size, implementation scope, ongoing support needs, and your organization's capacity — and we build a partnership around those real factors, not a generic pricing tier.
+          </p>
+        </div>
+      </section>
+
+      <section className="cta-band">
+        <h2>Add an Implementation Layer to Your Program.</h2>
+        <p>If your organization already supports entrepreneurs or growing businesses, Aurum Ventura can help participants turn operational guidance into working systems.</p>
+        <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Discuss a Program Partnership</a>
+      </section>
+    </div>
+  );
+}
+
 function AboutPage({ setPage }) {
   const go = (key) => (e) => { e.preventDefault(); setPage(key); };
   return (
@@ -814,16 +993,16 @@ function AboutPage({ setPage }) {
       <section className="section">
         <h2>Why Aurum Ventura Was Built</h2>
         <p className="section-lead">
-          Businesses often account for payroll, materials, equipment, marketing, and other obvious operating expenses. Administrative time is different.
+          There's a common challenge that affects both individual businesses and the organizations supporting them: the gap between knowing what needs to be done and having the capacity to actually implement it.
         </p>
         <p>
-          Hours spent searching for documents, organizing files, updating spreadsheets, processing routine paperwork, tracking expiration dates, handling invoices, and maintaining records are frequently spread across owners, managers, supervisors, and employees without the true cost ever being measured.
+          Businesses often account for payroll, materials, equipment, marketing, and other obvious operating expenses. But administrative time is different — hours spent searching for documents, organizing files, updating spreadsheets, processing routine paperwork, tracking expiration dates, handling invoices, and maintaining records are frequently spread across owners, managers, supervisors, and employees without the true cost ever being measured.
         </p>
         <p>
-          Aurum Ventura was built to help reduce those unaccounted administrative hours and hidden labor costs. We also help businesses move away from outdated, paper-heavy processes by creating more organized digital workflows that make important information easier to locate, manage, and maintain.
+          Aurum Ventura was built to help close that implementation gap. For individual businesses, we provide direct back-office support to reduce unaccounted administrative hours and hidden labor costs. For organizations supporting entrepreneurs and growing businesses, we provide hands-on implementation expertise to help participants turn operational guidance into working systems.
         </p>
         <p>
-          Instead of paperwork sitting in filing cabinets, vehicles, desks, inboxes, or scattered folders, we help businesses develop a more structured administrative environment. The goal is not simply to digitize paperwork. It is to help businesses create better systems around the administrative work they already have.
+          We help businesses and programs move away from outdated, paper-heavy processes by creating more organized digital workflows that make important information easier to locate, manage, and maintain. Instead of paperwork sitting in filing cabinets, vehicles, desks, inboxes, or scattered folders, we help develop more structured administrative environments. The goal is not simply to digitize paperwork. It is to help businesses create better systems around the administrative work they already have.
         </p>
       </section>
 
@@ -1164,10 +1343,6 @@ function ContactPage() {
   const [form, setForm] = useState({ name: "", business: "", email: "", phone: "", type: "", message: "" });
   const [sent, setSent] = useState(false);
 
-  // Prefill from ?areas= when arriving via the "What's taking up your time?"
-  // selector. Done client-side, post-mount, on purpose — the prerendered
-  // static HTML for /contact never includes a query string, so applying
-  // this during render (instead of after) would mismatch on hydration.
   useEffect(() => {
     const areas = new URLSearchParams(window.location.search).get("areas");
     if (areas) {
@@ -1272,7 +1447,7 @@ function readDirectoryEntry(entry) {
         reader.readEntries(async (entries) => {
           if (!entries.length) { resolve(collected); return; }
           for (const e of entries) collected.push(...(await readDirectoryEntry(e)));
-          readBatch(); // readEntries only returns a batch at a time — must keep calling until empty
+          readBatch();
         }, () => resolve(collected));
       };
       readBatch();
@@ -1287,7 +1462,7 @@ function UploadPage() {
     uploadCode: "", email: "", category: "", documentDescription: "", requestedAction: "", additionalNotes: "",
   });
   const [files, setFiles] = useState([]);
-  const [submitState, setSubmitState] = useState("idle"); // idle | submitting | success
+  const [submitState, setSubmitState] = useState("idle");
   const [formError, setFormError] = useState("");
   const [confirmation, setConfirmation] = useState(null);
   const [dragActive, setDragActive] = useState(false);
@@ -1316,7 +1491,7 @@ function UploadPage() {
         file,
         status: !allowed || tooLarge ? "error" : "pending",
         error: !allowed
-          ? `".${fileExtension(file.name) || "?"}" isn't a supported file type.`
+          ? `\".${fileExtension(file.name) || "?"}\" isn't a supported file type.`
           : tooLarge
           ? `Larger than the ${Math.round(MAX_FILE_SIZE_BYTES / (1024 * 1024))}MB limit.`
           : "",
@@ -1363,7 +1538,7 @@ function UploadPage() {
       xhr.onload = () => {
         const ok = xhr.status >= 200 && xhr.status < 300;
         let message = "";
-        try { message = JSON.parse(xhr.responseText).message || ""; } catch { /* non-JSON error body */ }
+        try { message = JSON.parse(xhr.responseText).message || ""; } catch { }
         setFiles((prev) => prev.map((x) => (x.localId === f.localId
           ? { ...x, status: ok ? "done" : "error", progress: ok ? 100 : x.progress, error: ok ? "" : (message || "Upload failed.") }
           : x)));
@@ -1873,9 +2048,6 @@ function ClientIntakePage() {
   );
 }
 
-// Thin fetch wrapper for /api/admin/* — always sends the session cookie,
-// and centralizes the "session expired mid-use" redirect so every admin
-// page doesn't have to handle that case separately.
 async function adminFetch(url, options, onUnauthorized) {
   const res = await fetch(url, { ...options, credentials: "same-origin" });
   if (res.status === 401) {
@@ -2087,7 +2259,7 @@ function AdminIntakeDetailPage({ intakeId, setPage }) {
       setShowInfoForm(false);
       setInfoMessage("");
       load();
-    } catch { /* handled by unauthorized redirect */ }
+    } catch { }
     setBusy(false);
   }
 
@@ -2104,7 +2276,7 @@ function AdminIntakeDetailPage({ intakeId, setPage }) {
       if (!res.ok) { setActionError(d.message || "Could not reject this intake."); setBusy(false); return; }
       setShowRejectForm(false);
       load();
-    } catch { /* handled by unauthorized redirect */ }
+    } catch { }
     setBusy(false);
   }
 
@@ -2240,6 +2412,7 @@ export const SITE_NAME = "Aurum Ventura Enterprise LLC";
 const PAGE_TITLES = {
   Home: `${SITE_NAME} — Business Administrative Services`,
   Services: `Services — ${SITE_NAME}`,
+  ProgramsPartnerships: `Programs & Partnerships — ${SITE_NAME}`,
   About: `About — ${SITE_NAME}`,
   Industries: `Industries — ${SITE_NAME}`,
   HowItWorks: `How It Works — ${SITE_NAME}`,
@@ -2255,6 +2428,7 @@ const PAGE_TITLES = {
 const PAGE_DESCRIPTIONS = {
   Home: "Outsourced administrative back-office support for small and growing businesses.",
   Services: "Recurring administrative support — document prep, invoicing, license tracking, vendor admin, data management, and more — plus a one-time Business File Reset project.",
+  ProgramsPartnerships: "Implementation partnerships for organizations supporting entrepreneurs and small businesses. Hands-on operational systems and back-office implementation.",
   About: "How Aurum Ventura works: a defined scope, reserved monthly capacity, and a monthly report on what moved.",
   Industries: "Industries and business types Aurum Ventura works with, and examples of what we handle for each.",
   HowItWorks: "Our process from consultation to active service, and how custom monthly pricing is put together.",
@@ -2268,8 +2442,6 @@ const PAGE_DESCRIPTIONS = {
   AdminIntakes: "Internal Aurum Ventura administration.",
 };
 
-// Title + meta description for a given page key or service slug — shared
-// between the client (document.title) and the static prerender step.
 export function metaFor(page) {
   if (PAGE_TITLES[page]) return { title: PAGE_TITLES[page], description: PAGE_DESCRIPTIONS[page] };
   const service = SERVICES.find((s) => s.slug === page);
@@ -2285,11 +2457,6 @@ export default function App({ initialPath } = {}) {
     pageFromPath(initialPath ?? (typeof window !== "undefined" ? window.location.pathname : "/"))
   );
 
-  // Keeps the browser URL in sync with the current page — real, shareable
-  // links, plus back/forward support via the popstate listener below.
-  // `search` lets a caller (e.g. the time selector) attach a query string
-  // (?areas=...) in the same pushState call, rather than pushing it
-  // separately beforehand only to have this overwrite it.
   const navigate = (key, search = "") => {
     if (key !== page || search) window.history.pushState({}, "", pathFor(key) + search);
     setPage(key);
@@ -2312,6 +2479,7 @@ export default function App({ initialPath } = {}) {
   const pages = {
     Home: <HomePage setPage={navigate} />,
     Services: <ServicesPage setPage={navigate} />,
+    ProgramsPartnerships: <ProgramsPartnershipsPage setPage={navigate} />,
     About: <AboutPage setPage={navigate} />,
     Industries: <IndustriesPage setPage={navigate} />,
     HowItWorks: <HowItWorksPage setPage={navigate} />,
@@ -2333,9 +2501,6 @@ export default function App({ initialPath } = {}) {
 
   return (
     <div className="app">
-      {/* dangerouslySetInnerHTML (not a text child) so SSR's HTML-escaping
-          of this raw CSS string doesn't mismatch the client's hydration —
-          browsers treat <style> content as raw text, unescaped. */}
       <style dangerouslySetInnerHTML={{ __html: `
         * { box-sizing: border-box; }
         .app {
@@ -2458,6 +2623,40 @@ export default function App({ initialPath } = {}) {
         .cost-row:first-child { border-top: 1px solid #D6E4EA; }
         .cost-hours { color: ${COLORS.teal}; font-weight: 600; white-space: nowrap; }
         .cost-total { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.2rem, 2.6vw, 1.5rem); font-weight: 600; line-height: 1.4; color: ${COLORS.navy}; max-width: 620px; margin: 0; }
+
+        /* Two-Path Section */
+        .two-path-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin: 1.6rem 0 1.8rem; max-width: 900px; }
+        .two-path-card { background: ${COLORS.ice}; padding: 1.8rem 1.9rem; border-radius: 4px; border-left: 3px solid ${COLORS.aqua}; }
+        .two-path-card h3 { font: inherit; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 1.3rem; color: ${COLORS.navy}; margin: 0 0 0.8rem; }
+        .two-path-card p { font-size: 0.95rem; line-height: 1.65; color: ${COLORS.navy}; margin: 0 0 1.1rem; }
+        .two-path-card .btn-text { font-size: 0.9rem; }
+        @media (max-width: 760px) { .two-path-grid { grid-template-columns: 1fr; } }
+
+        /* Programs & Partnerships Page */
+        .partner-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin: 1.5rem 0 2rem; }
+        .partner-card { padding: 1.2rem 1.4rem; border-left: 3px solid ${COLORS.aqua}; background: ${COLORS.white}; border-radius: 4px; box-shadow: 0 1px 2px rgba(4,25,68,0.04); transition: border-color 0.3s ease, box-shadow 0.3s ease; }
+        .partner-card h3 { font: inherit; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 1.05rem; color: ${COLORS.navy}; margin: 0; line-height: 1.3; }
+        .partner-card:hover { border-left-color: ${COLORS.teal}; box-shadow: 0 2px 6px rgba(4,25,68,0.08); }
+        @media (max-width: 640px) { .partner-grid { grid-template-columns: 1fr; } }
+
+        .systems-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.7rem 1.5rem; margin: 1.5rem 0 2rem; max-width: 720px; }
+        .system-item { display: flex; gap: 0.8rem; font-size: 0.92rem; color: ${COLORS.navy}; line-height: 1.4; }
+        .system-bullet { color: ${COLORS.teal}; font-weight: 600; flex-shrink: 0; }
+        @media (max-width: 640px) { .systems-grid { grid-template-columns: 1fr; } }
+
+        .process-steps { display: grid; grid-template-columns: 1fr; gap: 1.4rem; margin: 1.6rem 0 2rem; max-width: 720px; }
+        .process-step { display: flex; gap: 1.2rem; }
+        .step-number { flex-shrink: 0; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; background: ${COLORS.ice}; border: 1.5px solid ${COLORS.aqua}; color: ${COLORS.navy}; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 1rem; border-radius: 4px; }
+        .step-content h3 { font-family: inherit; font-weight: 600; font-size: 1rem; color: ${COLORS.navy}; margin: 0 0 0.4rem; }
+        .step-content p { font-size: 0.92rem; color: ${COLORS.slate}; line-height: 1.55; margin: 0; }
+
+        .pilot-box { max-width: 620px; background: ${COLORS.ice}; border-left: 3px solid ${COLORS.aqua}; border-radius: 4px; padding: 1.3rem 1.5rem; margin: 1.3rem 0 1.6rem; }
+        .pilot-box p { font-size: 0.95rem; line-height: 1.65; color: ${COLORS.navy}; margin-bottom: 1rem; }
+        .pilot-box p:last-child { margin-bottom: 0; }
+
+        .custom-note { max-width: 620px; background: ${COLORS.white}; border: 1px solid #E4E9EF; border-radius: 4px; padding: 1.4rem 1.6rem; margin: 1.3rem 0 1.6rem; }
+        .custom-note p { font-size: 0.95rem; line-height: 1.65; color: ${COLORS.navy}; margin-bottom: 1rem; }
+        .custom-note p:last-child { margin-bottom: 0; }
 
         .tag-list { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1rem; }
         .tag { border: 1px solid ${COLORS.teal}; color: ${COLORS.teal}; font-size: 0.82rem; font-weight: 500; padding: 0.35rem 0.9rem; }

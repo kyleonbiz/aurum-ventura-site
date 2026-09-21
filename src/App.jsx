@@ -416,7 +416,7 @@ function Footer({ setPage }) {
       <Swoosh style={{ width: "140px", height: "46px", opacity: 0.5, margin: "0 auto" }} />
       <div className="footer-legal-bar">
         <p className="footer-legal">
-          &copy; {new Date().getFullYear()} Aurum Ventura Enterprise LLC. Remote administrative support for businesses nationwide.
+          &copy; {new Date().getFullYear()} Aurum Ventura Enterprise LLC. Nashville-based remote administrative support for businesses nationwide.
         </p>
         <p className="footer-legal-links">
           <a href={pathFor("About")} onClick={go("About")}>About</a>
@@ -583,6 +583,9 @@ function HomePage({ setPage }) {
             moving behind the scenes. Document management, invoicing, license and renewal tracking, vendor 
             administration, CRM data, project administration, and reporting — all handled within a defined 
             scope and reserved capacity.
+          </p>
+          <p style={{ fontSize: "0.9rem", fontWeight: "500", color: COLORS.teal, marginTop: "1.1rem", marginBottom: "1.6rem", maxWidth: "620px" }}>
+            Based in Nashville, Tennessee. Providing remote back-office administrative support to businesses nationwide.
           </p>
           <div className="hero-cta">
             <a className="btn-text" href={pathFor("Services")} onClick={go("Services")}>See our services &rarr;</a>
@@ -961,7 +964,7 @@ function AboutPage({ setPage }) {
         <p className="kicker">About</p>
         <h1>About Aurum Ventura Enterprise LLC</h1>
         <p className="hero-sub">
-          Built to Make Business Administration More Efficient
+          Nashville-Based Outsourced Administrative Back Office
         </p>
       </section>
 
@@ -999,10 +1002,26 @@ function AboutPage({ setPage }) {
           Businesses often account for payroll, materials, equipment, marketing, and other obvious operating expenses. But administrative time is different — hours spent searching for documents, organizing files, updating spreadsheets, processing routine paperwork, tracking expiration dates, handling invoices, and maintaining records are frequently spread across owners, managers, supervisors, and employees without the true cost ever being measured.
         </p>
         <p>
-          Aurum Ventura was built to help close that implementation gap. For individual businesses, we provide direct back-office support to reduce unaccounted administrative hours and hidden labor costs. For organizations supporting entrepreneurs and growing businesses, we provide hands-on implementation expertise to help participants turn operational guidance into working systems.
+          Aurum Ventura was built to help close that implementation gap. We provide outsourced back-office administrative support to small and growing businesses nationwide, operating remotely to deliver consistent, reliable support regardless of business location. Whether it's document organization, invoice administration, vendor records, CRM updates, license tracking, or project administration, Aurum Ventura handles the operational work that allows business owners to focus on growth.
         </p>
         <p>
           We help businesses and programs move away from outdated, paper-heavy processes by creating more organized digital workflows that make important information easier to locate, manage, and maintain. Instead of paperwork sitting in filing cabinets, vehicles, desks, inboxes, or scattered folders, we help develop more structured administrative environments. The goal is not simply to digitize paperwork. It is to help businesses create better systems around the administrative work they already have.
+        </p>
+      </section>
+
+      <section className="section alt">
+        <h2>Nashville-Based. Nationwide Service.</h2>
+        <p className="section-lead">
+          Aurum Ventura Enterprise LLC is headquartered in Nashville, Tennessee. Because our administrative services operate through a remote business model, we support businesses throughout the United States without requiring a physical office location in your city.
+        </p>
+        <div className="trust-facts">
+          <span>Nashville, TN — headquartered</span>
+          <span>Nationwide — remote service model</span>
+          <span>Tennessee-registered LLC</span>
+          <span>Business insurance maintained</span>
+        </div>
+        <p>
+          We believe businesses should feel confident not only in the services they receive, but also in the company they choose to trust with their administrative operations. Our goal is to build long-term working relationships based on organization, consistency, professionalism, confidentiality, and accountability.
         </p>
       </section>
 
@@ -1046,22 +1065,6 @@ function AboutPage({ setPage }) {
         </div>
         <p>
           Confidentiality is not treated as an additional service. It is part of how we operate.
-        </p>
-      </section>
-
-      <section className="section alt">
-        <h2>Nashville Based. Nationwide Service.</h2>
-        <p className="section-lead">
-          Aurum Ventura Enterprise LLC is based in Nashville, Tennessee. Because our administrative services operate through a remote business model, we support businesses throughout the United States without requiring an additional employee physically located in your office.
-        </p>
-        <div className="trust-facts">
-          <span>Nashville, TN — headquartered</span>
-          <span>Nationwide — remote service model</span>
-          <span>Tennessee-registered LLC</span>
-          <span>Business insurance maintained</span>
-        </div>
-        <p>
-          We believe businesses should feel confident not only in the services they receive, but also in the company they choose to trust with their administrative operations. Our goal is to build long-term working relationships based on organization, consistency, professionalism, confidentiality, and accountability.
         </p>
       </section>
 
@@ -1134,7 +1137,7 @@ function IndustriesPage({ setPage }) {
         <h1>Who We Work With</h1>
         <p className="hero-sub">
           Businesses with real administrative volume but no dedicated staff to own it — growing
-          operations that need consistency, not a full-time hire.
+          operations that need consistency, not a full-time hire. We work with industries nationwide.
         </p>
       </section>
       <section className="section">
@@ -2410,7 +2413,7 @@ function AdminIntakeDetailPage({ intakeId, setPage }) {
 
 export const SITE_NAME = "Aurum Ventura Enterprise LLC";
 const PAGE_TITLES = {
-  Home: `${SITE_NAME} — Business Administrative Services`,
+  Home: "Aurum Ventura | Outsourced Back Office & Administrative Services",
   Services: `Services — ${SITE_NAME}`,
   ProgramsPartnerships: `Programs & Partnerships — ${SITE_NAME}`,
   About: `About — ${SITE_NAME}`,
@@ -2426,18 +2429,18 @@ const PAGE_TITLES = {
   AdminIntakes: `Client Intakes — ${SITE_NAME}`,
 };
 const PAGE_DESCRIPTIONS = {
-  Home: "Outsourced administrative back-office support for small and growing businesses.",
-  Services: "Recurring administrative support — document prep, invoicing, license tracking, vendor admin, data management, and more — plus a one-time Business File Reset project.",
-  ProgramsPartnerships: "Implementation partnerships for organizations supporting entrepreneurs and small businesses. Hands-on operational systems and back-office implementation.",
-  About: "How Aurum Ventura works: a defined scope, reserved monthly capacity, and a monthly report on what moved.",
-  Industries: "Industries and business types Aurum Ventura works with, and examples of what we handle for each.",
-  HowItWorks: "Our process from consultation to active service, and how custom monthly pricing is put together.",
-  Security: "How Aurum Ventura handles the confidentiality, storage, and retention of your business documents and information.",
-  Privacy: "What information Aurum Ventura collects through this site and its client forms, and how it's used.",
-  Terms: "The terms governing use of this website and Aurum Ventura's administrative services.",
-  Contact: "Request a consultation to see where administrative work is taking your time.",
-  Upload: "Securely send documents and administrative requests to Aurum Ventura.",
-  ClientIntake: "Complete your company information so Aurum Ventura can begin setting up your administrative services.",
+  Home: "Remote outsourced back-office administrative support for small and growing businesses nationwide. Document management, invoicing, vendor records, CRM support, license tracking, and project administration.",
+  Services: "Recurring administrative services for businesses nationwide — document preparation, invoice administration, license tracking, vendor administration, CRM data management, project administration, and more.",
+  ProgramsPartnerships: "Implementation partnerships for organizations supporting entrepreneurs and small businesses. Hands-on operational systems and back-office implementation for entrepreneurship programs.",
+  About: "Aurum Ventura is a Nashville-based outsourced administrative back office serving small and growing businesses nationwide. Learn about our approach to business operations.",
+  Industries: "Back-office and administrative support for contractors, property managers, cleaning and landscaping, construction, staffing, real estate, professional services, and other industries nationwide.",
+  HowItWorks: "How Aurum Ventura's back-office support process works — from consultation through service delivery and monthly reporting.",
+  Security: "How Aurum Ventura secures and protects your business documents, information, and confidentiality when providing remote administrative services.",
+  Privacy: "Privacy policy for Aurum Ventura's website and back-office administrative services for businesses nationwide.",
+  Terms: "Terms of service for Aurum Ventura's remote back-office administrative support services.",
+  Contact: "Contact Aurum Ventura to request a consultation about outsourced back-office administrative support for your business.",
+  Upload: "Securely upload documents and submit administrative requests to Aurum Ventura.",
+  ClientIntake: "Complete client intake to set up outsourced back-office administrative services with Aurum Ventura.",
   AdminLogin: "Internal Aurum Ventura administration.",
   AdminIntakes: "Internal Aurum Ventura administration.",
 };

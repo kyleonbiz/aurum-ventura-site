@@ -2490,6 +2490,14 @@ export default function App({ initialPath } = {}) {
   const [page, setPage] = useState(() =>
     pageFromPath(initialPath ?? (typeof window !== "undefined" ? window.location.pathname : "/"))
   );
+  // Inject Organization JSON-LD schema
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.textContent = JSON.stringify(ORGANIZATION_SCHEMA);
+    document.head.appendChild(script);
+    return () => { if (script.parentNode) document.head.removeChild(script); };
+  }, []);
 
   const navigate = (key, search = "") => {
     if (key !== page || search) window.history.pushState({}, "", pathFor(key) + search);

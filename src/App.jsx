@@ -1458,7 +1458,18 @@ function ContactPage() {
           <div className="contact-side">
             <h2>Direct Contact</h2>
             <p>admin@aurumventura.net</p>
-            <p>850-653-7797</p>
+            <p>850-653-7797</p>             <h2>Connect</h2>
+            <p>
+              <a 
+                href={GOOGLE_BUSINESS_URL !== "YOUR_GOOGLE_BUSINESS_URL_HERE" ? GOOGLE_BUSINESS_URL : "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: COLORS.teal, textDecoration: "underline" }}
+              >
+                View Aurum Ventura on Google
+              </a>
+            </p>
+
             <h2>Typical Response</h2>
             <p>Within one business day.</p>
           </div>

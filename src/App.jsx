@@ -30,7 +30,7 @@ const COLORS = {
 // Organization JSON-LD & Google Business
 // ============================================
 // PASTE YOUR GOOGLE BUSINESS PROFILE URL HERE:
-const GOOGLE_BUSINESS_URL = "YOUR_GOOGLE_BUSINESS_URL_HERE";
+const GOOGLE_BUSINESS_URL = "https://share.google/RR4rQeNwXhJky9eVF";
 
 const ORGANIZATION_SCHEMA = {
   "@context": "https://schema.org",

@@ -26,7 +26,37 @@ const COLORS = {
   ice: "#E6F3F9",
   slate: "#57677F",
   white: "#FFFFFF",
+};// ============================================
+// Organization JSON-LD & Google Business
+// ============================================
+// PASTE YOUR GOOGLE BUSINESS PROFILE URL HERE:
+const GOOGLE_BUSINESS_URL = "YOUR_GOOGLE_BUSINESS_URL_HERE";
+
+const ORGANIZATION_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Aurum Ventura Enterprise LLC",
+  "url": "https://www.aurumventura.net",
+  "logo": "https://www.aurumventura.net/logo-mark.png",
+  "description": "Outsourced back-office administrative services for small and growing businesses across the United States.",
+  "telephone": "+1-850-653-7797",
+  "email": "admin@aurumventura.net",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Nashville",
+    "addressRegion": "TN",
+    "addressCountry": "US"
+  },
+  "areaServed": { "@type": "Country", "name": "United States" },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+1-850-653-7797",
+    "email": "admin@aurumventura.net",
+    "contactType": "customer service"
+  },
+  "sameAs": GOOGLE_BUSINESS_URL !== "YOUR_GOOGLE_BUSINESS_URL_HERE" ? [GOOGLE_BUSINESS_URL] : []
 };
+
 
 
 export const SERVICES = [

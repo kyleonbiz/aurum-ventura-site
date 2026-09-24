@@ -502,7 +502,7 @@ function TimeSelector({ setPage }) {
   return (
     <section className="cta-band">
       <h2>What&rsquo;s taking up your time?</h2>
-      <p>Select what&rsquo;s eating your week — we&rsquo;ll tell you what we can take off your plate.</p>
+      <p>Select what&rsquo;s eating your week — we&rsquo;ll show you what we can handle.</p>
       <div className="tag-list selector-tags">
         {TIME_SINKS.map((t) => (
           <button
@@ -520,7 +520,7 @@ function TimeSelector({ setPage }) {
           ? "Pick a few areas above to see what we can take off your plate."
           : `Aurum Ventura can take ${selected.length} of those administrative area${selected.length > 1 ? "s" : ""} off your plate.`}
       </p>
-      <a className="btn-primary" href={pathFor("Contact")} onClick={go}>Let's Improve My Back Office &rarr;</a>
+      <a className="btn-primary" href={pathFor("Contact")} onClick={go}>See What We Can Take Off Your Plate &rarr;</a>
     </section>
   );
 }
@@ -598,7 +598,6 @@ function PeopleProcessTechnology() {
 function HomePage({ setPage }) {
   const go = (key) => (e) => { e.preventDefault(); setPage(key); };
   const costRef = useReveal();
-  const handleRef = useReveal();
   const audienceRef = useReveal();
   const notRef = useReveal();
   return (
@@ -609,14 +608,10 @@ function HomePage({ setPage }) {
           <p className="kicker">Business Administrative Services</p>
           <h1>Your Business.<br />Our Back Office.</h1>
           <p className="hero-sub">
-            Aurum Ventura provides managed back-office support for small and growing businesses, combining 
-            hands-on administrative support, organized processes, and modern business systems to keep operations 
-            moving behind the scenes. Document management, invoicing, license and renewal tracking, vendor 
-            administration, CRM data, project administration, and reporting — all handled within a defined 
-            scope and reserved capacity.
+            Aurum Ventura provides managed back-office support for small and growing businesses. Document management, invoicing, license tracking, vendor records, CRM data, project administration, and reporting — all handled within a defined scope and reserved capacity.
           </p>
           <p style={{ fontSize: "0.9rem", fontWeight: "500", color: COLORS.teal, marginTop: "1.1rem", marginBottom: "1.6rem", maxWidth: "620px" }}>
-            Based in Nashville, Tennessee. Providing remote back-office administrative support to businesses nationwide.
+            Based in Nashville, Tennessee. Remote service to businesses nationwide.
           </p>
           <div className="hero-cta">
             <a className="btn-text" href={pathFor("Services")} onClick={go("Services")}>See our services &rarr;</a>
@@ -650,11 +645,16 @@ function HomePage({ setPage }) {
       </section>
 
       <section className="section alt">
-        <h2 ref={costRef}>What It's Actually Costing You</h2>
+        <h2>The Real Cost of Administrative Work</h2>
         <p className="section-lead">
-          Every hour spent on paperwork is an hour not spent running the business. Depending on the business, 
-          administrative tasks typically consume hours each week:
+          Most businesses underestimate how many hours administrative tasks consume. Depending on your operation:
         </p>
+        <div className="cost-highlight">
+          <p className="cost-emphasis">8–10+ hours per week</p>
+          <p style={{ fontSize: "0.95rem", color: COLORS.slate, maxWidth: "600px", marginTop: "0.6rem" }}>
+            That's what invoicing, renewals, vendor paperwork, CRM updates, document organization, and reporting typically costs. Every one of those hours is an hour not spent running your business.
+          </p>
+        </div>
         <div className="cost-list">
           {TIME_COST.map(([task, hours]) => (
             <div className="cost-row" key={task}>
@@ -663,26 +663,9 @@ function HomePage({ setPage }) {
             </div>
           ))}
         </div>
-        <p className="cost-total">
-          Depending on your operation, this can easily add up to 8+ hours weekly across invoicing, records, 
-          renewals, CRM, vendor paperwork, and reporting.
-        </p>
       </section>
 
-      <section className="section">
-        <h2 ref={handleRef}>What We Handle</h2>
-        <div className="plain-grid">
-          {SERVICES.map((s, i) => (
-            <a className="plain-grid-item" key={s.slug} href={pathFor(s.slug)} onClick={go(s.slug)}>
-              <span className="plain-num">{String(i + 1).padStart(2, "0")}</span>
-              <h3>{s.title}</h3>
-              {s.oneTime && <span className="badge-one-time">One-Time</span>}
-            </a>
-          ))}
-        </div>
-      </section>
-
-      <PeopleProcessTechnology />
+      <Testimonials />
 
       <section className="section alt">
         <h2 ref={audienceRef}>Who We Work With</h2>
@@ -699,6 +682,21 @@ function HomePage({ setPage }) {
       </section>
 
       <section className="section">
+        <h2>What We Handle</h2>
+        <div className="plain-grid">
+          {SERVICES.map((s, i) => (
+            <a className="plain-grid-item" key={s.slug} href={pathFor(s.slug)} onClick={go(s.slug)}>
+              <span className="plain-num">{String(i + 1).padStart(2, "0")}</span>
+              <h3>{s.title}</h3>
+              {s.oneTime && <span className="badge-one-time">One-Time</span>}
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <PeopleProcessTechnology />
+
+      <section className="section alt">
         <h2 ref={notRef}>What We're Not</h2>
         <p className="section-lead">
           We're an administrative back office, not a virtual assistant marketplace, a law firm, or an accounting 
@@ -710,8 +708,6 @@ function HomePage({ setPage }) {
         <a className="btn-text" href={pathFor("About")} onClick={go("About")}>Learn how we work &rarr;</a>
       </section>
 
-      <Testimonials />
-
       <TimeSelector setPage={setPage} />
     </div>
   );
@@ -720,7 +716,7 @@ function HomePage({ setPage }) {
 function Testimonials() {
   const ref = useReveal();
   return (
-    <section className="section alt">
+    <section className="section">
       <h2 ref={ref}>What Clients Say</h2>
       <div className="testimonial-grid">
         {TESTIMONIALS.map((t) => (
@@ -1012,19 +1008,6 @@ function AboutPage({ setPage }) {
       </section>
 
       <section className="section alt">
-        <h2>Leadership</h2>
-        <p className="section-lead">
-          Aurum Ventura Enterprise LLC is led by Kyle Fulwood Jr.
-        </p>
-        <p>
-          Kyle brings more than 10 years of administrative and general management experience, including experience managing business operations, documentation, team processes, organizational systems, and day-to-day administrative responsibilities.
-        </p>
-        <p>
-          That operational experience helped shape Aurum Ventura into more than a traditional administrative support service. The company is designed around understanding how administrative work affects the entire operation of a business — from productivity and organization to labor costs and management time.
-        </p>
-      </section>
-
-      <section className="section">
         <h2>Why Aurum Ventura Was Built</h2>
         <p className="section-lead">
           There's a common challenge that affects both individual businesses and the organizations supporting them: the gap between knowing what needs to be done and having the capacity to actually implement it.
@@ -2583,24 +2566,24 @@ export default function App({ initialPath } = {}) {
           text-transform: uppercase; color: ${COLORS.teal}; margin: 0 0 0.7rem;
         }
 
-        /* Nav */
+        /* Nav - FIXED SPACING */
         .nav { position: sticky; top: 0; background: ${COLORS.white}; border-bottom: 1px solid #E4E9EF; z-index: 50; }
-        .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0.9rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+        .nav-inner { max-width: 1100px; margin: 0 auto; padding: 1rem 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
         .nav-brand { display: flex; align-items: center; gap: 0.6rem; background: none; border: none; padding: 0; }
         .nav-mark { height: 34px; width: auto; }
         .nav-word { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 600; color: ${COLORS.navy}; text-align: left; line-height: 1.15; }
         .nav-word small { display: block; font-family: 'Montserrat', sans-serif; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: ${COLORS.slate}; }
-        .nav-links { display: flex; align-items: center; gap: 2rem; }
+        .nav-links { display: flex; align-items: center; gap: 2rem; flex: 1; }
         .nav-link { background: none; border: none; font-size: 0.88rem; font-weight: 500; color: ${COLORS.slate}; padding: 0.3rem 0; border-bottom: 2px solid transparent; }
         .nav-link.active, .nav-link:hover { color: ${COLORS.navy}; border-bottom-color: ${COLORS.aqua}; }
-        .nav-cta { background: ${COLORS.navy}; color: ${COLORS.white}; border: none; padding: 0.6rem 1.2rem; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.02em; }
+        .nav-cta { background: ${COLORS.navy}; color: ${COLORS.white}; border: none; padding: 0.6rem 1.2rem; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.02em; flex-shrink: 0; }
         .nav-cta:hover, .nav-cta.active { background: ${COLORS.teal}; }
-        .nav-burger { display: none; flex-direction: column; gap: 4px; background: none; border: none; padding: 0.4rem; }
+        .nav-burger { display: none; flex-direction: column; gap: 4px; background: none; border: none; padding: 0.4rem; flex-shrink: 0; }
         .nav-burger span { width: 22px; height: 2px; background: ${COLORS.navy}; }
         .nav-mobile { display: none; }
 
         @media (max-width: 768px) {
-          .nav-links { display: none; }
+          .nav-links { display: none; flex: none; }
           .nav-burger { display: flex; }
           .nav-mobile { display: flex; flex-direction: column; border-top: 1px solid #E4E9EF; padding: 0.5rem 1.5rem 1rem; }
           .nav-mobile-link { text-align: left; background: none; border: none; padding: 0.6rem 0; font-size: 0.95rem; color: ${COLORS.slate}; }
@@ -2627,6 +2610,8 @@ export default function App({ initialPath } = {}) {
         .section-lead { max-width: 620px; margin-bottom: 0.8rem; }
         .callout { max-width: 620px; background: ${COLORS.white}; border-left: 3px solid ${COLORS.aqua}; border-radius: 4px; padding: 1.1rem 1.4rem; font-size: 0.92rem; line-height: 1.6; color: ${COLORS.navy}; }
         .callout strong { color: ${COLORS.teal}; }
+        .cost-highlight { max-width: 600px; background: #FEF9F5; border-left: 4px solid ${COLORS.teal}; padding: 1.4rem 1.6rem; margin: 1.2rem 0 1.8rem; }
+        .cost-emphasis { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; color: ${COLORS.teal}; line-height: 1.2; margin: 0; }
         .mission-statement { max-width: 620px; background: ${COLORS.ice}; border-left: 3px solid ${COLORS.teal}; border-radius: 4px; padding: 1.3rem 1.5rem; margin: 1rem 0 1.5rem; }
         .mission-statement p { font-size: 1rem; line-height: 1.65; color: ${COLORS.navy}; margin-bottom: 0.9rem; }
         .mission-statement p:last-child { margin-bottom: 0; }

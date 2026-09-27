@@ -2779,6 +2779,8 @@ export default function App({ initialPath } = {}) {
         .industry-panel { margin-top: 1.3rem; padding-top: 1.1rem; border-top: 1px solid #E4E9EF; max-width: 560px; }
         .industry-panel-label { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: ${COLORS.teal}; margin-bottom: 0.5rem; }
         .industry-examples { margin-top: 0; }
+        .industry-examples a { color: ${COLORS.teal}; font-weight: 500; text-decoration: none; border-bottom: 1px solid ${COLORS.teal}; cursor: pointer; transition: color 0.2s ease, background 0.2s ease; }
+        .industry-examples a:hover { color: ${COLORS.navy}; background: ${COLORS.ice}; padding: 0.1rem 0.3rem; border-radius: 2px; }
 
         .plain-list { margin: 0.8rem 0 0; padding-left: 1.2rem; color: ${COLORS.slate}; }
         .plain-list li { margin-bottom: 0.5rem; line-height: 1.5; }

@@ -335,7 +335,7 @@ export function pathFor(key) {
     case "ProWorx": return "https://www.proworx.io";
     case "PreferredPartners": return "/preferred-partners";
     case "BusinessPrograms": return "/programs-partnerships#business-programs";
-    case "PartnershipOpportunities": return "/programs-partnerships#partnership-opportunities";
+    case "PartnershipOpportunities": return "/partnership-opportunities";
     case "About": return "/about";
     case "Industries": return "/industries";
     case "HowItWorks": return "/how-it-works";
@@ -357,6 +357,7 @@ export function pageFromPath(pathname) {
   if (path === "/services") return "Services";
   if (path === "/programs-partnerships") return "ProgramsPartnerships";
   if (path === "/preferred-partners") return "PreferredPartners";
+  if (path === "/partnership-opportunities") return "PartnershipOpportunities";
   if (path === "/about") return "About";
   if (path === "/industries") return "Industries";
   if (path === "/how-it-works") return "HowItWorks";
@@ -1262,6 +1263,54 @@ function PreferredPartnersPage({ setPage }) {
         <a className="btn-text" href={pathFor("About")} onClick={go("About")}>
           Learn More About Aurum Ventura →
         </a>
+      </section>
+    </div>
+  );
+}
+
+function PartnershipOpportunitiesPage({ setPage }) {
+  const go = (key) => (e) => { e.preventDefault(); setPage(key); };
+  return (
+    <div>
+      <section className="page-head">
+        <p className="kicker">Partnerships</p>
+        <h1>Partnership Opportunities</h1>
+        <p className="hero-sub">
+          Aurum Ventura is actively building partnerships with organizations and professionals who share our commitment to supporting business growth and operational excellence.
+        </p>
+      </section>
+      <section className="section">
+        <h2>How Organizations Can Partner With Us</h2>
+        <p className="section-lead">
+          If your organization provides business support, education, coaching, or resources to entrepreneurs and growing businesses, Aurum Ventura can extend your impact by providing hands-on operational implementation for the businesses and participants in your program.
+        </p>
+      </section>
+      <section className="section alt">
+        <h2>What We Offer Partners</h2>
+        <ul className="plain-list">
+          <li>Direct operational support for program participants or clients</li>
+          <li>Custom implementation packages tailored to your program's scope</li>
+          <li>Professional administrative systems and workflow setup</li>
+          <li>Documented outcomes and program effectiveness reporting</li>
+          <li>Flexible partnership models, from pilot programs to ongoing arrangements</li>
+        </ul>
+      </section>
+      <section className="section">
+        <h2>Types of Partnerships</h2>
+        <p style={{ marginBottom: "1.5rem" }}>
+          <strong>Program Partnerships:</strong> Work with your organization to implement back-office systems for entrepreneurs and growing businesses in your program.
+        </p>
+        <p style={{ marginBottom: "1.5rem" }}>
+          <strong>Referral Partnerships:</strong> Refer businesses to Aurum Ventura for administrative support, building a valuable resource for your network.
+        </p>
+        <p>
+          <strong>Collaborative Partnerships:</strong> Work together on specific initiatives, pilot programs, or custom projects aligned with both organizations' missions.
+        </p>
+      </section>
+      <section className="cta-band">
+        <h2>Ready to Explore Partnership?</h2>
+        <p>If your organization supports entrepreneurs or growing businesses, let's talk about how we can work together.</p>
+        <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Discuss a Partnership</a>
       </section>
     </div>
   );
@@ -2805,6 +2854,7 @@ export default function App({ initialPath } = {}) {
     Services: <ServicesPage setPage={navigate} />,
     ProgramsPartnerships: <ProgramsPartnershipsPage setPage={navigate} />,
     PreferredPartners: <PreferredPartnersPage setPage={navigate} />,
+    PartnershipOpportunities: <PartnershipOpportunitiesPage setPage={navigate} />,
     About: <AboutPage setPage={navigate} />,
     Industries: <IndustriesPage setPage={navigate} />,
     HowItWorks: <HowItWorksPage setPage={navigate} />,

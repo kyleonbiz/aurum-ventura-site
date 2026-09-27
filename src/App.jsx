@@ -2673,7 +2673,7 @@ export default function App({ initialPath } = {}) {
         .nav-links { display: flex; align-items: center; gap: 1.5rem; margin-left: 2.5rem; }
         .nav-link { background: none; border: none; font-size: 0.88rem; font-weight: 500; color: ${COLORS.slate}; padding: 0.3rem 0; border-bottom: 2px solid transparent; }
         .nav-link.active, .nav-link:hover { color: ${COLORS.navy}; border-bottom-color: ${COLORS.aqua}; }
-        .nav-cta { background: ${COLORS.navy}; color: ${COLORS.white}; border: none; padding: 0.6rem 1.2rem; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.02em; flex-shrink: 0; margin-left: 1rem; }
+        .nav-cta { background: ${COLORS.navy}; color: ${COLORS.white}; border: none; padding: 0.6rem 1.2rem; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.02em; flex-shrink: 0; margin-left: auto; }
         .nav-cta:hover, .nav-cta.active { background: ${COLORS.teal}; }
         .nav-burger { display: none; flex-direction: column; gap: 4px; background: none; border: none; padding: 0.4rem; flex-shrink: 0; }
         .nav-burger span { width: 22px; height: 2px; background: ${COLORS.navy}; }

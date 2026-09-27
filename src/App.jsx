@@ -1225,12 +1225,6 @@ function PreferredPartnersPage({ setPage }) {
             </button>
           </div>
 
-          <div className="partner-website">
-            <p className="website-label">Website:</p>
-            <a href="https://www.proworx.io" target="_blank" rel="noopener noreferrer" className="website-link">
-              proworx.io
-            </a>
-          </div>
         </div>
 
         {partnershipOpen && (

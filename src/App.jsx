@@ -728,9 +728,9 @@ function HomePage({ setPage }) {
       <Testimonials />
 
       <section className="section alt">
-        <h2 ref={audienceRef}>Who We Work With</h2>
-        <p className="section-lead">
-          Businesses with real administrative volume but no dedicated staff to own it — growing operations that 
+        <h2 ref={audienceRef} style={{ textAlign: "left" }}>Who We Work With</h2>
+        <p className="section-lead" style={{ textAlign: "left", maxWidth: "none" }}>
+          Businesses with real administrative volume but no dedicated staff to own it — growing operations that
           need consistency, not a full-time hire. Select an industry to see examples of what we handle.
         </p>
         <p style={{ fontSize: "0.9rem", backgroundColor: "#E6F3F9", border: "none", borderLeft: "3px solid #09748B", borderRadius: "4px", padding: "1rem 1.2rem", maxWidth: "620px", marginBottom: "1.3rem", color: "#041944" }}>

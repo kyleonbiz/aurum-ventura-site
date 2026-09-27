@@ -383,7 +383,7 @@ function Swoosh({ style }) {
 const NAV_LABELS = { HowItWorks: "How It Works", ProgramsPartnerships: "Programs & Partnerships", Upload: "Upload Documents" };
 
 function Nav({ page, setPage }) {
-  const items = ["Home", "Services", "ProgramsPartnerships", "Industries", "HowItWorks", "About"];
+  const items = ["Home", "Services", "ProgramsPartnerships", "Industries", "About"];
   const [open, setOpen] = useState(false);
   const isServiceDetail = SERVICES.some((s) => s.slug === page);
   const isActive = (it) => page === it || (it === "Services" && isServiceDetail);

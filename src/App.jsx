@@ -414,6 +414,14 @@ function Nav({ page, setPage }) {
             </a>
           ))}
           <a
+            className="nav-link"
+            href="https://www.proworx.io/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            ProWorx
+          </a>
+          <a
             className={"nav-cta" + (page === "Contact" ? " active" : "")}
             href={pathFor("Contact")}
             onClick={go("Contact")}
@@ -443,6 +451,14 @@ function Nav({ page, setPage }) {
               {NAV_LABELS[it] || it}
             </a>
           ))}
+          <a
+            className="nav-mobile-link"
+            href="https://www.proworx.io/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            ProWorx
+          </a>
           <a
             className={"nav-mobile-link nav-mobile-cta" + (page === "Contact" ? " active" : "")}
             href={pathFor("Contact")}

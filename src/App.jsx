@@ -2762,8 +2762,8 @@ export default function App({ initialPath } = {}) {
         /* Two-Path Section */
         .two-path-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin: 1.6rem 0 1.8rem; max-width: 900px; }
         .two-path-card { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: ${COLORS.ice}; padding: 2.8rem 1.9rem; border-radius: 4px; border-left: 3px solid ${COLORS.aqua}; min-height: 280px; }
-        .two-path-card h3 { font: inherit; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 1.3rem; color: ${COLORS.navy}; margin: 0 0 0.8rem; }
-        .two-path-card p { font-size: 0.95rem; line-height: 1.65; color: ${COLORS.navy}; margin: 0 0 1.1rem; }
+        .two-path-card h3 { font: inherit; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 1.3rem; color: ${COLORS.navy}; margin: 0 0 0.4rem; }
+        .two-path-card p { font-size: 0.95rem; line-height: 1.65; color: ${COLORS.navy}; margin: 0 0 0.8rem; }
         .two-path-card .btn-text { font-size: 0.9rem; }
         @media (max-width: 760px) { .two-path-grid { grid-template-columns: 1fr; } }
 

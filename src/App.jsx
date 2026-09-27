@@ -1174,39 +1174,6 @@ function ProgramsPartnershipsPage({ setPage }) {
         </a>
       </section>
 
-      <section className="section" id="partnership-opportunities">
-        <h2>Partnership Opportunities</h2>
-        <p className="section-lead">
-          Aurum Ventura is actively building partnerships with organizations and professionals who share our commitment to supporting business growth and operational excellence.
-        </p>
-        <div style={{ maxWidth: "720px", margin: "0 auto" }}>
-          <h3 style={{ fontSize: "1.15rem", marginBottom: "1rem", color: "#041944" }}>How Organizations Can Partner With Us</h3>
-          <p style={{ marginBottom: "1.5rem", color: "#57677F" }}>
-            If your organization provides business support, education, coaching, or resources to entrepreneurs and growing businesses, Aurum Ventura can extend your impact by providing hands-on operational implementation for the businesses and participants in your program.
-          </p>
-
-          <h3 style={{ fontSize: "1.15rem", marginBottom: "1rem", color: "#041944" }}>What We Offer Partners</h3>
-          <ul className="plain-list" style={{ marginBottom: "1.5rem" }}>
-            <li>Direct operational support for program participants or clients</li>
-            <li>Custom implementation packages tailored to your program's scope</li>
-            <li>Professional administrative systems and workflow setup</li>
-            <li>Documented outcomes and program effectiveness reporting</li>
-            <li>Flexible partnership models, from pilot programs to ongoing arrangements</li>
-          </ul>
-
-          <h3 style={{ fontSize: "1.15rem", marginBottom: "1rem", color: "#041944" }}>Types of Partnerships</h3>
-          <p style={{ marginBottom: "0.8rem", color: "#57677F" }}>
-            <strong>Program Partnerships:</strong> Work with your organization to implement back-office systems for entrepreneurs and growing businesses in your program.
-          </p>
-          <p style={{ marginBottom: "0.8rem", color: "#57677F" }}>
-            <strong>Referral Partnerships:</strong> Refer businesses to Aurum Ventura for administrative support, building a valuable resource for your network.
-          </p>
-          <p style={{ color: "#57677F" }}>
-            <strong>Collaborative Partnerships:</strong> Work together on specific initiatives, pilot programs, or custom projects aligned with both organizations' missions.
-          </p>
-        </div>
-      </section>
-
       <section className="cta-band">
         <h2>Add an Implementation Layer to Your Program.</h2>
         <p>If your organization already supports entrepreneurs or growing businesses, Aurum Ventura can help participants turn operational guidance into working systems.</p>

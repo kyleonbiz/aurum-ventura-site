@@ -161,6 +161,18 @@ export const SERVICES = [
       "Archiving outdated files and consolidating duplicates into a clean system",
     ],
   },
+  {
+    slug: "back-office-setup",
+    title: "Back Office Set Up",
+    oneTime: true,
+    summary: "Initial setup and configuration of your back-office systems, processes, and administrative infrastructure. Customize your scope based on your business needs.",
+    examples: [
+      "Building a CRM from scratch and populating with existing customer data",
+      "Creating administrative workflows and tracking systems for your business",
+      "Setting up vendor files, license tracking, and document organization systems",
+      "Designing invoicing processes and payment tracking workflows",
+    ],
+  },
 ];
 
 const AUDIENCE = [

@@ -2690,7 +2690,7 @@ export default function App({ initialPath } = {}) {
         }
 
         /* Hero */
-        .hero { position: relative; overflow: hidden; padding: 4rem 1.5rem 3rem; }
+        .hero { position: relative; overflow: hidden; padding: 1.5rem 1.5rem 3rem; }
         .hero-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; max-width: 640px; }
         .hero-sub { font-size: 1.02rem; margin: 1rem 0 1.6rem; max-width: 560px; }
         .hero-cta { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; }

@@ -733,7 +733,7 @@ function HomePage({ setPage }) {
           Businesses with real administrative volume but no dedicated staff to own it — growing operations that 
           need consistency, not a full-time hire. Select an industry to see examples of what we handle.
         </p>
-        <p style={{ fontSize: "0.9rem", backgroundColor: "#E6F3F9", border: "none", borderLeft: "3px solid #09748B", borderRadius: "4px", padding: "1rem 1.2rem", maxWidth: "620px", marginBottom: "1.3rem", color: "#041944" }}>
+        <p style={{ fontSize: "0.9rem", backgroundColor: "#E6F3F9", border: "none", borderLeft: "3px solid #09748B", borderRadius: "4px", padding: "1rem 1.2rem", maxWidth: "500px", marginBottom: "1.3rem", color: "#041944", marginLeft: "0" }}>
           <strong>Best fit:</strong> Aurum is a strong fit for growing businesses with recurring administrative
           volume, multiple customers or projects, and no dedicated team to consistently own the back office.
         </p>

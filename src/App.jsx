@@ -399,6 +399,14 @@ function Swoosh({ style }) {
 
 const NAV_LABELS = { HowItWorks: "How It Works", ProgramsPartnerships: "Programs & Partnerships", Upload: "Upload Documents" };
 
+const SERVICES_DROPDOWN_ITEMS = [
+  { label: "All Services", key: "Services" },
+  { label: "Invoice Administration", key: "invoice-administration" },
+  { label: "CRM & Data Management", key: "crm-data-management" },
+  { label: "Vendor Administration", key: "vendor-administration" },
+  { label: "License & Renewal Tracking", key: "license-renewal-tracking" },
+];
+
 const PROGRAMS_DROPDOWN_ITEMS = [
   { label: "Overview", key: "ProgramsPartnerships" },
   { label: "Preferred Partners", key: "PreferredPartners" },
@@ -409,14 +417,16 @@ const PROGRAMS_DROPDOWN_ITEMS = [
 function Nav({ page, setPage }) {
   const items = ["Home", "Services", "ProgramsPartnerships", "Industries", "About", "HowItWorks"];
   const [open, setOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
+  const [programsDropdownOpen, setProgramsDropdownOpen] = useState(false);
   const isServiceDetail = SERVICES.some((s) => s.slug === page);
   const isActive = (it) => page === it || (it === "Services" && isServiceDetail);
   const go = (key, closeMenu) => (e) => {
     e.preventDefault();
     setPage(key);
     if (closeMenu) setOpen(false);
-    setDropdownOpen(false);
+    setServicesDropdownOpen(false);
+    setProgramsDropdownOpen(false);
   };
   return (
     <header className="nav">
@@ -430,18 +440,52 @@ function Nav({ page, setPage }) {
         </a>
         <nav className="nav-links">
           {items.map((it) => {
-            if (it === "ProgramsPartnerships") {
+            if (it === "Services") {
               return (
-                <div key={it} className="nav-dropdown" onMouseEnter={() => setDropdownOpen(true)} onMouseLeave={() => setDropdownOpen(false)}>
+                <div key={it} className="nav-dropdown" onMouseEnter={() => setServicesDropdownOpen(true)} onMouseLeave={() => setServicesDropdownOpen(false)}>
                   <a
-                    className={"nav-link nav-dropdown-trigger" + (isActive(it) ? " active" : "") + (dropdownOpen ? " open" : "")}
+                    className={"nav-link nav-dropdown-trigger" + (isActive(it) ? " active" : "") + (servicesDropdownOpen ? " open" : "")}
                     href={pathFor(it)}
                     onClick={go(it)}
                   >
                     {NAV_LABELS[it] || it}
                     <span className="nav-chevron">˅</span>
                   </a>
-                  {dropdownOpen && (
+                  {servicesDropdownOpen && (
+                    <div className="nav-dropdown-menu">
+                      {SERVICES_DROPDOWN_ITEMS.map((item) => {
+                        const url = pathFor(item.key);
+                        const isExternal = url.startsWith("http");
+                        return (
+                          <a
+                            key={item.key}
+                            className="nav-dropdown-item"
+                            href={url}
+                            onClick={isExternal ? undefined : go(item.key, false)}
+                            target={isExternal ? "_blank" : undefined}
+                            rel={isExternal ? "noopener noreferrer" : undefined}
+                          >
+                            {item.label}
+                          </a>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+            if (it === "ProgramsPartnerships") {
+              return (
+                <div key={it} className="nav-dropdown" onMouseEnter={() => setProgramsDropdownOpen(true)} onMouseLeave={() => setProgramsDropdownOpen(false)}>
+                  <a
+                    className={"nav-link nav-dropdown-trigger" + (isActive(it) ? " active" : "") + (programsDropdownOpen ? " open" : "")}
+                    href={pathFor(it)}
+                    onClick={go(it)}
+                  >
+                    {NAV_LABELS[it] || it}
+                    <span className="nav-chevron">˅</span>
+                  </a>
+                  {programsDropdownOpen && (
                     <div className="nav-dropdown-menu">
                       {PROGRAMS_DROPDOWN_ITEMS.map((item) => {
                         const url = pathFor(item.key);
@@ -496,20 +540,55 @@ function Nav({ page, setPage }) {
       {open && (
         <div className="nav-mobile" id="nav-mobile-menu">
           {items.map((it) => {
+            if (it === "Services") {
+              return (
+                <div key={it}>
+                  <button
+                    className="nav-mobile-dropdown-trigger"
+                    onClick={() => setServicesDropdownOpen(!servicesDropdownOpen)}
+                    aria-expanded={servicesDropdownOpen}
+                    aria-controls="nav-mobile-services-dropdown"
+                  >
+                    <span className={"nav-mobile-link" + (isActive(it) ? " active" : "")}>{NAV_LABELS[it] || it}</span>
+                    <span className={"nav-mobile-chevron" + (servicesDropdownOpen ? " open" : "")}>˅</span>
+                  </button>
+                  {servicesDropdownOpen && (
+                    <div className="nav-mobile-dropdown" id="nav-mobile-services-dropdown">
+                      {SERVICES_DROPDOWN_ITEMS.map((item) => {
+                        const url = pathFor(item.key);
+                        const isExternal = url.startsWith("http");
+                        return (
+                          <a
+                            key={item.key}
+                            className="nav-mobile-dropdown-item"
+                            href={url}
+                            onClick={isExternal ? undefined : go(item.key, true)}
+                            target={isExternal ? "_blank" : undefined}
+                            rel={isExternal ? "noopener noreferrer" : undefined}
+                          >
+                            {item.label}
+                          </a>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            }
             if (it === "ProgramsPartnerships") {
               return (
                 <div key={it}>
                   <button
                     className="nav-mobile-dropdown-trigger"
-                    onClick={() => setDropdownOpen(!dropdownOpen)}
-                    aria-expanded={dropdownOpen}
-                    aria-controls="nav-mobile-dropdown"
+                    onClick={() => setProgramsDropdownOpen(!programsDropdownOpen)}
+                    aria-expanded={programsDropdownOpen}
+                    aria-controls="nav-mobile-programs-dropdown"
                   >
                     <span className={"nav-mobile-link" + (isActive(it) ? " active" : "")}>{NAV_LABELS[it] || it}</span>
-                    <span className={"nav-mobile-chevron" + (dropdownOpen ? " open" : "")}>˅</span>
+                    <span className={"nav-mobile-chevron" + (programsDropdownOpen ? " open" : "")}>˅</span>
                   </button>
-                  {dropdownOpen && (
-                    <div className="nav-mobile-dropdown" id="nav-mobile-dropdown">
+                  {programsDropdownOpen && (
+                    <div className="nav-mobile-dropdown" id="nav-mobile-programs-dropdown">
                       {PROGRAMS_DROPDOWN_ITEMS.map((item) => {
                         const url = pathFor(item.key);
                         const isExternal = url.startsWith("http");

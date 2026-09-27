@@ -400,7 +400,6 @@ const NAV_LABELS = { HowItWorks: "How It Works", ProgramsPartnerships: "Programs
 
 const PROGRAMS_DROPDOWN_ITEMS = [
   { label: "Overview", key: "ProgramsPartnerships" },
-  { label: "ProWorx", key: "ProWorx" },
   { label: "Preferred Partners", key: "PreferredPartners" },
   { label: "Business Programs", key: "BusinessPrograms" },
   { label: "Partnership Opportunities", key: "PartnershipOpportunities" },

@@ -675,8 +675,8 @@ function HomePage({ setPage }) {
       </section>
 
       <section className="section">
-        <h2>How We Support Businesses</h2>
-        <p className="section-lead">
+        <h2 style={{ textAlign: "center" }}>How We Support Businesses</h2>
+        <p className="section-lead" style={{ textAlign: "center", margin: "0 auto 0.8rem" }}>
           Aurum Ventura provides back-office operations support in two ways:
         </p>
         <div className="two-path-grid">

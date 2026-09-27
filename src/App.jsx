@@ -244,6 +244,50 @@ const INDUSTRY_EXAMPLES = {
   "Professional Services": ["CRM updates", "Document management", "Invoice administration", "Status reporting"],
 };
 
+// Maps example labels to service slugs for internal linking
+const EXAMPLE_TO_SERVICE = {
+  "Invoice administration": "invoice-administration",
+  "CRM & data updates": "crm-data-management",
+  "CRM updates": "crm-data-management",
+  "Recurring status reporting": "data-entry-reporting",
+  "Status reporting": "data-entry-reporting",
+  "Forms & paperwork": "forms-paperwork",
+  "Property & vendor records": "vendor-administration",
+  "Vendor documentation": "vendor-administration",
+  "Vendor records": "vendor-administration",
+  "Monthly reporting": "data-entry-reporting",
+  "Client invoicing": "invoice-administration",
+  "Service scheduling": "project-administration",
+  "Equipment tracking": "project-administration",
+  "Performance reports": "data-entry-reporting",
+  "Project documentation": "project-administration",
+  "Subcontractor management": "vendor-administration",
+  "Job costing": "data-entry-reporting",
+  "Compliance records": "document-preparation-management",
+  "Candidate tracking": "crm-data-management",
+  "Placement documentation": "document-preparation-management",
+  "Client reporting": "data-entry-reporting",
+  "Contract management": "document-preparation-management",
+  "Transaction paperwork": "forms-paperwork",
+  "Document organization": "document-preparation-management",
+  "Document management": "document-preparation-management",
+};
+
+// Build reverse mapping: industry → service slugs
+const INDUSTRY_SERVICES = {};
+Object.entries(INDUSTRY_EXAMPLES).forEach(([industry, examples]) => {
+  const serviceSlugs = new Set(examples.map(ex => EXAMPLE_TO_SERVICE[ex]).filter(Boolean));
+  INDUSTRY_SERVICES[industry] = Array.from(serviceSlugs);
+});
+
+// Build reverse mapping: service slug → industries
+const SERVICE_INDUSTRIES = {};
+SERVICES.forEach(service => {
+  SERVICE_INDUSTRIES[service.slug] = Object.entries(INDUSTRY_SERVICES)
+    .filter(([, slugs]) => slugs.includes(service.slug))
+    .map(([industry]) => industry);
+});
+
 function useReveal() {
   const ref = useRef(null);
   useEffect(() => {
@@ -463,8 +507,9 @@ function Footer({ setPage }) {
   );
 }
 
-function IndustryPanel() {
+function IndustryPanel({ setPage }) {
   const [active, setActive] = useState(0);
+  const go = (slug) => (e) => { e.preventDefault(); setPage(slug); };
   return (
     <>
       <div className="tag-list">
@@ -482,7 +527,16 @@ function IndustryPanel() {
       <div className="industry-panel">
         <p className="industry-panel-label">Examples for {AUDIENCE[active]}</p>
         <ul className="plain-list industry-examples">
-          {INDUSTRY_EXAMPLES[AUDIENCE[active]].map((ex) => <li key={ex}>{ex}</li>)}
+          {INDUSTRY_EXAMPLES[AUDIENCE[active]].map((ex) => {
+            const slug = EXAMPLE_TO_SERVICE[ex];
+            return slug ? (
+              <li key={ex}>
+                <a href={pathFor(slug)} onClick={go(slug)}>{ex}</a>
+              </li>
+            ) : (
+              <li key={ex}>{ex}</li>
+            );
+          })}
         </ul>
       </div>
     </>
@@ -674,10 +728,10 @@ function HomePage({ setPage }) {
           need consistency, not a full-time hire. Select an industry to see examples of what we handle.
         </p>
         <p style={{ fontSize: "0.9rem", backgroundColor: "#E6F3F9", border: "none", borderLeft: "3px solid #09748B", borderRadius: "4px", padding: "1rem 1.2rem", maxWidth: "620px", marginBottom: "1.3rem", color: "#041944" }}>
-          <strong>Best fit:</strong> Aurum is a strong fit for growing businesses with recurring administrative 
+          <strong>Best fit:</strong> Aurum is a strong fit for growing businesses with recurring administrative
           volume, multiple customers or projects, and no dedicated team to consistently own the back office.
         </p>
-        <IndustryPanel />
+        <IndustryPanel setPage={setPage} />
         <a className="btn-text" href={pathFor("Services")} onClick={go("Services")}>See the full list of services &rarr;</a>
       </section>
 
@@ -806,6 +860,27 @@ function ServiceDetailPage({ slug, setPage }) {
           {service.examples.map((ex) => <li key={ex}>{ex}</li>)}
         </ul>
       </section>
+      {SERVICE_INDUSTRIES[slug] && SERVICE_INDUSTRIES[slug].length > 0 && (
+        <section className="section alt">
+          <h2>Used by These Industries</h2>
+          <p className="section-lead">
+            This service is commonly used by businesses in these industries.
+          </p>
+          <div className="tag-list">
+            {SERVICE_INDUSTRIES[slug].map((industry) => (
+              <a
+                key={industry}
+                href={pathFor("Industries")}
+                onClick={(e) => { e.preventDefault(); setPage("Industries"); }}
+                className="tag"
+                style={{ cursor: "pointer", textDecoration: "none" }}
+              >
+                {industry}
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
       <section className="cta-band">
         {service.oneTime ? (
           <>
@@ -1156,7 +1231,7 @@ function IndustriesPage({ setPage }) {
       </section>
       <section className="section">
         <h2 ref={ref}>Industries We Serve</h2>
-        <IndustryPanel />
+        <IndustryPanel setPage={setPage} />
       </section>
       <section className="cta-band">
         <h2>Don't see your industry?</h2>

@@ -334,7 +334,7 @@ export function pathFor(key) {
     case "Services": return "/services";
     case "ProgramsPartnerships": return "/programs-partnerships";
     case "ProWorx": return "https://www.proworx.io";
-    case "PreferredPartners": return "/programs-partnerships#preferred-partners";
+    case "PreferredPartners": return "/preferred-partners";
     case "BusinessPrograms": return "/programs-partnerships#business-programs";
     case "PartnershipOpportunities": return "/programs-partnerships#partnership-opportunities";
     case "About": return "/about";
@@ -357,6 +357,7 @@ export function pageFromPath(pathname) {
   if (path === "/") return "Home";
   if (path === "/services") return "Services";
   if (path === "/programs-partnerships") return "ProgramsPartnerships";
+  if (path === "/preferred-partners") return "PreferredPartners";
   if (path === "/about") return "About";
   if (path === "/industries") return "Industries";
   if (path === "/how-it-works") return "HowItWorks";
@@ -1179,6 +1180,103 @@ function ProgramsPartnershipsPage({ setPage }) {
         <h2>Add an Implementation Layer to Your Program.</h2>
         <p>If your organization already supports entrepreneurs or growing businesses, Aurum Ventura can help participants turn operational guidance into working systems.</p>
         <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Discuss a Program Partnership</a>
+      </section>
+    </div>
+  );
+}
+
+function PreferredPartnersPage({ setPage }) {
+  const go = (key) => (e) => { e.preventDefault(); setPage(key); };
+
+  const PARTNERS = [
+    {
+      name: "ProWorx",
+      logo: "/logo-mark.png",
+      description: "Business management software designed for service businesses. Helps organize service delivery, scheduling, client data, and operational visibility.",
+      website: "https://www.proworx.io",
+    },
+    {
+      name: "Technology Integration Partner",
+      logo: "/logo-mark.png",
+      description: "Specialized expertise in digital transformation and system implementation for growing businesses.",
+      website: "#",
+    },
+    {
+      name: "Operations Excellence Partner",
+      logo: "/logo-mark.png",
+      description: "Dedicated to streamlining administrative workflows and improving operational efficiency across all business functions.",
+      website: "#",
+    },
+    {
+      name: "Business Support Specialist",
+      logo: "/logo-mark.png",
+      description: "Focused on providing comprehensive back-office support and administrative services to thriving enterprises.",
+      website: "#",
+    },
+    {
+      name: "Strategic Implementation Partner",
+      logo: "/logo-mark.png",
+      description: "Expert in translating business strategy into operational systems and sustainable administrative structures.",
+      website: "#",
+    },
+    {
+      name: "Growth-Focused Solutions",
+      logo: "/logo-mark.png",
+      description: "Committed to supporting businesses at every stage of growth with scalable administrative and operational solutions.",
+      website: "#",
+    },
+  ];
+
+  return (
+    <div>
+      <section className="page-head">
+        <p className="kicker">Preferred Partners</p>
+        <h1>Our Preferred Partners</h1>
+        <p className="hero-sub">
+          Aurum Ventura works closely with a select group of partners who share our commitment to helping businesses operate efficiently and scale sustainably. These relationships allow us to provide comprehensive support that combines administrative expertise with technology solutions and strategic guidance.
+        </p>
+      </section>
+
+      <section className="section">
+        <h2>Technology & Services Partners</h2>
+        <p className="section-lead">
+          We partner with industry-leading providers to ensure our clients have access to best-in-class tools and support systems.
+        </p>
+        <div className="partner-grid">
+          {PARTNERS.map((partner) => (
+            <div className="partner-card" key={partner.name}>
+              <img src={partner.logo} alt={partner.name} className="partner-logo" />
+              <h3>{partner.name}</h3>
+              <p>{partner.description}</p>
+              {partner.website !== "#" && (
+                <a href={partner.website} target="_blank" rel="noopener noreferrer" className="partner-link">
+                  Learn more →
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="section alt">
+        <h2>Partnership Benefits</h2>
+        <p className="section-lead">
+          Our strategic partnerships deliver measurable value to the businesses we serve.
+        </p>
+        <ul className="plain-list">
+          <li><strong>Integrated Solutions:</strong> Seamless integration between Aurum Ventura's administrative services and our partners' platforms and solutions.</li>
+          <li><strong>Expert Support:</strong> Access to specialized expertise and support from both Aurum Ventura and our preferred partners.</li>
+          <li><strong>Optimized Workflows:</strong> Streamlined processes that combine administrative best practices with proven technology solutions.</li>
+          <li><strong>Scalability:</strong> Systems and services designed to grow with your business as it scales and evolves.</li>
+          <li><strong>Reliability:</strong> Partnership with trusted, established providers committed to business continuity and customer success.</li>
+          <li><strong>Innovation:</strong> Access to continuous improvements and new features as our partners innovate and enhance their offerings.</li>
+        </ul>
+      </section>
+
+      <section className="cta-band">
+        <h2>Interested in Becoming a Partner?</h2>
+        <p>If your organization shares our commitment to supporting business growth and operational excellence, we'd like to explore partnership opportunities.</p>
+        <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Discuss Partnership Opportunities</a>
       </section>
     </div>
   );
@@ -2717,6 +2815,7 @@ export default function App({ initialPath } = {}) {
     Home: <HomePage setPage={navigate} />,
     Services: <ServicesPage setPage={navigate} />,
     ProgramsPartnerships: <ProgramsPartnershipsPage setPage={navigate} />,
+    PreferredPartners: <PreferredPartnersPage setPage={navigate} />,
     About: <AboutPage setPage={navigate} />,
     Industries: <IndustriesPage setPage={navigate} />,
     HowItWorks: <HowItWorksPage setPage={navigate} />,
@@ -2896,8 +2995,12 @@ export default function App({ initialPath } = {}) {
         /* Programs & Partnerships Page */
         .partner-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin: 1.5rem 0 2rem; }
         .partner-card { padding: 1.2rem 1.4rem; border-left: 3px solid ${COLORS.aqua}; background: ${COLORS.white}; border-radius: 4px; box-shadow: 0 1px 2px rgba(4,25,68,0.04); transition: border-color 0.3s ease, box-shadow 0.3s ease; }
-        .partner-card h3 { font: inherit; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 1.05rem; color: ${COLORS.navy}; margin: 0; line-height: 1.3; }
+        .partner-card h3 { font: inherit; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 1.05rem; color: ${COLORS.navy}; margin: 0 0 0.5rem 0; line-height: 1.3; }
+        .partner-card p { font-size: 0.9rem; color: ${COLORS.slate}; margin-bottom: 0.8rem; line-height: 1.55; }
         .partner-card:hover { border-left-color: ${COLORS.teal}; box-shadow: 0 2px 6px rgba(4,25,68,0.08); }
+        .partner-logo { width: 40px; height: 40px; margin-bottom: 0.8rem; object-fit: contain; }
+        .partner-link { display: inline-block; color: ${COLORS.teal}; font-weight: 600; font-size: 0.85rem; text-decoration: none; border-bottom: 1px solid ${COLORS.teal}; padding-bottom: 0.2rem; transition: color 0.2s ease; }
+        .partner-link:hover { color: ${COLORS.navy}; border-bottom-color: ${COLORS.navy}; }
         @media (max-width: 640px) { .partner-grid { grid-template-columns: 1fr; } }
 
         .systems-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.7rem 1.5rem; margin: 1.5rem 0 2rem; max-width: 720px; }

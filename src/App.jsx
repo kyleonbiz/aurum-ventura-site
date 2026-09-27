@@ -1442,7 +1442,11 @@ function IndustriesPage({ setPage }) {
       </section>
       <section className="section">
         <h2 ref={ref}>Industries We Serve</h2>
-        <IndustryPanel setPage={setPage} />
+        <div className="tag-list">
+          {AUDIENCE.map((industry) => (
+            <span key={industry} className="tag">{industry}</span>
+          ))}
+        </div>
       </section>
       <section className="cta-band">
         <h2>Don't see your industry?</h2>

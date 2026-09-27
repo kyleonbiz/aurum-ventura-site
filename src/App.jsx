@@ -333,7 +333,7 @@ export function pathFor(key) {
     case "Home": return "/";
     case "Services": return "/services";
     case "ProgramsPartnerships": return "/programs-partnerships";
-    case "ProWorx": return "/programs-partnerships#proworx";
+    case "ProWorx": return "https://www.proworx.io";
     case "PreferredPartners": return "/programs-partnerships#preferred-partners";
     case "BusinessPrograms": return "/programs-partnerships#business-programs";
     case "PartnershipOpportunities": return "/programs-partnerships#partnership-opportunities";
@@ -443,16 +443,22 @@ function Nav({ page, setPage }) {
                   </a>
                   {dropdownOpen && (
                     <div className="nav-dropdown-menu">
-                      {PROGRAMS_DROPDOWN_ITEMS.map((item) => (
-                        <a
-                          key={item.key}
-                          className="nav-dropdown-item"
-                          href={pathFor(item.key)}
-                          onClick={go(item.key, false)}
-                        >
-                          {item.label}
-                        </a>
-                      ))}
+                      {PROGRAMS_DROPDOWN_ITEMS.map((item) => {
+                        const url = pathFor(item.key);
+                        const isExternal = url.startsWith("http");
+                        return (
+                          <a
+                            key={item.key}
+                            className="nav-dropdown-item"
+                            href={url}
+                            onClick={isExternal ? undefined : go(item.key, false)}
+                            target={isExternal ? "_blank" : undefined}
+                            rel={isExternal ? "noopener noreferrer" : undefined}
+                          >
+                            {item.label}
+                          </a>
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -504,16 +510,22 @@ function Nav({ page, setPage }) {
                   </button>
                   {dropdownOpen && (
                     <div className="nav-mobile-dropdown" id="nav-mobile-dropdown">
-                      {PROGRAMS_DROPDOWN_ITEMS.map((item) => (
-                        <a
-                          key={item.key}
-                          className="nav-mobile-dropdown-item"
-                          href={pathFor(item.key)}
-                          onClick={go(item.key, true)}
-                        >
-                          {item.label}
-                        </a>
-                      ))}
+                      {PROGRAMS_DROPDOWN_ITEMS.map((item) => {
+                        const url = pathFor(item.key);
+                        const isExternal = url.startsWith("http");
+                        return (
+                          <a
+                            key={item.key}
+                            className="nav-mobile-dropdown-item"
+                            href={url}
+                            onClick={isExternal ? undefined : go(item.key, true)}
+                            target={isExternal ? "_blank" : undefined}
+                            rel={isExternal ? "noopener noreferrer" : undefined}
+                          >
+                            {item.label}
+                          </a>
+                        );
+                      })}
                     </div>
                   )}
                 </div>

@@ -2664,8 +2664,8 @@ export default function App({ initialPath } = {}) {
         }
 
         /* Nav - FIXED SPACING */
-        .nav { position: sticky; top: 0; background: ${COLORS.white}; border-bottom: 1px solid #E4E9EF; z-index: 50; }
-        .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0.75rem 1.5rem 0.75rem 1.5rem; display: flex; align-items: center; justify-content: flex-start; padding-right: 0; }
+        .nav { position: sticky; top: 0; background: ${COLORS.white}; border-bottom: 1px solid #E4E9EF; z-index: 50; overflow: visible; }
+        .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0.75rem 0 0.75rem 1.5rem; display: flex; align-items: center; justify-content: flex-start; position: relative; }
         .nav-brand { display: flex; align-items: center; gap: 0.6rem; background: none; border: none; padding: 0; }
         .nav-mark { height: 34px; width: auto; }
         .nav-word { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 600; color: ${COLORS.navy}; text-align: left; line-height: 1.15; }
@@ -2673,7 +2673,7 @@ export default function App({ initialPath } = {}) {
         .nav-links { display: flex; align-items: center; gap: 1.4rem; margin-left: 1.8rem; }
         .nav-link { background: none; border: none; font-size: 0.88rem; font-weight: 500; color: ${COLORS.slate}; padding: 0.3rem 0; border-bottom: 2px solid transparent; }
         .nav-link.active, .nav-link:hover { color: ${COLORS.navy}; border-bottom-color: ${COLORS.aqua}; }
-        .nav-cta { background: ${COLORS.navy}; color: ${COLORS.white}; border: none; padding: 0.6rem 1.2rem; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.02em; flex-shrink: 0; margin-left: auto; margin-right: 1.5rem; }
+        .nav-cta { background: ${COLORS.navy}; color: ${COLORS.white}; border: none; padding: 0.6rem 1.2rem; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.02em; flex-shrink: 0; position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
         .nav-cta:hover, .nav-cta.active { background: ${COLORS.teal}; }
         .nav-burger { display: none; flex-direction: column; gap: 4px; background: none; border: none; padding: 0.4rem; flex-shrink: 0; }
         .nav-burger span { width: 22px; height: 2px; background: ${COLORS.navy}; }

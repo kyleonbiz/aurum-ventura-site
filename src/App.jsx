@@ -333,6 +333,10 @@ export function pathFor(key) {
     case "Home": return "/";
     case "Services": return "/services";
     case "ProgramsPartnerships": return "/programs-partnerships";
+    case "ProWorx": return "/programs-partnerships#proworx";
+    case "PreferredPartners": return "/programs-partnerships#preferred-partners";
+    case "BusinessPrograms": return "/programs-partnerships#business-programs";
+    case "PartnershipOpportunities": return "/programs-partnerships#partnership-opportunities";
     case "About": return "/about";
     case "Industries": return "/industries";
     case "HowItWorks": return "/how-it-works";
@@ -394,15 +398,25 @@ function Swoosh({ style }) {
 
 const NAV_LABELS = { HowItWorks: "How It Works", ProgramsPartnerships: "Programs & Partnerships", Upload: "Upload Documents" };
 
+const PROGRAMS_DROPDOWN_ITEMS = [
+  { label: "Overview", key: "ProgramsPartnerships" },
+  { label: "ProWorx", key: "ProWorx" },
+  { label: "Preferred Partners", key: "PreferredPartners" },
+  { label: "Business Programs", key: "BusinessPrograms" },
+  { label: "Partnership Opportunities", key: "PartnershipOpportunities" },
+];
+
 function Nav({ page, setPage }) {
   const items = ["Home", "Services", "ProgramsPartnerships", "Industries", "About", "HowItWorks"];
   const [open, setOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const isServiceDetail = SERVICES.some((s) => s.slug === page);
   const isActive = (it) => page === it || (it === "Services" && isServiceDetail);
   const go = (key, closeMenu) => (e) => {
     e.preventDefault();
     setPage(key);
     if (closeMenu) setOpen(false);
+    setDropdownOpen(false);
   };
   return (
     <header className="nav">
@@ -415,16 +429,46 @@ function Nav({ page, setPage }) {
           </span>
         </a>
         <nav className="nav-links">
-          {items.map((it) => (
-            <a
-              key={it}
-              className={"nav-link" + (isActive(it) ? " active" : "")}
-              href={pathFor(it)}
-              onClick={go(it)}
-            >
-              {NAV_LABELS[it] || it}
-            </a>
-          ))}
+          {items.map((it) => {
+            if (it === "ProgramsPartnerships") {
+              return (
+                <div key={it} className="nav-dropdown" onMouseEnter={() => setDropdownOpen(true)} onMouseLeave={() => setDropdownOpen(false)}>
+                  <a
+                    className={"nav-link nav-dropdown-trigger" + (isActive(it) ? " active" : "") + (dropdownOpen ? " open" : "")}
+                    href={pathFor(it)}
+                    onClick={go(it)}
+                  >
+                    {NAV_LABELS[it] || it}
+                    <span className="nav-chevron">˅</span>
+                  </a>
+                  {dropdownOpen && (
+                    <div className="nav-dropdown-menu">
+                      {PROGRAMS_DROPDOWN_ITEMS.map((item) => (
+                        <a
+                          key={item.key}
+                          className="nav-dropdown-item"
+                          href={pathFor(item.key)}
+                          onClick={go(item.key, false)}
+                        >
+                          {item.label}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+            return (
+              <a
+                key={it}
+                className={"nav-link" + (isActive(it) ? " active" : "")}
+                href={pathFor(it)}
+                onClick={go(it)}
+              >
+                {NAV_LABELS[it] || it}
+              </a>
+            );
+          })}
           <a
             className={"nav-cta" + (page === "Contact" ? " active" : "")}
             href={pathFor("Contact")}
@@ -445,16 +489,47 @@ function Nav({ page, setPage }) {
       </div>
       {open && (
         <div className="nav-mobile" id="nav-mobile-menu">
-          {items.map((it) => (
-            <a
-              key={it}
-              className={"nav-mobile-link" + (isActive(it) ? " active" : "")}
-              href={pathFor(it)}
-              onClick={go(it, true)}
-            >
-              {NAV_LABELS[it] || it}
-            </a>
-          ))}
+          {items.map((it) => {
+            if (it === "ProgramsPartnerships") {
+              return (
+                <div key={it}>
+                  <button
+                    className="nav-mobile-dropdown-trigger"
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                    aria-expanded={dropdownOpen}
+                    aria-controls="nav-mobile-dropdown"
+                  >
+                    <span className={"nav-mobile-link" + (isActive(it) ? " active" : "")}>{NAV_LABELS[it] || it}</span>
+                    <span className={"nav-mobile-chevron" + (dropdownOpen ? " open" : "")}>˅</span>
+                  </button>
+                  {dropdownOpen && (
+                    <div className="nav-mobile-dropdown" id="nav-mobile-dropdown">
+                      {PROGRAMS_DROPDOWN_ITEMS.map((item) => (
+                        <a
+                          key={item.key}
+                          className="nav-mobile-dropdown-item"
+                          href={pathFor(item.key)}
+                          onClick={go(item.key, true)}
+                        >
+                          {item.label}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
+            return (
+              <a
+                key={it}
+                className={"nav-mobile-link" + (isActive(it) ? " active" : "")}
+                href={pathFor(it)}
+                onClick={go(it, true)}
+              >
+                {NAV_LABELS[it] || it}
+              </a>
+            );
+          })}
           <a
             className={"nav-mobile-link nav-mobile-cta" + (page === "Contact" ? " active" : "")}
             href={pathFor("Contact")}
@@ -2696,6 +2771,17 @@ export default function App({ initialPath } = {}) {
         .nav-burger span { width: 22px; height: 2px; background: ${COLORS.navy}; }
         .nav-mobile { display: none; }
 
+        /* Dropdown Styles */
+        .nav-dropdown { position: relative; }
+        .nav-dropdown-trigger { display: inline-flex; align-items: center; gap: 0.35rem; }
+        .nav-chevron { display: inline-flex; align-items: center; font-size: 0.7rem; transition: transform 0.2s ease; }
+        .nav-dropdown-trigger.open .nav-chevron { transform: scaleY(-1); }
+        .nav-dropdown-menu { position: absolute; top: 100%; left: 0; background: ${COLORS.white}; border: 1px solid #E4E9EF; border-top: none; border-radius: 0 0 4px 4px; box-shadow: 0 4px 12px rgba(4, 25, 68, 0.08); min-width: 220px; z-index: 100; animation: slideDown 0.2s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+        .nav-dropdown-item { display: block; padding: 0.7rem 1.1rem; font-size: 0.88rem; color: ${COLORS.slate}; text-decoration: none; transition: background 0.15s ease, color 0.15s ease; }
+        .nav-dropdown-item:hover { background: ${COLORS.ice}; color: ${COLORS.navy}; }
+        .nav-dropdown-item:first-child { border-top: 1px solid #E4E9EF; }
+
         @media (max-width: 768px) {
           .nav-links { display: none; flex: none; }
           .nav-burger { display: flex; }
@@ -2704,6 +2790,17 @@ export default function App({ initialPath } = {}) {
           .nav-mobile-link.active { color: ${COLORS.navy}; font-weight: 600; }
           .nav-mobile-cta { color: ${COLORS.navy}; font-weight: 600; margin-top: 0.4rem; }
           .nav-mobile-cta.active { color: ${COLORS.teal}; }
+
+          /* Mobile Dropdown Styles */
+          .nav-dropdown-trigger { display: none; }
+          .nav-dropdown-menu { display: none; }
+          .nav-mobile-dropdown-trigger { display: flex; align-items: center; justify-content: space-between; width: 100%; background: none; border: none; padding: 0.6rem 0; font-size: 0.95rem; color: ${COLORS.slate}; cursor: pointer; font-family: inherit; }
+          .nav-mobile-dropdown-trigger .nav-mobile-link.active { color: ${COLORS.navy}; font-weight: 600; }
+          .nav-mobile-chevron { display: inline-flex; align-items: center; font-size: 0.7rem; transition: transform 0.2s ease; }
+          .nav-mobile-chevron.open { transform: scaleY(-1); }
+          .nav-mobile-dropdown { display: flex; flex-direction: column; background: ${COLORS.ice}; border-radius: 4px; margin-top: 0.3rem; padding: 0.4rem 0; }
+          .nav-mobile-dropdown-item { display: block; padding: 0.6rem 0 0.6rem 1.2rem; font-size: 0.85rem; color: ${COLORS.slate}; text-decoration: none; transition: color 0.15s ease; }
+          .nav-mobile-dropdown-item:hover { color: ${COLORS.navy}; }
         }
 
         /* Hero */

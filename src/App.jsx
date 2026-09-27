@@ -759,10 +759,10 @@ function HomePage({ setPage }) {
       <section className="hero">
         <Swoosh style={{ position: "absolute", top: "8%", right: "-5%", width: "560px", height: "220px", opacity: 0.35, zIndex: 0 }} />
         <div className="hero-inner">
-          <p className="kicker">Business Administrative Services</p>
-          <h1>Your Business. <br />Our Back Office.</h1>
+          <p className="kicker">Administrative Support for Growing Businesses</p>
+          <h1>Your Business. <br />Our Administrative Support.</h1>
           <p className="hero-sub">
-            Aurum Ventura provides managed back-office support for small and growing businesses. Document management, invoicing, license tracking, vendor records, CRM data, project administration, and reporting — all handled within a defined scope and reserved capacity.
+            Aurum Ventura provides professional administrative support for small and growing businesses. We handle document management, invoicing, license tracking, vendor records, CRM data, project administration, and reporting — all within a defined scope and reserved capacity.
           </p>
           <p style={{ fontSize: "0.9rem", fontWeight: "500", color: COLORS.teal, marginTop: "1.1rem", marginBottom: "1.6rem", maxWidth: "620px" }}>
             Based in Nashville, Tennessee. Remote service to businesses nationwide.
@@ -774,9 +774,9 @@ function HomePage({ setPage }) {
       </section>
 
       <section className="section">
-        <h2 style={{ textAlign: "center" }}>How We Support Businesses</h2>
+        <h2 style={{ textAlign: "center" }}>How We Provide Administrative Support</h2>
         <p className="section-lead" style={{ textAlign: "center", margin: "0 auto 0.8rem" }}>
-          Aurum Ventura provides back-office operations support in two ways:
+          Aurum Ventura delivers professional administrative support in two ways:
         </p>
         <div className="two-path-grid">
           <div className="two-path-card">
@@ -919,11 +919,11 @@ function ServicesPage({ setPage }) {
   return (
     <div>
       <section className="page-head">
-        <p className="kicker">Services</p>
+        <p className="kicker">Administrative Support Services</p>
         <h1>What We Do</h1>
         <p className="hero-sub">
-          Our recurring services fall into core categories — your Scope of Services is built from
-          the ones you actually need — plus a one-time Business File Reset project if you just need
+          Our administrative support services fall into core categories — your custom service plan is built from
+          the support areas you actually need — plus a one-time Business File Reset project if you just need
           your existing files organized.
         </p>
       </section>

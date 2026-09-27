@@ -2760,7 +2760,7 @@ export default function App({ initialPath } = {}) {
         .cost-total { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.2rem, 2.6vw, 1.5rem); font-weight: 600; line-height: 1.4; color: ${COLORS.navy}; max-width: 620px; margin: 0; }
 
         /* Two-Path Section */
-        .two-path-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin: 1.6rem 0 1.8rem; max-width: 900px; }
+        .two-path-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin: 1.6rem auto 1.8rem; max-width: 900px; }
         .two-path-card { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: ${COLORS.ice}; padding: 2.8rem 1.9rem; border-radius: 4px; border-left: 3px solid ${COLORS.aqua}; min-height: 280px; }
         .two-path-card h3 { font: inherit; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 1.3rem; color: ${COLORS.navy}; margin: 0 0 0.4rem; }
         .two-path-card p { font-size: 0.95rem; line-height: 1.65; color: ${COLORS.navy}; margin: 0 0 0.8rem; }

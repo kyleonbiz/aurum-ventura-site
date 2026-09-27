@@ -700,23 +700,28 @@ function HomePage({ setPage }) {
       </section>
 
       <section className="section alt">
-        <h2>The Real Cost of Administrative Work</h2>
-        <p className="section-lead">
-          Most businesses underestimate how many hours administrative tasks consume. Depending on your operation:
-        </p>
-        <div className="cost-highlight">
-          <p className="cost-emphasis">8–10+ hours per week</p>
-          <p style={{ fontSize: "0.95rem", color: COLORS.slate, maxWidth: "600px", marginTop: "0.6rem" }}>
-            That's what invoicing, renewals, vendor paperwork, CRM updates, document organization, and reporting typically costs. Every one of those hours is an hour not spent running your business.
-          </p>
-        </div>
-        <div className="cost-list">
-          {TIME_COST.map(([task, hours]) => (
-            <div className="cost-row" key={task}>
-              <span>{task}</span>
-              <span className="cost-hours">{hours}</span>
-            </div>
-          ))}
+        <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>The Real Cost of Administrative Work</h2>
+        <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem", maxWidth: "700px", margin: "0 auto" }}>
+          <div style={{ background: "#E6F3F9", borderRadius: "12px", padding: "2rem", textAlign: "center", border: "1px solid #B8D4E8" }}>
+            <p style={{ fontSize: "3.5rem", fontWeight: "700", color: COLORS.teal, margin: "0 0 0.5rem", fontFamily: "'Cormorant Garamond', serif" }}>10–16</p>
+            <p style={{ fontSize: "0.85rem", fontWeight: "600", letterSpacing: "0.1em", textTransform: "uppercase", color: COLORS.navy, margin: "0 0 1rem" }}>Hours / Week</p>
+            <p style={{ fontSize: "1.05rem", fontWeight: "600", color: COLORS.navy, margin: "0", lineHeight: "1.4" }}>consumed by running the business around the work</p>
+          </div>
+
+          <div style={{ background: "#FDE6E6", borderRadius: "12px", padding: "2rem", textAlign: "center", border: "1px solid #F5C5C5" }}>
+            <p style={{ fontSize: "3.5rem", fontWeight: "700", color: "#D63D2E", margin: "0 0 0.5rem", fontFamily: "'Cormorant Garamond', serif" }}>$23K+</p>
+            <p style={{ fontSize: "0.85rem", fontWeight: "600", letterSpacing: "0.1em", textTransform: "uppercase", color: "#D63D2E", margin: "0 0 1rem" }}>Per Year</p>
+            <p style={{ fontSize: "1.05rem", fontWeight: "600", color: COLORS.navy, margin: "0", lineHeight: "1.4" }}>in potential opportunity tied up in that time</p>
+            <p style={{ fontSize: "0.8rem", color: COLORS.slate, marginTop: "0.8rem", fontStyle: "italic" }}>Potential opportunity value, not guaranteed lost revenue.</p>
+          </div>
+
+          <div style={{ background: "#FDE6E6", borderRadius: "12px", padding: "2rem", textAlign: "center", border: "1px solid #F5C5C5" }}>
+            <p style={{ fontSize: "3.5rem", fontWeight: "700", color: "#D63D2E", margin: "0 0 0.5rem", fontFamily: "'Cormorant Garamond', serif" }}>1 in 3</p>
+            <p style={{ fontSize: "0.85rem", fontWeight: "600", letterSpacing: "0.1em", textTransform: "uppercase", color: COLORS.navy, margin: "0 0 0.5rem" }}>New Employer Businesses</p>
+            <p style={{ fontSize: "0.95rem", color: COLORS.slate, margin: "0 0 1rem" }}>do not make it to year three</p>
+            <p style={{ fontSize: "0.8rem", fontWeight: "700", color: "#D63D2E", textTransform: "uppercase", letterSpacing: "0.05em", margin: "0 0 0.6rem" }}>The Stakes</p>
+            <p style={{ fontSize: "1.1rem", fontWeight: "700", color: COLORS.navy, margin: "0", lineHeight: "1.3" }}>Small problems become business problems fast.</p>
+          </div>
         </div>
       </section>
 

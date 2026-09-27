@@ -3238,7 +3238,9 @@ export default function App({ initialPath } = {}) {
         .custom-note p:last-child { margin-bottom: 0; }
 
         .tag-list { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1rem; }
-        .tag { border: 1px solid ${COLORS.teal}; color: ${COLORS.teal}; font-size: 0.82rem; font-weight: 500; padding: 0.35rem 0.9rem; }
+        .tag { border: 1px solid ${COLORS.teal}; color: ${COLORS.teal}; font-size: 0.82rem; font-weight: 500; padding: 0.35rem 0.9rem; border-radius: 4px; display: inline-block; }
+        a.tag { cursor: pointer; transition: all 0.2s ease; background: transparent; }
+        a.tag:hover { background: ${COLORS.teal}; color: ${COLORS.white}; border-color: ${COLORS.teal}; transform: translateY(-1px); box-shadow: 0 2px 6px rgba(9, 116, 139, 0.15); }
         .tag-toggle { background: none; font-family: inherit; cursor: pointer; transition: background 0.2s ease, color 0.2s ease; }
         .tag-toggle.selected { background: ${COLORS.teal}; color: ${COLORS.white}; }
 

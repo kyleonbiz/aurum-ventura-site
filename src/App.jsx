@@ -1039,7 +1039,7 @@ function ServicesPage({ setPage }) {
       <section className="cta-band">
         <h2>Not sure which categories apply?</h2>
         <p>We'll work it out together in a short consultation.</p>
-        <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Request a Consultation</a>
+        <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>See How We Can Help</a>
       </section>
     </div>
   );
@@ -1051,6 +1051,13 @@ function ServiceDetailPage({ slug, setPage }) {
   const go = (key) => (e) => { e.preventDefault(); setPage(key); };
   return (
     <div>
+      <section className="breadcrumb-section" style={{ padding: "0.8rem 1.5rem", borderBottom: "1px solid #E4E9EF", fontSize: "0.85rem" }}>
+        <a href={pathFor("Home")} onClick={go("Home")} style={{ color: "#09748B", textDecoration: "none" }}>Home</a>
+        <span style={{ margin: "0 0.5rem", color: "#57677F" }}>/</span>
+        <a href={pathFor("Services")} onClick={go("Services")} style={{ color: "#09748B", textDecoration: "none" }}>Services</a>
+        <span style={{ margin: "0 0.5rem", color: "#57677F" }}>/</span>
+        <span style={{ color: "#57677F" }}>{service.title}</span>
+      </section>
       <section className="page-head">
         <a className="btn-text back-link" href={pathFor("Services")} onClick={go("Services")}>&larr; All Services</a>
         <p className="kicker">{String(index + 1).padStart(2, "0")} &middot; Services</p>
@@ -1096,7 +1103,7 @@ function ServiceDetailPage({ slug, setPage }) {
             <p>We'll fold it into a Scope of Services built around what you actually need.</p>
           </>
         )}
-        <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Request a Consultation</a>
+        <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Get a Custom Quote</a>
       </section>
     </div>
   );
@@ -1111,6 +1118,13 @@ function IndustryDetailPage({ slug, setPage }) {
 
   return (
     <div>
+      <section className="breadcrumb-section" style={{ padding: "0.8rem 1.5rem", borderBottom: "1px solid #E4E9EF", fontSize: "0.85rem" }}>
+        <a href={pathFor("Home")} onClick={go("Home")} style={{ color: "#09748B", textDecoration: "none" }}>Home</a>
+        <span style={{ margin: "0 0.5rem", color: "#57677F" }}>/</span>
+        <a href={pathFor("Industries")} onClick={go("Industries")} style={{ color: "#09748B", textDecoration: "none" }}>Industries</a>
+        <span style={{ margin: "0 0.5rem", color: "#57677F" }}>/</span>
+        <span style={{ color: "#57677F" }}>{industry}</span>
+      </section>
       <section className="page-head">
         <a className="btn-text back-link" href={pathFor("Industries")} onClick={go("Industries")}>&larr; All Industries</a>
         <p className="kicker">Industries We Serve</p>
@@ -1149,7 +1163,7 @@ function IndustryDetailPage({ slug, setPage }) {
       <section className="cta-band">
         <h2>Ready to handle {industry.toLowerCase()} operations more efficiently?</h2>
         <p>We'll build a custom scope of services around your specific needs.</p>
-        <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Request a Consultation</a>
+        <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Get Started for {industry}</a>
       </section>
     </div>
   );
@@ -1620,7 +1634,7 @@ function HowItWorksPage({ setPage }) {
       <section className="cta-band">
         <h2>Ready to see what it would cost?</h2>
         <p>A short consultation gets you a defined scope and a fixed monthly quote.</p>
-        <a className="btn-primary" href={pathFor("Contact")} onClick={(e) => { e.preventDefault(); setPage("Contact"); }}>Request a Consultation</a>
+        <a className="btn-primary" href={pathFor("Contact")} onClick={(e) => { e.preventDefault(); setPage("Contact"); }}>Get Your Quote</a>
       </section>
     </div>
   );
@@ -2971,6 +2985,16 @@ export function metaFor(page) {
   if (PAGE_TITLES[page]) return { title: PAGE_TITLES[page], description: PAGE_DESCRIPTIONS[page] };
   const service = SERVICES.find((s) => s.slug === page);
   if (service) return { title: `${service.title} — ${SITE_NAME}`, description: service.summary };
+  if (typeof page === "string" && page.startsWith("industry:")) {
+    const slug = page.slice("industry:".length);
+    const industry = slugToIndustry(slug);
+    if (industry) {
+      return {
+        title: `${industry} | Back-Office & Administrative Support — ${SITE_NAME}`,
+        description: `Professional outsourced administrative support for ${industry.toLowerCase()} businesses nationwide. Custom-scoped services including document management, invoicing, license tracking, vendor administration, and more.`
+      };
+    }
+  }
   if (typeof page === "string" && page.startsWith("admin-intake:")) {
     return { title: `Intake Review — ${SITE_NAME}`, description: PAGE_DESCRIPTIONS.AdminIntakes };
   }

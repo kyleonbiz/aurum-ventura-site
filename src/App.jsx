@@ -63,7 +63,7 @@ export const SERVICES = [
   {
     slug: "document-preparation-management",
     title: "Document Preparation & Management",
-    summary: "We organize your existing business documents, maintain a clean digital filing system, and prepare routine administrative documents — trackers, checklists, internal forms, and reports — from information you provide.",
+    summary: "Organize your documents, maintain a clean digital filing system, and prepare routine administrative documents — trackers, checklists, forms, and reports.",
     examples: [
       "Setting up a consistent folder structure across your business documents",
       "Preparing a weekly operations checklist from your notes",
@@ -73,7 +73,7 @@ export const SERVICES = [
   {
     slug: "invoice-administration",
     title: "Invoice Administration",
-    summary: "We prepare and send invoices when authorized, record payment status, track issue and due dates, and keep your invoice records organized and current. We do not perform debt collection.",
+    summary: "Prepare and send invoices, track payments and due dates, keep records organized. (No debt collection.)",
     examples: [
       "Preparing and sending an invoice once you approve the amount and recipient",
       "Logging payment status and flagging invoices approaching their due date",
@@ -83,7 +83,7 @@ export const SERVICES = [
   {
     slug: "license-renewal-tracking",
     title: "License & Renewal Tracking",
-    summary: "We record your licenses, permits, registrations, certifications, and insurance documentation, then track expiration and renewal dates so nothing quietly lapses. We track this information administratively — we do not determine what your business legally requires.",
+    summary: "Record and track licenses, permits, certifications, and insurance — so nothing lapses. (We track administratively; you determine what's legally required.)",
     examples: [
       "Building a renewal calendar for your business license, permits, and certifications",
       "Sending you a reminder ahead of an upcoming expiration date",
@@ -93,7 +93,7 @@ export const SERVICES = [
   {
     slug: "vendor-administration",
     title: "Vendor Administration",
-    summary: "We maintain vendor contact records, organize W-9s and Certificates of Insurance, track insurance expiration dates, and prepare routine vendor paperwork using information you approve.",
+    summary: "Maintain vendor records, organize W-9s and Certificates of Insurance, track expiration dates, and prepare routine vendor paperwork.",
     examples: [
       "Building and maintaining a vendor contact directory",
       "Collecting and organizing W-9s and Certificates of Insurance",
@@ -103,7 +103,7 @@ export const SERVICES = [
   {
     slug: "crm-data-management",
     title: "CRM & Data Management",
-    summary: "We enter and update customer and vendor records, clean up duplicates, maintain spreadsheets, and handle routine data entry so your systems stay accurate.",
+    summary: "Enter and update customer records, clean up duplicates, maintain spreadsheets, and handle routine data entry — keep your systems accurate.",
     examples: [
       "Entering new customer records into your CRM after a sale closes",
       "Cleaning up duplicate or outdated contact entries",
@@ -113,7 +113,7 @@ export const SERVICES = [
   {
     slug: "project-administration",
     title: "Project Administration",
-    summary: "We create and maintain project folders and trackers, organize project documents, update project status, and prepare routine administrative reports for work in progress.",
+    summary: "Create and maintain project folders, trackers, and documentation. Update status and prepare progress reports.",
     examples: [
       "Setting up a project folder and tracker for a new job",
       "Updating status fields as a project moves through its stages",
@@ -123,7 +123,7 @@ export const SERVICES = [
   {
     slug: "forms-paperwork",
     title: "Forms & Paperwork",
-    summary: "We prepare routine business forms, applications, checklists, and internal paperwork using information you provide. Anything requiring licensed professional judgment is handled by the appropriate qualified professional — not by us.",
+    summary: "Prepare routine business forms, applications, checklists, and internal paperwork using information you supply. (Licensed professionals handle anything requiring their judgment.)",
     examples: [
       "Filling out a routine application form with information you supply",
       "Preparing an internal checklist for a recurring process",
@@ -133,7 +133,7 @@ export const SERVICES = [
   {
     slug: "data-entry-reporting",
     title: "Data Entry & Reporting",
-    summary: "Spreadsheets, data cleanup, status reports, and monthly operational summaries — the recurring reporting that keeps you informed without consuming your time.",
+    summary: "Spreadsheets, data cleanup, and monthly operational reports — recurring reporting without the time cost.",
     examples: [
       "Entering weekly sales or job data into a tracking spreadsheet",
       "Cleaning up and standardizing an existing spreadsheet",
@@ -143,7 +143,7 @@ export const SERVICES = [
   {
     slug: "general-administrative-support",
     title: "General Administrative Support",
-    summary: "Routine administrative work within your approved Scope of Services. Every plan has a defined scope and reserved capacity, which protects both sides of the relationship.",
+    summary: "Routine administrative work within your approved scope. Every plan has defined scope and reserved capacity — that's what protects both sides.",
     examples: [
       "Handling day-to-day administrative requests within your approved scope",
       "Coordinating routine tasks that don't fit neatly into one category",
@@ -154,7 +154,7 @@ export const SERVICES = [
     slug: "business-file-reset",
     title: "Business File Reset",
     oneTime: true,
-    summary: "A one-time cleanup and organization service designed to bring structure to your existing digital files, folders, and document systems. Every project is custom-scoped and quoted based on the condition and complexity of your current setup.",
+    summary: "One-time cleanup and organization service for your digital files and folders. Every project is custom-scoped and quoted based on your current setup.",
     examples: [
       "Auditing and reorganizing a messy shared drive or folder structure",
       "Standardizing file and folder naming conventions across your business",

@@ -380,10 +380,10 @@ function Swoosh({ style }) {
   );
 }
 
-const NAV_LABELS = { HowItWorks: "How It Works", ProgramsPartnerships: "Programs & Partnerships", Upload: "Upload Documents" };
+const NAV_LABELS = { HowItWorks: "How It Works", ProgramsPartnerships: "Partnerships", Upload: "Upload Documents" };
 
 function Nav({ page, setPage }) {
-  const items = ["Home", "Services", "ProgramsPartnerships", "Industries", "HowItWorks", "About"];
+  const items = ["Home", "Services", "Industries", "About", "ProgramsPartnerships"];
   const [open, setOpen] = useState(false);
   const isServiceDetail = SERVICES.some((s) => s.slug === page);
   const isActive = (it) => page === it || (it === "Services" && isServiceDetail);
@@ -414,14 +414,6 @@ function Nav({ page, setPage }) {
             </a>
           ))}
           <a
-            className="nav-link"
-            href="https://www.proworx.io/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            ProWorx
-          </a>
-          <a
             className={"nav-cta" + (page === "Contact" ? " active" : "")}
             href={pathFor("Contact")}
             onClick={go("Contact")}
@@ -451,14 +443,6 @@ function Nav({ page, setPage }) {
               {NAV_LABELS[it] || it}
             </a>
           ))}
-          <a
-            className="nav-mobile-link"
-            href="https://www.proworx.io/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            ProWorx
-          </a>
           <a
             className={"nav-mobile-link nav-mobile-cta" + (page === "Contact" ? " active" : "")}
             href={pathFor("Contact")}
@@ -649,16 +633,17 @@ function PeopleProcessTechnology() {
       <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
         <h2>People. Process. Technology.</h2>
         <p style={{ fontSize: "1.02rem", marginBottom: "1rem", maxWidth: "620px" }}>
-          Strong back-office support takes more than completing tasks. Aurum Ventura combines human administrative 
-          support with organized workflows and business technology designed to keep information, jobs, and day-to-day 
-          operations connected. For qualifying service-business workflows, specialized technology platforms may be 
-          incorporated when they improve efficiency and visibility.
+          Strong back-office support takes more than completing tasks. Aurum Ventura combines human administrative
+          support with organized workflows and structured processes designed to keep information, jobs, and day-to-day
+          operations connected.
         </p>
         <p style={{ fontStyle: "italic", color: "#57677F", marginBottom: "1.5rem", maxWidth: "620px" }}>
-          The systems organize the operation. Aurum provides the support behind it.
+          People handle the work. Process keeps it organized. Technology, when appropriate, helps scale the operation.
         </p>
         <p style={{ maxWidth: "620px", color: "#57677F" }}>
-          <strong>Technology partner for service-business operations:</strong> ProWorx.
+          Aurum Ventura is an independent administrative services company. We work alongside technology providers that complement
+          our services. <strong>ProWorx</strong> is a technology partner that provides business management software for service
+          businesses. <a href={pathFor("ProgramsPartnerships")} style={{ color: "#09748B", textDecoration: "underline" }}>Learn about our partnerships →</a>
         </p>
       </div>
     </section>
@@ -1063,6 +1048,27 @@ function ProgramsPartnershipsPage({ setPage }) {
             The right program model depends on cohort size, implementation scope, ongoing support needs, and your organization's capacity — and we build a partnership around those real factors, not a generic pricing tier.
           </p>
         </div>
+      </section>
+
+      <section className="section">
+        <h2>Technology Partners</h2>
+        <p className="section-lead">
+          Aurum Ventura is an independent administrative services company. We work alongside technology providers that complement the services we provide.
+        </p>
+        <div style={{ maxWidth: "620px", marginBottom: "1.5rem" }}>
+          <h3 style={{ fontSize: "1.1rem", marginBottom: "0.5rem", color: "#041944" }}>ProWorx</h3>
+          <p style={{ color: "#57677F", marginBottom: "0.8rem" }}>
+            ProWorx provides business management software designed for service businesses. When appropriate for a client's operations,
+            working with ProWorx as a technology platform can help organize service delivery, scheduling, client data, and operational visibility.
+          </p>
+          <p style={{ color: "#57677F" }}>
+            Aurum Ventura handles the administrative work. ProWorx handles the business management technology. Together, they support a more
+            complete operational backbone.
+          </p>
+        </div>
+        <a className="btn-text" href="https://www.proworx.io/" target="_blank" rel="noopener noreferrer">
+          Learn about ProWorx →
+        </a>
       </section>
 
       <section className="cta-band">

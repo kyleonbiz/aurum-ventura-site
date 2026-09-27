@@ -1230,12 +1230,12 @@ function PreferredPartnersPage({ setPage }) {
       </section>
 
       <section className="section" id="partnership-details">
-        <h2>About the Aurum Ventura & ProWorx Partnership</h2>
-        <p className="section-lead" style={{ maxWidth: "620px" }}>
+        <h2 style={{ textAlign: "center" }}>About the Aurum Ventura & ProWorx Partnership</h2>
+        <p className="section-lead" style={{ maxWidth: "620px", margin: "0 auto 1.5rem", textAlign: "center" }}>
           Aurum Ventura and ProWorx have partnered to provide complementary services that strengthen operational support for growing businesses.
         </p>
 
-        <div style={{ maxWidth: "720px", marginTop: "1.5rem" }}>
+        <div style={{ maxWidth: "720px", marginTop: "1.5rem", margin: "1.5rem auto 0", textAlign: "center" }}>
           <h3 style={{ fontSize: "1.1rem", marginBottom: "0.6rem", color: COLORS.navy }}>What This Partnership Means</h3>
           <p style={{ marginBottom: "1rem", color: COLORS.slate }}>
             Aurum Ventura focuses on the human side of business operations—administrative support, process optimization, and strategic organization. ProWorx provides the technology platform that helps manage those operations efficiently. Together, they create a complete solution for businesses looking to streamline their back-office functions.

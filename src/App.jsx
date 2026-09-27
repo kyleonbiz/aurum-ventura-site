@@ -1188,95 +1188,55 @@ function ProgramsPartnershipsPage({ setPage }) {
 function PreferredPartnersPage({ setPage }) {
   const go = (key) => (e) => { e.preventDefault(); setPage(key); };
 
-  const PARTNERS = [
-    {
-      name: "ProWorx",
-      logo: "/logo-mark.png",
-      description: "Business management software designed for service businesses. Helps organize service delivery, scheduling, client data, and operational visibility.",
-      website: "https://www.proworx.io",
-    },
-    {
-      name: "Technology Integration Partner",
-      logo: "/logo-mark.png",
-      description: "Specialized expertise in digital transformation and system implementation for growing businesses.",
-      website: "#",
-    },
-    {
-      name: "Operations Excellence Partner",
-      logo: "/logo-mark.png",
-      description: "Dedicated to streamlining administrative workflows and improving operational efficiency across all business functions.",
-      website: "#",
-    },
-    {
-      name: "Business Support Specialist",
-      logo: "/logo-mark.png",
-      description: "Focused on providing comprehensive back-office support and administrative services to thriving enterprises.",
-      website: "#",
-    },
-    {
-      name: "Strategic Implementation Partner",
-      logo: "/logo-mark.png",
-      description: "Expert in translating business strategy into operational systems and sustainable administrative structures.",
-      website: "#",
-    },
-    {
-      name: "Growth-Focused Solutions",
-      logo: "/logo-mark.png",
-      description: "Committed to supporting businesses at every stage of growth with scalable administrative and operational solutions.",
-      website: "#",
-    },
-  ];
-
   return (
     <div>
       <section className="page-head">
-        <p className="kicker">Preferred Partners</p>
-        <h1>Our Preferred Partners</h1>
+        <p className="kicker">Preferred Partnerships</p>
+        <h1>Preferred Partnerships</h1>
         <p className="hero-sub">
-          Aurum Ventura works closely with a select group of partners who share our commitment to helping businesses operate efficiently and scale sustainably. These relationships allow us to provide comprehensive support that combines administrative expertise with technology solutions and strategic guidance.
+          Explore businesses within the Aurum Ventura network and learn more about the companies we partner with.
         </p>
       </section>
 
       <section className="section">
-        <h2>Technology & Services Partners</h2>
-        <p className="section-lead">
-          We partner with industry-leading providers to ensure our clients have access to best-in-class tools and support systems.
-        </p>
-        <div className="partner-grid">
-          {PARTNERS.map((partner) => (
-            <div className="partner-card" key={partner.name}>
-              <img src={partner.logo} alt={partner.name} className="partner-logo" />
-              <h3>{partner.name}</h3>
-              <p>{partner.description}</p>
-              {partner.website !== "#" && (
-                <a href={partner.website} target="_blank" rel="noopener noreferrer" className="partner-link">
-                  Learn more →
-                </a>
-              )}
-            </div>
-          ))}
+        <div className="partner-profile">
+          <img src="/logo-mark.png" alt="ProWorx" className="partner-profile-logo" />
+          <h2>ProWorx</h2>
+
+          <div className="partner-meta">
+            <p className="partner-type">Technology & Business Solutions Partner</p>
+          </div>
+
+          <p className="partner-description">
+            ProWorx is an independent technology and business solutions company that Aurum Ventura has partnered with as part of its growing business network.
+          </p>
+
+          <div className="partner-profile-links">
+            <a href="https://www.proworx.io" target="_blank" rel="noopener noreferrer" className="btn-primary">
+              Learn More About ProWorx →
+            </a>
+            <a href={pathFor("Contact")} onClick={go("Contact")} className="btn-secondary">
+              Learn More About the Partnership →
+            </a>
+          </div>
+
+          <div className="partner-website">
+            <p className="website-label">Website:</p>
+            <a href="https://www.proworx.io" target="_blank" rel="noopener noreferrer" className="website-link">
+              proworx.io
+            </a>
+          </div>
         </div>
       </section>
 
       <section className="section alt">
-        <h2>Partnership Benefits</h2>
-        <p className="section-lead">
-          Our strategic partnerships deliver measurable value to the businesses we serve.
+        <h2>About Aurum Ventura</h2>
+        <p className="section-lead" style={{ maxWidth: "620px" }}>
+          Aurum Ventura Enterprise provides administrative and operational support for businesses while building a broader network of professional relationships and business resources.
         </p>
-        <ul className="plain-list">
-          <li><strong>Integrated Solutions:</strong> Seamless integration between Aurum Ventura's administrative services and our partners' platforms and solutions.</li>
-          <li><strong>Expert Support:</strong> Access to specialized expertise and support from both Aurum Ventura and our preferred partners.</li>
-          <li><strong>Optimized Workflows:</strong> Streamlined processes that combine administrative best practices with proven technology solutions.</li>
-          <li><strong>Scalability:</strong> Systems and services designed to grow with your business as it scales and evolves.</li>
-          <li><strong>Reliability:</strong> Partnership with trusted, established providers committed to business continuity and customer success.</li>
-          <li><strong>Innovation:</strong> Access to continuous improvements and new features as our partners innovate and enhance their offerings.</li>
-        </ul>
-      </section>
-
-      <section className="cta-band">
-        <h2>Interested in Becoming a Partner?</h2>
-        <p>If your organization shares our commitment to supporting business growth and operational excellence, we'd like to explore partnership opportunities.</p>
-        <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Discuss Partnership Opportunities</a>
+        <a className="btn-text" href={pathFor("About")} onClick={go("About")}>
+          Learn More About Aurum Ventura →
+        </a>
       </section>
     </div>
   );
@@ -3002,6 +2962,20 @@ export default function App({ initialPath } = {}) {
         .partner-link { display: inline-block; color: ${COLORS.teal}; font-weight: 600; font-size: 0.85rem; text-decoration: none; border-bottom: 1px solid ${COLORS.teal}; padding-bottom: 0.2rem; transition: color 0.2s ease; }
         .partner-link:hover { color: ${COLORS.navy}; border-bottom-color: ${COLORS.navy}; }
         @media (max-width: 640px) { .partner-grid { grid-template-columns: 1fr; } }
+
+        .partner-profile { max-width: 640px; margin: 0 auto; text-align: center; padding: 1rem 0; }
+        .partner-profile-logo { width: 80px; height: 80px; margin: 0 auto 1.5rem; object-fit: contain; display: block; }
+        .partner-profile h2 { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 600; color: ${COLORS.navy}; margin: 0 0 1rem; line-height: 1.1; }
+        .partner-meta { margin-bottom: 1.5rem; }
+        .partner-type { font-size: 0.9rem; font-weight: 600; color: ${COLORS.teal}; letter-spacing: 0.05em; text-transform: uppercase; margin: 0; }
+        .partner-description { font-size: 1rem; color: ${COLORS.slate}; line-height: 1.65; margin: 1.5rem 0 2rem; }
+        .partner-profile-links { display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 2rem; }
+        .btn-secondary { display: inline-block; background: ${COLORS.white}; color: ${COLORS.teal}; border: 1.5px solid ${COLORS.teal}; padding: 0.75rem 1.5rem; font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: background 0.2s ease, color 0.2s ease; }
+        .btn-secondary:hover { background: ${COLORS.ice}; color: ${COLORS.navy}; border-color: ${COLORS.navy}; }
+        .partner-website { text-align: center; padding-top: 1.5rem; border-top: 1px solid #E4E9EF; }
+        .website-label { font-size: 0.85rem; font-weight: 600; color: ${COLORS.slate}; text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 0.5rem; }
+        .website-link { display: inline-block; font-size: 1.05rem; color: ${COLORS.teal}; font-weight: 600; text-decoration: none; padding-bottom: 0.3rem; border-bottom: 2px solid ${COLORS.teal}; transition: color 0.2s ease, border-color 0.2s ease; }
+        .website-link:hover { color: ${COLORS.navy}; border-bottom-color: ${COLORS.navy}; }
 
         .systems-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.7rem 1.5rem; margin: 1.5rem 0 2rem; max-width: 720px; }
         .system-item { display: flex; gap: 0.8rem; font-size: 0.92rem; color: ${COLORS.navy}; line-height: 1.4; }

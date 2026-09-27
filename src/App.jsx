@@ -675,7 +675,7 @@ function HomePage({ setPage }) {
       </section>
 
       <section className="section">
-        <h2>Supporting Businesses — and the Programs That Build Them.</h2>
+        <h2>How We Support Businesses</h2>
         <p className="section-lead">
           Aurum Ventura provides back-office operations support in two ways:
         </p>

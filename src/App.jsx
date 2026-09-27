@@ -2671,7 +2671,7 @@ export default function App({ initialPath } = {}) {
         .nav-word { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 600; color: ${COLORS.navy}; text-align: left; line-height: 1.15; }
         .nav-word small { display: block; font-family: 'Montserrat', sans-serif; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: ${COLORS.slate}; }
         .nav-links { display: flex; align-items: center; flex: 1; gap: 1.5rem; justify-content: space-evenly; }
-        .nav-link { background: none; border: none; font-size: 0.88rem; font-weight: 500; color: ${COLORS.slate}; padding: 0.3rem 0; border-bottom: 2px solid transparent; }
+        .nav-link { background: none; border: none; font-size: 0.88rem; font-weight: 500; color: ${COLORS.slate}; padding: 0.5rem 0; border-bottom: 2px solid transparent; display: flex; align-items: center; justify-content: center; text-align: center; min-height: 2.5rem; }
         .nav-link.active, .nav-link:hover { color: ${COLORS.navy}; border-bottom-color: ${COLORS.aqua}; }
         .nav-cta { background: ${COLORS.navy}; color: ${COLORS.white}; border: none; padding: 0.6rem 1.2rem; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.02em; flex-shrink: 0; margin-left: auto; }
         .nav-cta:hover, .nav-cta.active { background: ${COLORS.teal}; }
@@ -2761,7 +2761,7 @@ export default function App({ initialPath } = {}) {
 
         /* Two-Path Section */
         .two-path-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin: 1.6rem 0 1.8rem; max-width: 900px; }
-        .two-path-card { background: ${COLORS.ice}; padding: 1.8rem 1.9rem; border-radius: 4px; border-left: 3px solid ${COLORS.aqua}; }
+        .two-path-card { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: ${COLORS.ice}; padding: 2.8rem 1.9rem; border-radius: 4px; border-left: 3px solid ${COLORS.aqua}; min-height: 280px; }
         .two-path-card h3 { font: inherit; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 1.3rem; color: ${COLORS.navy}; margin: 0 0 0.8rem; }
         .two-path-card p { font-size: 0.95rem; line-height: 1.65; color: ${COLORS.navy}; margin: 0 0 1.1rem; }
         .two-path-card .btn-text { font-size: 0.9rem; }

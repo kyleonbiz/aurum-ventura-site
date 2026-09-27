@@ -401,10 +401,17 @@ const NAV_LABELS = { HowItWorks: "How It Works", ProgramsPartnerships: "Programs
 
 const SERVICES_DROPDOWN_ITEMS = [
   { label: "All Services", key: "Services" },
+  { label: "Document Preparation & Management", key: "document-preparation-management" },
   { label: "Invoice Administration", key: "invoice-administration" },
-  { label: "CRM & Data Management", key: "crm-data-management" },
-  { label: "Vendor Administration", key: "vendor-administration" },
   { label: "License & Renewal Tracking", key: "license-renewal-tracking" },
+  { label: "Vendor Administration", key: "vendor-administration" },
+  { label: "CRM & Data Management", key: "crm-data-management" },
+  { label: "Project Administration", key: "project-administration" },
+  { label: "Forms & Paperwork", key: "forms-paperwork" },
+  { label: "Data Entry & Reporting", key: "data-entry-reporting" },
+  { label: "General Administrative Support", key: "general-administrative-support" },
+  { label: "Business File Reset", key: "business-file-reset" },
+  { label: "Back Office Set Up", key: "back-office-setup" },
 ];
 
 const PROGRAMS_DROPDOWN_ITEMS = [

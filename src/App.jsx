@@ -661,7 +661,7 @@ function HomePage({ setPage }) {
         <Swoosh style={{ position: "absolute", top: "8%", right: "-5%", width: "560px", height: "220px", opacity: 0.35, zIndex: 0 }} />
         <div className="hero-inner">
           <p className="kicker">Business Administrative Services</p>
-          <h1>Your Business.<br />Our Back Office.</h1>
+          <h1>Your Business. <br />Our Back Office.</h1>
           <p className="hero-sub">
             Aurum Ventura provides managed back-office support for small and growing businesses. Document management, invoicing, license tracking, vendor records, CRM data, project administration, and reporting — all handled within a defined scope and reserved capacity.
           </p>

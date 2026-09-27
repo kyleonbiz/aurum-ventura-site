@@ -181,7 +181,6 @@ const AUDIENCE = [
 ];
 
 const STEPS = [
-  ["Consultation", "A short conversation to understand where administrative work is creating strain."],
   ["Needs Assessment", "We document what's actually taking time and where a defined scope would help."],
   ["Proposal", "A written recommendation outlining your custom scope, reserved capacity, and monthly service fee."],
   ["Agreement & Scope", "The Master Agreement and your Scope & Service Level Exhibit are signed."],

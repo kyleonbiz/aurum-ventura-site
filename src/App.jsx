@@ -1215,7 +1215,7 @@ function PreferredPartnersPage({ setPage }) {
             <a href="https://www.proworx.io" target="_blank" rel="noopener noreferrer" className="btn-primary">
               Learn More About ProWorx →
             </a>
-            <a href={pathFor("Contact")} onClick={go("Contact")} className="btn-secondary">
+            <a href="#partnership-details" className="btn-secondary">
               Learn More About the Partnership →
             </a>
           </div>
@@ -1226,6 +1226,32 @@ function PreferredPartnersPage({ setPage }) {
               proworx.io
             </a>
           </div>
+        </div>
+      </section>
+
+      <section className="section" id="partnership-details">
+        <h2>About the Aurum Ventura & ProWorx Partnership</h2>
+        <p className="section-lead" style={{ maxWidth: "620px" }}>
+          Aurum Ventura and ProWorx have partnered to provide complementary services that strengthen operational support for growing businesses.
+        </p>
+
+        <div style={{ maxWidth: "720px", marginTop: "1.5rem" }}>
+          <h3 style={{ fontSize: "1.1rem", marginBottom: "0.6rem", color: COLORS.navy }}>What This Partnership Means</h3>
+          <p style={{ marginBottom: "1rem", color: COLORS.slate }}>
+            Aurum Ventura focuses on the human side of business operations—administrative support, process optimization, and strategic organization. ProWorx provides the technology platform that helps manage those operations efficiently. Together, they create a complete solution for businesses looking to streamline their back-office functions.
+          </p>
+
+          <h3 style={{ fontSize: "1.1rem", marginBottom: "0.6rem", color: COLORS.navy }}>How It Works</h3>
+          <ul className="plain-list" style={{ marginTop: "0.8rem" }}>
+            <li>Aurum Ventura handles the administrative and operational tasks that keep a business running smoothly.</li>
+            <li>ProWorx provides the business management software and technology infrastructure to organize and track those operations.</li>
+            <li>When appropriate for a client's needs, the two services work together to provide integrated, end-to-end operational support.</li>
+          </ul>
+
+          <h3 style={{ fontSize: "1.1rem", marginBottom: "0.6rem", marginTop: "1.2rem", color: COLORS.navy }}>Two Separate Companies, Aligned Mission</h3>
+          <p style={{ marginBottom: "1rem", color: COLORS.slate }}>
+            Aurum Ventura and ProWorx are independent companies with distinct services. The partnership reflects a shared commitment to helping businesses operate more efficiently and scale sustainably. Clients can work with either company independently, or leverage both services together for more comprehensive support.
+          </p>
         </div>
       </section>
 

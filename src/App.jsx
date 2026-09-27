@@ -380,10 +380,10 @@ function Swoosh({ style }) {
   );
 }
 
-const NAV_LABELS = { HowItWorks: "How It Works", ProgramsPartnerships: "Partnerships", Upload: "Upload Documents" };
+const NAV_LABELS = { HowItWorks: "How It Works", ProgramsPartnerships: "Programs & Partnerships", Upload: "Upload Documents" };
 
 function Nav({ page, setPage }) {
-  const items = ["Home", "Services", "Industries", "About", "ProgramsPartnerships"];
+  const items = ["Home", "Services", "ProgramsPartnerships", "Industries", "HowItWorks", "About"];
   const [open, setOpen] = useState(false);
   const isServiceDetail = SERVICES.some((s) => s.slug === page);
   const isActive = (it) => page === it || (it === "Services" && isServiceDetail);

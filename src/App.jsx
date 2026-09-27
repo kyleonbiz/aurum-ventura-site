@@ -1200,7 +1200,7 @@ function PreferredPartnersPage({ setPage }) {
 
       <section className="section">
         <div className="partner-profile">
-          <img src="/logo-mark.png" alt="ProWorx" className="partner-profile-logo" />
+          <img src="/proworx-logo.png" alt="ProWorx" className="partner-profile-logo" />
           <h2>ProWorx</h2>
 
           <div className="partner-meta">

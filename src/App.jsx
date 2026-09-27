@@ -326,6 +326,15 @@ function useReveal() {
 
 export function adminIntakeDetailKey(id) { return `admin-intake:${id}`; }
 
+function industryToSlug(industry) {
+  return industry.toLowerCase().replace(/[&\s]+/g, "-").replace(/-+/g, "-");
+}
+
+function slugToIndustry(slug) {
+  const found = AUDIENCE.find(ind => industryToSlug(ind) === slug);
+  return found || null;
+}
+
 export function pathFor(key) {
   if (typeof key === "string" && key.startsWith("admin-intake:")) return "/admin/intakes/" + key.slice("admin-intake:".length);
   switch (key) {
@@ -371,8 +380,10 @@ export function pageFromPath(pathname) {
   if (path === "/admin/intakes") return "AdminIntakes";
   const adminIntakeMatch = path.match(/^\/admin\/intakes\/([^/]+)$/);
   if (adminIntakeMatch) return adminIntakeDetailKey(adminIntakeMatch[1]);
-  const match = path.match(/^\/services\/([^/]+)$/);
-  if (match && SERVICES.some((s) => s.slug === match[1])) return match[1];
+  const serviceMatch = path.match(/^\/services\/([^/]+)$/);
+  if (serviceMatch && SERVICES.some((s) => s.slug === serviceMatch[1])) return serviceMatch[1];
+  const industryMatch = path.match(/^\/industries\/([^/]+)$/);
+  if (industryMatch && slugToIndustry(industryMatch[1])) return "industry:" + industryMatch[1];
   return "Home";
 }
 
@@ -427,7 +438,8 @@ function Nav({ page, setPage }) {
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
   const [programsDropdownOpen, setProgramsDropdownOpen] = useState(false);
   const isServiceDetail = SERVICES.some((s) => s.slug === page);
-  const isActive = (it) => page === it || (it === "Services" && isServiceDetail);
+  const isIndustryDetail = typeof page === "string" && page.startsWith("industry:");
+  const isActive = (it) => page === it || (it === "Services" && isServiceDetail) || (it === "Industries" && isIndustryDetail);
   const go = (key, closeMenu) => (e) => {
     e.preventDefault();
     setPage(key);
@@ -1061,8 +1073,8 @@ function ServiceDetailPage({ slug, setPage }) {
             {SERVICE_INDUSTRIES[slug].map((industry) => (
               <a
                 key={industry}
-                href={pathFor("Industries")}
-                onClick={(e) => { e.preventDefault(); setPage("Industries"); }}
+                href={`/industries/${industryToSlug(industry)}`}
+                onClick={(e) => { e.preventDefault(); setPage("industry:" + industryToSlug(industry)); }}
                 className="tag"
                 style={{ cursor: "pointer", textDecoration: "none" }}
               >
@@ -1084,6 +1096,59 @@ function ServiceDetailPage({ slug, setPage }) {
             <p>We'll fold it into a Scope of Services built around what you actually need.</p>
           </>
         )}
+        <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Request a Consultation</a>
+      </section>
+    </div>
+  );
+}
+
+function IndustryDetailPage({ slug, setPage }) {
+  const industry = slugToIndustry(slug);
+  if (!industry) return null;
+
+  const services = INDUSTRY_SERVICES[industry] || [];
+  const go = (key) => (e) => { e.preventDefault(); setPage(key); };
+
+  return (
+    <div>
+      <section className="page-head">
+        <a className="btn-text back-link" href={pathFor("Industries")} onClick={go("Industries")}>&larr; All Industries</a>
+        <p className="kicker">Industries We Serve</p>
+        <h1>{industry}</h1>
+        <p className="hero-sub">
+          {industry} businesses often juggle customer or project workflows while administrative tasks pile up. We handle the back-office work so you can focus on serving clients and growing.
+        </p>
+      </section>
+
+      {services.length > 0 && (
+        <section className="section">
+          <h2>Services We Provide for {industry}</h2>
+          <p className="section-lead">
+            Businesses in {industry.toLowerCase()} commonly use these services:
+          </p>
+          <div className="service-links">
+            {services.map((serviceSlug) => {
+              const service = SERVICES.find(s => s.slug === serviceSlug);
+              return service ? (
+                <a
+                  key={serviceSlug}
+                  href={pathFor(serviceSlug)}
+                  onClick={go(serviceSlug)}
+                  className="service-link-item"
+                  style={{ display: "block", padding: "1rem", marginBottom: "1rem", border: "1px solid #ddd", borderRadius: "0.5rem", textDecoration: "none", color: "inherit" }}
+                >
+                  <h3 style={{ margin: "0 0 0.5rem 0", fontSize: "1.1rem" }}>{service.title}</h3>
+                  <p style={{ margin: 0, color: COLORS.slate, fontSize: "0.95rem" }}>{service.summary}</p>
+                </a>
+              ) : null;
+            })}
+          </div>
+        </section>
+      )}
+
+      <section className="cta-band">
+        <h2>Ready to handle {industry.toLowerCase()} operations more efficiently?</h2>
+        <p>We'll build a custom scope of services around your specific needs.</p>
         <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Request a Consultation</a>
       </section>
     </div>
@@ -1256,7 +1321,7 @@ function ProgramsPartnershipsPage({ setPage }) {
             complete operational backbone.
           </p>
         </div>
-        <a className="btn-text" href="https://www.proworx.io/" target="_blank" rel="noopener noreferrer">
+        <a className="btn-text" href="https://www.proworx.io/" target="_blank" rel="noopener noreferrer nofollow">
           Learn about ProWorx →
         </a>
       </section>
@@ -1298,7 +1363,7 @@ function PreferredPartnersPage({ setPage }) {
           </p>
 
           <div className="partner-profile-links">
-            <a href="https://www.proworx.io" target="_blank" rel="noopener noreferrer" className="btn-primary">
+            <a href="https://www.proworx.io" target="_blank" rel="noopener noreferrer nofollow" className="btn-primary">
               Learn More About ProWorx →
             </a>
             <button
@@ -1563,6 +1628,7 @@ function HowItWorksPage({ setPage }) {
 
 function IndustriesPage({ setPage }) {
   const ref = useReveal();
+  const go = (key) => (e) => { e.preventDefault(); setPage(key); };
   return (
     <div>
       <section className="page-head">
@@ -1577,14 +1643,22 @@ function IndustriesPage({ setPage }) {
         <h2 ref={ref}>Industries We Serve</h2>
         <div className="tag-list">
           {AUDIENCE.map((industry) => (
-            <span key={industry} className="tag">{industry}</span>
+            <a
+              key={industry}
+              href={`/industries/${industryToSlug(industry)}`}
+              onClick={go("industry:" + industryToSlug(industry))}
+              className="tag"
+              style={{ cursor: "pointer", textDecoration: "none", color: "inherit" }}
+            >
+              {industry}
+            </a>
           ))}
         </div>
       </section>
       <section className="cta-band">
         <h2>Don't see your industry?</h2>
         <p>We work with a range of service and operational businesses beyond this list — tell us what you do.</p>
-        <a className="btn-primary" href={pathFor("Contact")} onClick={(e) => { e.preventDefault(); setPage("Contact"); }}>Request a Consultation</a>
+        <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Request a Consultation</a>
       </section>
     </div>
   );
@@ -2955,8 +3029,10 @@ export default function App({ initialPath } = {}) {
   };
   const service = SERVICES.find((s) => s.slug === page);
   const isAdminIntakeDetail = typeof page === "string" && page.startsWith("admin-intake:");
+  const isIndustryDetail = typeof page === "string" && page.startsWith("industry:");
   const content = pages[page]
     || (service ? <ServiceDetailPage slug={page} setPage={navigate} />
+    : isIndustryDetail ? <IndustryDetailPage slug={page.slice("industry:".length)} setPage={navigate} />
     : isAdminIntakeDetail ? <AdminIntakeDetailPage intakeId={page.slice("admin-intake:".length)} setPage={navigate} />
     : pages.Home);
 

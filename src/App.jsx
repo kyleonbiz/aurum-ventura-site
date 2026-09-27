@@ -2665,7 +2665,7 @@ export default function App({ initialPath } = {}) {
 
         /* Nav - FIXED SPACING */
         .nav { position: sticky; top: 0; background: ${COLORS.white}; border-bottom: 1px solid #E4E9EF; z-index: 50; }
-        .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0.75rem 1.5rem; display: flex; align-items: center; justify-content: flex-start; gap: 3rem; }
+        .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0.75rem 1.5rem; display: flex; align-items: center; justify-content: flex-start; }
         .nav-brand { display: flex; align-items: center; gap: 0.6rem; background: none; border: none; padding: 0; }
         .nav-mark { height: 34px; width: auto; }
         .nav-word { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 600; color: ${COLORS.navy}; text-align: left; line-height: 1.15; }

@@ -1192,7 +1192,7 @@ function PreferredPartnersPage({ setPage }) {
   return (
     <div>
       <section className="page-head">
-        <p className="kicker">Preferred Partnerships</p>
+        <p className="kicker">Our Networking Ecosystem</p>
         <h1>Preferred Partnerships</h1>
         <p className="hero-sub">
           Explore businesses within the Aurum Ventura network and learn more about the companies we partner with.

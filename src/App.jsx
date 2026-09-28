@@ -677,6 +677,8 @@ function Footer({ setPage }) {
           <div>
             <h3>How We Work</h3>
             <a href={pathFor("HowItWorks")} onClick={go("HowItWorks")}>How It Works</a>
+            <a href={pathFor("FAQ")} onClick={go("FAQ")}>FAQ</a>
+            <a href={pathFor("Alternatives")} onClick={go("Alternatives")}>Why Aurum?</a>
             <a href={pathFor("Security")} onClick={go("Security")}>Security &amp; Confidentiality</a>
           </div>
           <div>

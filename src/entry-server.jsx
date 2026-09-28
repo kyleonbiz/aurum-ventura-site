@@ -15,6 +15,8 @@ export const ROUTES = [
   "Contact",
   "Upload",
   "ClientIntake",
+  "FAQ",
+  "Alternatives",
   ...SERVICES.map((s) => s.slug),
 ].map((key) => ({ path: pathFor(key), ...metaFor(key) }));
 

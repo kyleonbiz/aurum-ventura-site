@@ -411,6 +411,15 @@
             backgroundColor: 'rgb(255,255,255)'
         });
 
+        // Pre-fill form from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.forEach((value, key) => {
+            const field = document.getElementById(key);
+            if (field) {
+                field.value = decodeURIComponent(value);
+            }
+        });
+
         document.getElementById('signatureDate').valueAsDate = new Date();
 
         function clearSignature() {

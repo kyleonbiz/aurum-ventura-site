@@ -298,6 +298,7 @@
             }
         }
     </style>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/index.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -365,13 +366,35 @@
                 <div class="link-preview">
                     <h3>📋 Service Agreement Link</h3>
                     <div class="link-box" id="serviceLink">Enter client info and click Generate to see the link</div>
-                    <button class="btn-copy" onclick="copyToClipboard('serviceLink')">Copy Link</button>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-copy" onclick="copyToClipboard('serviceLink')">Copy Link</button>
+                        <button class="btn-copy" style="background: #0056b3;" onclick="sendServiceAgreementEmail()">📧 Send Email</button>
+                    </div>
                     <div class="copied-message" id="serviceCopied">✓ Copied to clipboard!</div>
 
                     <h3 style="margin-top: 20px;">📝 Client Info Sheet Link</h3>
                     <div class="link-box" id="clientLink">Enter client info and click Generate to see the link</div>
-                    <button class="btn-copy" onclick="copyToClipboard('clientLink')">Copy Link</button>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-copy" onclick="copyToClipboard('clientLink')">Copy Link</button>
+                        <button class="btn-copy" style="background: #0056b3;" onclick="sendClientInfoEmail()">📧 Send Email</button>
+                    </div>
                     <div class="copied-message" id="clientCopied">✓ Copied to clipboard!</div>
+                </div>
+
+                <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #ffc107;">
+                    <p style="font-size: 13px; color: #856404; margin-bottom: 8px;"><strong>💡 Email Setup:</strong> To enable automatic email sending, add your EmailJS credentials below.</p>
+                    <div class="two-column" style="gap: 10px;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label style="font-size: 12px; margin-bottom: 4px;">EmailJS Service ID (optional)</label>
+                            <input type="text" id="emailjsService" placeholder="service_xxxxxxx" style="font-size: 12px; padding: 8px;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label style="font-size: 12px; margin-bottom: 4px;">EmailJS Public Key</label>
+                            <input type="text" id="emailjsPublic" placeholder="your_public_key" style="font-size: 12px; padding: 8px;">
+                        </div>
+                    </div>
+                    <p style="font-size: 11px; color: #666; margin-top: 8px;">Get free at <strong>emailjs.com</strong> → Create account → Copy Service ID & Public Key</p>
+                    <button class="btn-secondary" onclick="saveEmailConfig()" style="font-size: 12px; padding: 6px 12px; margin-top: 8px;">Save Email Config</button>
                 </div>
             </div>
         </div>
@@ -516,6 +539,7 @@
         window.addEventListener('DOMContentLoaded', () => {
             loadTerms();
             updatePreview();
+            loadEmailConfig();
         });
 
         function loadTerms() {
@@ -623,6 +647,108 @@
                 message.classList.add('show');
                 setTimeout(() => message.classList.remove('show'), 2000);
             });
+        }
+
+        function loadEmailConfig() {
+            const config = localStorage.getItem('aurumEmailConfig');
+            if (config) {
+                const parsed = JSON.parse(config);
+                document.getElementById('emailjsService').value = parsed.serviceId || '';
+                document.getElementById('emailjsPublic').value = parsed.publicKey || '';
+                if (parsed.serviceId && parsed.publicKey) {
+                    emailjs.init(parsed.publicKey);
+                }
+            }
+        }
+
+        function saveEmailConfig() {
+            const config = {
+                serviceId: document.getElementById('emailjsService').value,
+                publicKey: document.getElementById('emailjsPublic').value
+            };
+            if (config.publicKey) {
+                localStorage.setItem('aurumEmailConfig', JSON.stringify(config));
+                emailjs.init(config.publicKey);
+                alert('✓ Email config saved! You can now send emails.');
+            } else {
+                alert('Please enter your EmailJS Public Key');
+            }
+        }
+
+        function sendServiceAgreementEmail() {
+            const clientEmail = document.getElementById('gen_email').value;
+            const businessName = document.getElementById('gen_businessName').value;
+            const link = document.getElementById('serviceLink').textContent;
+
+            if (!clientEmail || !link.includes('http')) {
+                alert('Please enter client email and generate the link first');
+                return;
+            }
+
+            const config = localStorage.getItem('aurumEmailConfig');
+            if (!config) {
+                openEmailClient(clientEmail, 'Service Agreement - Aurum Ventura', businessName, link, 'service-agreement');
+                return;
+            }
+
+            const parsed = JSON.parse(config);
+            if (!parsed.serviceId) {
+                openEmailClient(clientEmail, 'Service Agreement - Aurum Ventura', businessName, link, 'service-agreement');
+                return;
+            }
+
+            sendEmailViaEmailJS(clientEmail, businessName, link, 'Service Agreement', parsed.serviceId);
+        }
+
+        function sendClientInfoEmail() {
+            const clientEmail = document.getElementById('gen_email').value;
+            const businessName = document.getElementById('gen_businessName').value;
+            const link = document.getElementById('clientLink').textContent;
+
+            if (!clientEmail || !link.includes('http')) {
+                alert('Please enter client email and generate the link first');
+                return;
+            }
+
+            const config = localStorage.getItem('aurumEmailConfig');
+            if (!config) {
+                openEmailClient(clientEmail, 'Client Information Sheet - Aurum Ventura', businessName, link, 'client-info-sheet');
+                return;
+            }
+
+            const parsed = JSON.parse(config);
+            if (!parsed.serviceId) {
+                openEmailClient(clientEmail, 'Client Information Sheet - Aurum Ventura', businessName, link, 'client-info-sheet');
+                return;
+            }
+
+            sendEmailViaEmailJS(clientEmail, businessName, link, 'Client Information Sheet', parsed.serviceId);
+        }
+
+        function sendEmailViaEmailJS(email, business, link, formName, serviceId) {
+            const templateParams = {
+                to_email: email,
+                business_name: business,
+                form_link: link,
+                form_name: formName
+            };
+
+            emailjs.send(serviceId, 'aurum_form_email', templateParams)
+                .then(response => {
+                    alert(`✓ Email sent to ${email}!`);
+                })
+                .catch(error => {
+                    console.error('Email send failed:', error);
+                    alert('Email send failed. Opening email client instead...');
+                    openEmailClient(email, `${formName} - Aurum Ventura`, business, link, formName.toLowerCase().replace(/\s+/g, '-'));
+                });
+        }
+
+        function openEmailClient(email, subject, business, link, formType) {
+            const body = `Hi ${email.split('@')[0]},\n\nWe're ready to get you set up with Aurum Ventura!\n\nPlease complete your ${formType === 'service-agreement' ? 'Service Agreement' : 'Client Information Sheet'} by clicking the link below:\n\n${link}\n\nThis link has your information pre-filled to save you time. Just review, sign, and download the PDF.\n\nQuestions? Reach out to us at admin@aurumventura.net or 850-653-7797\n\nBest regards,\nAurum Ventura Team`;
+
+            const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = mailtoLink;
         }
     </script>
 </body>

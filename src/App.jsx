@@ -949,7 +949,6 @@ function HomePage({ setPage }) {
           volume, multiple customers or projects, and no dedicated team to consistently own the back office.
         </p>
         <IndustryPanel setPage={setPage} />
-        <a className="btn-text" href={pathFor("Services")} onClick={go("Services")}>See the full list of services &rarr;</a>
       </section>
 
       <section className="section">
@@ -963,6 +962,7 @@ function HomePage({ setPage }) {
             </a>
           ))}
         </div>
+        <a className="btn-text" href={pathFor("Services")} onClick={go("Services")} style={{ marginTop: "0.8rem", display: "inline-block" }}>See the full list of services &rarr;</a>
       </section>
 
       <PeopleProcessTechnology />

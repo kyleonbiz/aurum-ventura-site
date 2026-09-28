@@ -3209,7 +3209,7 @@ function AdminIntakeDetailPage({ intakeId, setPage }) {
 
 export const SITE_NAME = "Aurum Ventura Enterprise LLC";
 const PAGE_TITLES = {
-  Home: "Aurum Ventura | Outsourced Back Office & Administrative Services",
+  Home: "Back Office Administrative Support | Aurum Ventura",
   Services: `Services — ${SITE_NAME}`,
   ProgramsPartnerships: `Programs & Partnerships — ${SITE_NAME}`,
   About: `About — ${SITE_NAME}`,
@@ -3228,7 +3228,7 @@ const PAGE_TITLES = {
   AdminIntakes: `Client Intakes — ${SITE_NAME}`,
 };
 const PAGE_DESCRIPTIONS = {
-  Home: "Remote outsourced back-office administrative support for small and growing businesses nationwide. Document management, invoicing, vendor records, CRM support, license tracking, and project administration.",
+  Home: "We design and execute workflows to get you 10-16 hours/week back. Document prep, invoicing, vendor admin, CRM, license tracking, and custom workflows for growing businesses nationwide.",
   Services: "Recurring administrative services for businesses nationwide — document preparation, invoice administration, license tracking, vendor administration, CRM data management, project administration, and more.",
   ProgramsPartnerships: "Implementation partnerships for organizations supporting entrepreneurs and small businesses. Hands-on operational systems and back-office implementation for entrepreneurship programs.",
   About: "Aurum Ventura is a Nashville-based outsourced administrative back office serving small and growing businesses nationwide. Learn about our approach to business operations.",

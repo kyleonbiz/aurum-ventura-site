@@ -976,7 +976,7 @@ function HomePage({ setPage }) {
         <ul className="plain-list">
           {NOT_LIST.map((n) => <li key={n}>{n}</li>)}
         </ul>
-        <a className="btn-text" href={pathFor("About")} onClick={go("About")} style={{ marginTop: "1rem", display: "inline-block" }}>Learn how we work &rarr;</a>
+        <a className="btn-text" href={pathFor("About")} onClick={go("About")} style={{ marginTop: "1rem", display: "block" }}>Learn how we work &rarr;</a>
       </section>
 
       <TimeSelector setPage={setPage} />

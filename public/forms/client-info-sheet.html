@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurum Ventura - Client Information Sheet</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --dark-navy: #041944;
+            --corporate-teal: #09748B;
+            --aqua-teal: #26AEB4;
+            --ice-blue: #E6F3F9;
+            --blue-gray: #57677F;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--ice-blue) 0%, var(--white) 100%);
+            color: var(--blue-gray);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(4, 25, 68, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--dark-navy) 0%, var(--corporate-teal) 100%);
+            padding: 40px 30px;
+            color: white;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            color: var(--corporate-teal);
+            font-size: 18px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--ice-blue);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: var(--dark-navy);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="phone"],
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="phone"]:focus,
+        input[type="date"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--corporate-teal);
+            box-shadow: 0 0 0 3px rgba(9, 116, 139, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .signature-section {
+            background: var(--ice-blue);
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .signature-section h3 {
+            color: var(--dark-navy);
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        #signaturePad {
+            border: 2px solid var(--corporate-teal);
+            border-radius: 6px;
+            background: white;
+            cursor: crosshair;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: var(--dark-navy);
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-primary {
+            background: var(--corporate-teal);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-navy);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(9, 116, 139, 0.3);
+        }
+
+        .submit-section {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .footer {
+            background: var(--ice-blue);
+            padding: 20px 30px;
+            text-align: center;
+            color: var(--blue-gray);
+            font-size: 12px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer a {
+            color: var(--corporate-teal);
+            text-decoration: none;
+        }
+
+        .success-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .instructions {
+            background: var(--ice-blue);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 20px;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .submit-section {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AURUM VENTURA</h1>
+            <p>Client Information Sheet</p>
+        </div>
+
+        <div class="content">
+            <div class="success-message" id="successMessage">
+                ✓ Form completed and PDF downloaded successfully!
+            </div>
+
+            <div class="instructions">
+                <strong>Instructions:</strong> Complete this form at onboarding. This information helps us deliver better service and manage your account effectively.
+            </div>
+
+            <div class="section">
+                <h2>Business & Contact Information</h2>
+                <div class="form-group">
+                    <label>Business Name *</label>
+                    <input type="text" id="businessName" placeholder="Enter your business name" required>
+                </div>
+                <div class="two-column">
+                    <div class="form-group">
+                        <label>Owner / Main Contact *</label>
+                        <input type="text" id="contactName" placeholder="Enter contact name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Industry</label>
+                        <input type="text" id="industry" placeholder="e.g., Professional Services, Retail, etc.">
+                    </div>
+                </div>
+                <div class="two-column">
+                    <div class="form-group">
+                        <label>Email *</label>
+                        <input type="email" id="email" placeholder="Enter email address" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone *</label>
+                        <input type="text" id="phone" placeholder="Enter phone number" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Business Address</label>
+                    <textarea id="address" placeholder="Street address, city, state, zip"></textarea>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Service & Communication Preferences</h2>
+                <div class="two-column">
+                    <div class="form-group">
+                        <label>Selected Plan *</label>
+                        <select id="plan" required>
+                            <option value="">Select a plan</option>
+                            <option value="admin-essentials">Admin Essentials (8 hrs/mo)</option>
+                            <option value="business-admin">Business Admin (18 hrs/mo)</option>
+                            <option value="back-office-plus">Back Office Plus (32 hrs/mo)</option>
+                            <option value="custom">Custom Department</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" id="startDate">
+                    </div>
+                </div>
+                <div class="two-column">
+                    <div class="form-group">
+                        <label>Billing Method *</label>
+                        <select id="billingMethod" required>
+                            <option value="">Select payment method</option>
+                            <option value="ach">ACH Transfer</option>
+                            <option value="square">Square</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Best Time to Reach You</label>
+                        <input type="text" id="bestTime" placeholder="e.g., 9am-5pm Eastern">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Preferred Way to Send Requests</label>
+                    <textarea id="requestMethod" placeholder="e.g., Email, Slack, form submission, etc."></textarea>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Tools, Vendors & Operations</h2>
+                <div class="form-group">
+                    <label>Tools You Use</label>
+                    <textarea id="tools" placeholder="Accounting software, CRM, email, file storage, project management, etc."></textarea>
+                </div>
+                <div class="two-column">
+                    <div class="form-group">
+                        <label>Main Vendors / Partners</label>
+                        <textarea id="vendors" placeholder="Key vendors we should know about"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Licenses or Permits to Track</label>
+                        <textarea id="licenses" placeholder="With renewal dates if applicable"></textarea>
+                    </div>
+                </div>
+                <div class="two-column">
+                    <div class="form-group">
+                        <label>Who Else Can Approve Work?</label>
+                        <textarea id="approvers" placeholder="Names and titles of approval contacts"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Top 3 Tasks Off Your Plate</label>
+                        <textarea id="topTasks" placeholder="What do you want to delegate most?"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Anything We Should Never Do Without Asking?</label>
+                    <textarea id="restrictions" placeholder="Any boundaries or restrictions we should know about"></textarea>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Client Acknowledgment</h2>
+                <p style="margin-bottom: 20px; font-size: 14px;">I confirm that the information above is accurate and authorize Aurum Ventura to use it for service delivery and account management.</p>
+
+                <div class="signature-section">
+                    <h3>Your Signature</h3>
+                    <canvas id="signaturePad" width="800" height="120"></canvas>
+                    <div class="button-group">
+                        <button class="btn-secondary" onclick="clearSignature()">Clear Signature</button>
+                    </div>
+                </div>
+
+                <div class="two-column">
+                    <div class="form-group">
+                        <label>Print Name</label>
+                        <input type="text" id="printName" placeholder="Print your full name">
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="signatureDate">
+                    </div>
+                </div>
+            </div>
+
+            <div class="submit-section">
+                <button class="btn-primary" onclick="generatePDF()">Sign & Download PDF</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Aurum Ventura Enterprise LLC | admin@aurumventura.net | 850-653-7797</p>
+            <p style="margin-top: 8px;">This form is kept on file in your client folder.</p>
+        </div>
+    </div>
+
+    <script>
+        let signaturePad;
+        const canvas = document.getElementById('signaturePad');
+        const resizeCanvas = () => {
+            const ratio = Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext('2d').scale(ratio, ratio);
+        };
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        signaturePad = new SignaturePad(canvas, {
+            backgroundColor: 'rgb(255,255,255)'
+        });
+
+        document.getElementById('signatureDate').valueAsDate = new Date();
+
+        function clearSignature() {
+            signaturePad.clear();
+        }
+
+        function generatePDF() {
+            const businessName = document.getElementById('businessName').value;
+            const contactName = document.getElementById('contactName').value;
+            const email = document.getElementById('email').value;
+            const printName = document.getElementById('printName').value;
+
+            if (!businessName || !contactName || !email || !printName) {
+                alert('Please fill in all required fields (marked with *).');
+                return;
+            }
+
+            if (signaturePad.isEmpty()) {
+                alert('Please sign the form.');
+                return;
+            }
+
+            const element = document.querySelector('.container');
+            const opt = {
+                margin: 10,
+                filename: `${businessName}_Client_Info_Sheet.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                document.getElementById('successMessage').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('successMessage').style.display = 'none';
+                }, 3000);
+            });
+        }
+    </script>
+</body>
+</html>

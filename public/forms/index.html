@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurum Ventura - Client Forms</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --dark-navy: #041944;
+            --corporate-teal: #09748B;
+            --aqua-teal: #26AEB4;
+            --ice-blue: #E6F3F9;
+            --blue-gray: #57677F;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--ice-blue) 0%, var(--white) 100%);
+            color: var(--blue-gray);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--dark-navy) 0%, var(--corporate-teal) 100%);
+            padding: 60px 40px;
+            color: white;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 50px;
+            box-shadow: 0 4px 20px rgba(4, 25, 68, 0.15);
+        }
+
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .forms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(4, 25, 68, 0.1);
+            transition: all 0.3s ease;
+            border-top: 4px solid var(--corporate-teal);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 30px rgba(4, 25, 68, 0.15);
+        }
+
+        .form-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .form-card h2 {
+            color: var(--dark-navy);
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .form-card p {
+            color: var(--blue-gray);
+            font-size: 14px;
+            margin-bottom: 20px;
+            flex-grow: 1;
+            line-height: 1.7;
+        }
+
+        .form-card a {
+            background: var(--corporate-teal);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .form-card a:hover {
+            background: var(--dark-navy);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(9, 116, 139, 0.3);
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: var(--aqua-teal);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .info-section {
+            background: var(--ice-blue);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .info-section h3 {
+            color: var(--dark-navy);
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .info-section p {
+            font-size: 13px;
+            line-height: 1.7;
+            margin-bottom: 8px;
+        }
+
+        .info-section ul {
+            margin-left: 20px;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .info-section li {
+            margin-bottom: 6px;
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--blue-gray);
+            font-size: 12px;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer p {
+            margin-bottom: 8px;
+        }
+
+        .footer a {
+            color: var(--corporate-teal);
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                padding: 40px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .forms-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AURUM VENTURA</h1>
+            <p>Client Forms & Agreements</p>
+        </div>
+
+        <div class="info-section">
+            <h3>Welcome</h3>
+            <p>Thank you for choosing Aurum Ventura for your administrative support needs. Below are the forms to help us get you set up and ready to work together.</p>
+        </div>
+
+        <div class="forms-grid">
+            <!-- Service Agreement -->
+            <div class="form-card">
+                <div class="status-badge">REQUIRED</div>
+                <div class="form-icon">📋</div>
+                <h2>Service Agreement</h2>
+                <p>Review and sign our service agreement outlining terms, plans, pricing, turnaround times, and payment methods. Takes about 5 minutes.</p>
+                <a href="service-agreement.html">Open Form</a>
+            </div>
+
+            <!-- Client Information Sheet -->
+            <div class="form-card">
+                <div class="status-badge">REQUIRED</div>
+                <div class="form-icon">📝</div>
+                <h2>Client Information Sheet</h2>
+                <p>Tell us about your business, tools, vendors, approval contacts, and what tasks you want to delegate. About 10 minutes to complete.</p>
+                <a href="client-info-sheet.html">Open Form</a>
+            </div>
+
+            <!-- Onboarding Checklist -->
+            <div class="form-card">
+                <div class="status-badge">REFERENCE</div>
+                <div class="form-icon">✓</div>
+                <h2>Onboarding Checklist</h2>
+                <p>Our internal guide to your onboarding process. Shows the 8 steps, timeline, and key touchpoints from inquiry to first completed request.</p>
+                <a href="onboarding-checklist.html">View Checklist</a>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3>How It Works</h3>
+            <ul>
+                <li><strong>Fill out the forms:</strong> Complete the Service Agreement and Client Information Sheet online.</li>
+                <li><strong>Sign electronically:</strong> Use the signature pad in each form to sign with your mouse, touchpad, or mobile device.</li>
+                <li><strong>Download as PDF:</strong> After signing, the completed form downloads automatically to your computer for your records.</li>
+                <li><strong>We're notified:</strong> Your submission alerts us, and we begin setting up your account.</li>
+            </ul>
+        </div>
+
+        <div class="info-section">
+            <h3>Questions?</h3>
+            <p>If you have any questions about these forms or our services, please don't hesitate to reach out:</p>
+            <p>
+                <strong>Email:</strong> <a href="mailto:admin@aurumventura.net">admin@aurumventura.net</a><br>
+                <strong>Phone:</strong> 850-653-7797
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2026 Aurum Ventura Enterprise LLC. All rights reserved.</p>
+            <p><a href="https://aurumventura.net">Back to main website</a></p>
+        </div>
+    </div>
+</body>
+</html>

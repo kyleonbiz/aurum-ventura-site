@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurum Ventura - Service Agreement</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --dark-navy: #041944;
+            --corporate-teal: #09748B;
+            --aqua-teal: #26AEB4;
+            --ice-blue: #E6F3F9;
+            --blue-gray: #57677F;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--ice-blue) 0%, var(--white) 100%);
+            color: var(--blue-gray);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(4, 25, 68, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--dark-navy) 0%, var(--corporate-teal) 100%);
+            padding: 40px 30px;
+            color: white;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section h2 {
+            color: var(--corporate-teal);
+            font-size: 18px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--ice-blue);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th {
+            background: var(--corporate-teal);
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tr:nth-child(even) {
+            background: var(--ice-blue);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: var(--dark-navy);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="date"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--corporate-teal);
+            box-shadow: 0 0 0 3px rgba(9, 116, 139, 0.1);
+        }
+
+        .signature-section {
+            background: var(--ice-blue);
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .signature-section h3 {
+            color: var(--dark-navy);
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        #signaturePad {
+            border: 2px solid var(--corporate-teal);
+            border-radius: 6px;
+            background: white;
+            cursor: crosshair;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: var(--dark-navy);
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-primary {
+            background: var(--corporate-teal);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-navy);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(9, 116, 139, 0.3);
+        }
+
+        .submit-section {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .terms-text {
+            font-size: 13px;
+            color: var(--blue-gray);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            background: var(--ice-blue);
+            padding: 20px 30px;
+            text-align: center;
+            color: var(--blue-gray);
+            font-size: 12px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .footer a {
+            color: var(--corporate-teal);
+            text-decoration: none;
+        }
+
+        .success-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 20px;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .submit-section {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AURUM VENTURA</h1>
+            <p>Service Agreement</p>
+        </div>
+
+        <div class="content">
+            <div class="success-message" id="successMessage">
+                ✓ Agreement signed and PDF downloaded successfully!
+            </div>
+
+            <div class="section">
+                <h2>Client Information</h2>
+                <div class="two-column">
+                    <div class="form-group">
+                        <label>Business Name</label>
+                        <input type="text" id="businessName" placeholder="Enter business name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Name</label>
+                        <input type="text" id="contactName" placeholder="Enter contact name" required>
+                    </div>
+                </div>
+                <div class="two-column">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="email" placeholder="Enter email address" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="text" id="phone" placeholder="Enter phone number" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Services & Terms</h2>
+                <table>
+                    <tr>
+                        <th>Term</th>
+                        <th>Details</th>
+                    </tr>
+                    <tr>
+                        <td>Services</td>
+                        <td>Administrative back-office support. Not legal, accounting, tax, or debt collection.</td>
+                    </tr>
+                    <tr>
+                        <td>Plans</td>
+                        <td>Admin Essentials (8 hrs/mo), Business Admin (18 hrs/mo), Back Office Plus (32 hrs/mo), Custom Department (scoped)</td>
+                    </tr>
+                    <tr>
+                        <td>Price</td>
+                        <td>As quoted in your proposal. Billed monthly in advance.</td>
+                    </tr>
+                    <tr>
+                        <td>Unused Hours</td>
+                        <td>Do not roll over.</td>
+                    </tr>
+                    <tr>
+                        <td>Extra Work</td>
+                        <td>$60/hr, only with your approval first.</td>
+                    </tr>
+                    <tr>
+                        <td>Turnaround</td>
+                        <td>Normal: 2 business days. Priority: next business day. Urgent: same day if received by 12 PM CT.</td>
+                    </tr>
+                    <tr>
+                        <td>Payment</td>
+                        <td>ACH or Square. Due on receipt.</td>
+                    </tr>
+                    <tr>
+                        <td>Termination</td>
+                        <td>Either side, with 30 days written notice.</td>
+                    </tr>
+                    <tr>
+                        <td>Your Role</td>
+                        <td>Provide information and access on time. Approve anything that spends money or signs on your behalf.</td>
+                    </tr>
+                    <tr>
+                        <td>Confidentiality</td>
+                        <td>Your information is used only to do the work and returned at the end.</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2>Agreement & Signature</h2>
+                <div class="terms-text">
+                    By signing below, you acknowledge that you have read and agree to the terms of this Service Agreement. This agreement is effective upon signature and continues until terminated by either party with 30 days written notice.
+                </div>
+
+                <div class="signature-section">
+                    <h3>Your Signature</h3>
+                    <canvas id="signaturePad" width="800" height="150"></canvas>
+                    <div class="button-group">
+                        <button class="btn-secondary" onclick="clearSignature()">Clear</button>
+                    </div>
+                </div>
+
+                <div class="two-column">
+                    <div class="form-group">
+                        <label>Signature Date</label>
+                        <input type="date" id="signatureDate" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="submit-section">
+                <button class="btn-primary" onclick="generatePDF()">Sign & Download PDF</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Aurum Ventura Enterprise LLC | admin@aurumventura.net | 850-653-7797</p>
+            <p style="margin-top: 8px;">This is a secure, electronically signed agreement.</p>
+        </div>
+    </div>
+
+    <script>
+        let signaturePad;
+        const canvas = document.getElementById('signaturePad');
+        const resizeCanvas = () => {
+            const ratio = Math.max(window.devicePixelRatio || 1, 1);
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            canvas.getContext('2d').scale(ratio, ratio);
+        };
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        signaturePad = new SignaturePad(canvas, {
+            backgroundColor: 'rgb(255,255,255)'
+        });
+
+        // Set today's date as default
+        document.getElementById('signatureDate').valueAsDate = new Date();
+
+        function clearSignature() {
+            signaturePad.clear();
+        }
+
+        function generatePDF() {
+            const businessName = document.getElementById('businessName').value;
+            const contactName = document.getElementById('contactName').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const signatureDate = document.getElementById('signatureDate').value;
+
+            // Validation
+            if (!businessName || !contactName || !email || !phone || !signatureDate) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            if (signaturePad.isEmpty()) {
+                alert('Please sign the agreement.');
+                return;
+            }
+
+            // Create PDF
+            const element = document.querySelector('.container');
+            const opt = {
+                margin: 10,
+                filename: `${businessName}_Service_Agreement.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                document.getElementById('successMessage').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('successMessage').style.display = 'none';
+                }, 3000);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -249,23 +249,23 @@ const TIME_SINKS = [
 ];
 
 const INDUSTRY_EXAMPLES = {
-  "Contractors & Trades": ["Invoice administration", "CRM "CRM & data updates" Data Updates", "Recurring Status Reporting", "Forms "Forms Forms & paperwork Paperwork" Paperwork"],
-  "Property Management": ["Property & Vendor Records", "Vendor documentation", "Monthly Reporting", "CRM Updates"],
-  "Cleaning & Facility Services": ["Client invoicing", "Service scheduling", "Equipment tracking", "Performance reports"],
-  "Construction/Subcontractors": ["Project documentation", "Subcontractor management", "Job costing", "Compliance records"],
-  "Staffing & Recruiting": ["Candidate tracking", "Placement documentation", "Client reporting", "Contract management"],
-  "Real Estate": ["Transaction paperwork", "Document organization", "CRM Updates", "Vendor records"],
-  "Professional Services": ["CRM Updates", "Document management", "Invoice administration", "Status Reporting"],
+  "Contractors & Trades": ["Invoice Administration", "CRM & Data Updates", "Recurring Status Reporting", "Forms & Paperwork"],
+  "Property Management": ["Property & Vendor Records", "Vendor Documentation", "Monthly Reporting", "CRM Updates"],
+  "Cleaning & Facility Services": ["Client Invoicing", "Service Scheduling", "Equipment Tracking", "Performance Reports"],
+  "Construction/Subcontractors": ["Project Documentation", "Subcontractor Management", "Job Costing", "Compliance Records"],
+  "Staffing & Recruiting": ["Candidate Tracking", "Placement Documentation", "Client Reporting", "Contract Management"],
+  "Real Estate": ["Transaction Paperwork", "Document Organization", "CRM Updates", "Vendor Records"],
+  "Professional Services": ["CRM Updates", "Document Management", "Invoice Administration", "Status Reporting"],
 };
 
 // Maps example labels to service slugs for internal linking
 const EXAMPLE_TO_SERVICE = {
-  "Invoice administration": "invoice-administration",
-  "CRM "CRM & data updates" Data Updates": "crm-data-management",
+  "Invoice Administration": "invoice-administration",
+  "CRM & Data Updates": "crm-data-management",
   "CRM Updates": "crm-data-management",
   "Recurring Status Reporting": "data-entry-reporting",
   "Status Reporting": "data-entry-reporting",
-  "Forms "Forms Forms & paperwork Paperwork" Paperwork": "forms-paperwork",
+  "Forms & Paperwork": "forms-paperwork",
   "Property & Vendor Records": "vendor-administration",
   "Vendor documentation": "vendor-administration",
   "Vendor records": "vendor-administration",
@@ -1524,13 +1524,13 @@ function AboutPage({ setPage }) {
         <p className="section-lead">
           There's a common challenge that affects both individual businesses and the organizations supporting them: the gap between knowing what needs to be done and having the capacity to actually implement it.
         </p>
-        <p>
+        <p style={{ marginBottom: "1.2rem" }}>
           Businesses often account for payroll, materials, equipment, marketing, and other obvious operating expenses. But administrative time is different — hours spent searching for documents, organizing files, updating spreadsheets, processing routine paperwork, tracking expiration dates, handling invoices, and maintaining records are frequently spread across owners, managers, supervisors, and employees without the true cost ever being measured.
         </p>
-        <p>
+        <p style={{ marginBottom: "1.2rem" }}>
           Aurum Ventura was built to help close that implementation gap. We provide outsourced back-office administrative support to small and growing businesses nationwide, operating remotely to deliver consistent, reliable support regardless of business location. Whether it's Document Organization, Invoice Administration, Vendor Records, CRM updates, License Tracking, or Project Administration, Aurum Ventura handles the operational work that allows business owners to focus on growth.
         </p>
-        <p>
+        <p style={{ marginBottom: "1.2rem" }}>
           We help businesses and programs move away from outdated, paper-heavy processes by creating more organized digital workflows that make important information easier to locate, manage, and maintain. Instead of paperwork sitting in filing cabinets, vehicles, desks, inboxes, or scattered folders, we help develop more structured administrative environments. The goal is not simply to digitize paperwork. It is to help businesses create better systems around the administrative work they already have.
         </p>
       </section>
@@ -1540,13 +1540,13 @@ function AboutPage({ setPage }) {
         <p className="section-lead">
           Aurum Ventura Enterprise LLC is headquartered in Nashville, Tennessee. Because our administrative services operate through a remote business model, we support businesses throughout the United States without requiring a physical office location in your city.
         </p>
-        <div className="trust-facts">
+        <div className="trust-facts" style={{ marginBottom: "1.2rem" }}>
           <span>Nashville, TN — headquartered</span>
           <span>Nationwide — remote service model</span>
           <span>Tennessee-registered LLC</span>
           <span>Business insurance maintained</span>
         </div>
-        <p>
+        <p style={{ marginBottom: "1.2rem" }}>
           We believe businesses should feel confident not only in the services they receive, but also in the company they choose to trust with their administrative operations. Our goal is to build long-term working relationships based on organization, consistency, professionalism, confidentiality, and accountability.
         </p>
       </section>
@@ -1556,16 +1556,16 @@ function AboutPage({ setPage }) {
         <p className="section-lead">
           We operate in an era where artificial intelligence and automation can make business operations faster and more efficient. At Aurum Ventura, we embrace those tools — but we do not believe technology should replace human judgment.
         </p>
-        <p>
+        <p style={{ marginBottom: "1.2rem" }}>
           Administrative work often involves context, attention to detail, communication, exceptions, and decisions that cannot always be reduced to an automated process. Technology can misunderstand information, overlook context, or produce incorrect results.
         </p>
-        <p>
+        <p style={{ marginBottom: "1.2rem" }}>
           That is why our approach remains human-led and technology-supported. We use modern digital tools, automation, and artificial intelligence to reduce repetitive work, improve organization, support administrative workflows, and help routine processes move more efficiently.
         </p>
-        <p>
+        <p style={{ marginBottom: "1.2rem" }}>
           However, our clients' administrative needs remain under human oversight. Documents are reviewed. Questions are evaluated in context. Exceptions are handled individually. Administrative responsibilities are approached with actual thought and attention rather than relying entirely on an automated system to make every decision.
         </p>
-        <p>
+        <p style={{ marginBottom: "1.2rem" }}>
           Our goal is not to remove people from business administration. It is to give people better tools to manage it. For our clients, that means the efficiency of modern technology combined with the accountability, judgment, and attention of real people working behind the scenes.
         </p>
       </section>

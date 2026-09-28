@@ -868,12 +868,17 @@ function HomePage({ setPage }) {
       <section className="hero">
         <Swoosh style={{ position: "absolute", top: "8%", right: "-5%", width: "560px", height: "220px", opacity: 0.35, zIndex: 0 }} />
         <div className="hero-inner">
-          <p className="kicker">Administrative Support for Growing Businesses</p>
-          <h1>Your Business. <br />Our Administrative Support.</h1>
+          <h1>Back Office.<br />Without the Hire.</h1>
           <p className="hero-sub">
-            Aurum Ventura provides professional administrative support for small and growing businesses. We handle document management, invoicing, license tracking, vendor records, CRM data, project administration, and reporting — all within a defined scope and reserved capacity.
+            Get 10–16 hours/week back while we handle:
           </p>
-          <p style={{ fontSize: "0.9rem", fontWeight: "500", color: COLORS.teal, marginTop: "1.1rem", marginBottom: "1.6rem", maxWidth: "620px" }}>
+          <ul style={{ fontSize: "1.05rem", lineHeight: "1.8", color: COLORS.slate, marginBottom: "1.6rem", maxWidth: "500px", paddingLeft: "1.5rem" }}>
+            <li>Document management & filing</li>
+            <li>Invoicing & payment tracking</li>
+            <li>CRM data & vendor records</li>
+            <li>License renewals & compliance tracking</li>
+          </ul>
+          <p style={{ fontSize: "0.9rem", fontWeight: "500", color: COLORS.teal, marginBottom: "1.6rem", maxWidth: "620px" }}>
             Based in Nashville, Tennessee. Remote service to businesses nationwide.
           </p>
           <div className="hero-cta">

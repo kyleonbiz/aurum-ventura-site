@@ -356,6 +356,8 @@ export function pathFor(key) {
     case "Terms": return "/terms";
     case "Contact": return "/contact";
     case "ROICalculator": return "/roi-calculator";
+    case "FAQ": return "/faq";
+    case "Alternatives": return "/alternatives";
     case "Upload": return "/upload";
     case "ClientIntake": return "/client-intake";
     case "AdminLogin": return "/admin";
@@ -379,6 +381,8 @@ export function pageFromPath(pathname) {
   if (path === "/terms") return "Terms";
   if (path === "/contact") return "Contact";
   if (path === "/roi-calculator") return "ROICalculator";
+  if (path === "/faq") return "FAQ";
+  if (path === "/alternatives") return "Alternatives";
   if (path === "/upload") return "Upload";
   if (path === "/client-intake") return "ClientIntake";
   if (path === "/admin" || path === "/admin/login") return "AdminLogin";
@@ -2075,6 +2079,155 @@ function ROICalculatorPage({ setPage }) {
   );
 }
 
+function FAQPage({ setPage }) {
+  const go = (key) => (e) => { e.preventDefault(); setPage(key); };
+  const faqs = [
+    {
+      q: "How is Aurum Ventura different from a virtual assistant?",
+      a: "Virtual assistants typically work as independent contractors on tasks you assign day-to-day. Aurum Ventura provides a defined scope of administrative support with reserved capacity, clear pricing, and a master agreement that protects both sides. We focus on systems and consistency, not just task completion."
+    },
+    {
+      q: "What's included in a scope of services?",
+      a: "Every scope is custom-built around your specific needs. We assess what administrative work is taking your time, then define exactly what Aurum Ventura will handle, how many hours per month you get, and what the fixed monthly fee is. Nothing surprises you later."
+    },
+    {
+      q: "How long does it take to get started?",
+      a: "After you request a consultation, we do a needs assessment (typically a 30-minute call), provide a written proposal, and then handle secure onboarding—which takes about 5–10 business days. Then you're live."
+    },
+    {
+      q: "Can you handle confidential or sensitive business information?",
+      a: "Yes. Every team member signs a confidentiality agreement. Your data is encrypted in transit and at rest. Access is limited to staff actually working your account. We outline exactly how we handle your information in our master agreement."
+    },
+    {
+      q: "What if my needs change?",
+      a: "Your scope is designed for flexibility. If your needs shift, we adjust your scope and pricing to match. You're not locked in—we can scale up, scale down, or change what we handle."
+    },
+    {
+      q: "Do you work with businesses outside the United States?",
+      a: "We primarily serve U.S.-based businesses. If you're outside the US but have a US business location or operations, contact us to discuss."
+    },
+    {
+      q: "What happens if you can't complete something in my scope?",
+      a: "Everything in your scope is prioritized against your reserved capacity. If something unexpected comes up that's outside scope, we flag it and get your approval before we start work on it—we don't just bill you extra."
+    },
+    {
+      q: "How do you measure success?",
+      a: "We track what moves through your scope each month and report on it. You see exactly what we handled, how much capacity you used, and what's available for next month. Success looks like you getting your time back."
+    }
+  ];
+
+  return (
+    <div>
+      <section className="page-head">
+        <p className="kicker">FAQ</p>
+        <h1>Frequently Asked Questions</h1>
+        <p className="hero-sub">
+          Answers to common questions about how Aurum Ventura works, what's included, and how we support your business.
+        </p>
+      </section>
+      <section className="section" style={{ maxWidth: "720px", margin: "0 auto" }}>
+        {faqs.map((faq, i) => (
+          <div key={i} style={{ marginBottom: "2rem", paddingBottom: "1.5rem", borderBottom: i < faqs.length - 1 ? "1px solid #E4E9EF" : "none" }}>
+            <h3 style={{ margin: "0 0 0.8rem 0", color: COLORS.navy, fontSize: "1.1rem" }}>{faq.q}</h3>
+            <p style={{ margin: 0, lineHeight: "1.6", color: COLORS.slate }}>{faq.a}</p>
+          </div>
+        ))}
+      </section>
+
+      <section className="cta-band">
+        <h2>Have other questions?</h2>
+        <p>Get in touch—we're happy to talk through your specific situation.</p>
+        <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Contact Us</a>
+      </section>
+    </div>
+  );
+}
+
+function AlternativesPage({ setPage }) {
+  const go = (key) => (e) => { e.preventDefault(); setPage(key); };
+
+  const comparisons = [
+    {
+      option: "Virtual Assistants (Freelance)",
+      pros: ["Low cost", "Easy to hire", "Flexible hours"],
+      cons: ["No continuity if they leave", "Limited accountability", "You manage day-to-day tasks", "No infrastructure"],
+      aurum: "Defined scope, consistency, reserved capacity, no turnover risk"
+    },
+    {
+      option: "DIY (Handle it yourself)",
+      pros: ["Full control", "No extra cost"],
+      cons: ["Takes your personal time", "Errors cost money", "No systems", "Slows growth"],
+      aurum: "Get your time back, professional handling, scalable systems"
+    },
+    {
+      option: "Internal Hire (Full-time employee)",
+      pros: ["Team member", "Long-term knowledge"],
+      cons: ["High cost ($35K-$50K+/year)", "Benefits, payroll, management", "Not flexible", "Growing businesses don't need full-time admin"],
+      aurum: "Pay for what you use, no employment overhead, no management load"
+    },
+    {
+      option: "VA Marketplace (Upwork, Fiverr, etc.)",
+      pros: ["Wide talent pool", "Transparent pricing"],
+      cons: ["Quality varies", "Time zone issues", "No accountability", "You find and manage people"],
+      aurum: "Vetted, consistent, accountable team that knows your business"
+    }
+  ];
+
+  return (
+    <div>
+      <section className="page-head">
+        <p className="kicker">Why Choose Aurum Ventura</p>
+        <h1>Aurum vs Other Options</h1>
+        <p className="hero-sub">
+          How we compare to virtual assistants, doing it yourself, hiring full-time, and freelance marketplaces.
+        </p>
+      </section>
+
+      <section className="section" style={{ maxWidth: "900px", margin: "0 auto" }}>
+        {comparisons.map((comp, i) => (
+          <div key={i} style={{ marginBottom: "2.5rem", padding: "1.5rem", background: "#f9fafb", borderRadius: "8px", border: "1px solid #E4E9EF" }}>
+            <h3 style={{ margin: "0 0 1rem 0", color: COLORS.navy }}>{comp.option}</h3>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", marginBottom: "1.5rem" }}>
+              <div>
+                <p style={{ margin: "0 0 0.5rem 0", fontSize: "0.9rem", fontWeight: "600", color: COLORS.teal }}>Pros</p>
+                <ul style={{ margin: "0", paddingLeft: "1.2rem", color: COLORS.slate, fontSize: "0.95rem" }}>
+                  {comp.pros.map((pro, j) => <li key={j} style={{ marginBottom: "0.4rem" }}>{pro}</li>)}
+                </ul>
+              </div>
+              <div>
+                <p style={{ margin: "0 0 0.5rem 0", fontSize: "0.9rem", fontWeight: "600", color: "#c84b31" }}>Cons</p>
+                <ul style={{ margin: "0", paddingLeft: "1.2rem", color: COLORS.slate, fontSize: "0.95rem" }}>
+                  {comp.cons.map((con, j) => <li key={j} style={{ marginBottom: "0.4rem" }}>{con}</li>)}
+                </ul>
+              </div>
+            </div>
+
+            <div style={{ padding: "1rem", background: COLORS.ice, borderRadius: "4px", borderLeft: `4px solid ${COLORS.teal}` }}>
+              <p style={{ margin: 0, fontSize: "0.95rem", color: COLORS.navy }}>
+                <strong>Aurum Ventura:</strong> {comp.aurum}
+              </p>
+            </div>
+          </div>
+        ))}
+      </section>
+
+      <section className="section alt" style={{ maxWidth: "720px", margin: "2rem auto 0" }}>
+        <h2 style={{ textAlign: "center" }}>The Real Question</h2>
+        <p style={{ textAlign: "center", color: COLORS.slate }}>
+          Administrative support isn't about finding the cheapest option. It's about getting your time back so you can focus on serving clients and growing your business. Aurum Ventura gives you consistency, accountability, and professional handling—without the overhead of an internal hire.
+        </p>
+      </section>
+
+      <section className="cta-band">
+        <h2>Ready to see if we're a fit?</h2>
+        <p>Let's talk about your specific situation and build a custom scope.</p>
+        <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Request a Consultation</a>
+      </section>
+    </div>
+  );
+}
+
 function readDirectoryEntry(entry) {
   return new Promise((resolve) => {
     if (entry.isFile) {
@@ -3062,6 +3215,8 @@ const PAGE_TITLES = {
   Terms: `Terms of Service — ${SITE_NAME}`,
   Contact: `Contact — ${SITE_NAME}`,
   ROICalculator: `Calculate Your Time Savings — ${SITE_NAME}`,
+  FAQ: `Frequently Asked Questions — ${SITE_NAME}`,
+  Alternatives: `Aurum Ventura vs Virtual Assistants & DIY — ${SITE_NAME}`,
   Upload: `Upload Documents — ${SITE_NAME}`,
   ClientIntake: `Client Intake — ${SITE_NAME}`,
   AdminLogin: `Admin — ${SITE_NAME}`,
@@ -3079,6 +3234,8 @@ const PAGE_DESCRIPTIONS = {
   Terms: "Terms of service for Aurum Ventura's remote back-office administrative support services.",
   Contact: "Contact Aurum Ventura to request a consultation about outsourced back-office administrative support for your business.",
   ROICalculator: "Free calculator to estimate how much time and money you could save by outsourcing administrative tasks to Aurum Ventura.",
+  FAQ: "Answers to common questions about Aurum Ventura's administrative support services, pricing, process, and how we work with businesses.",
+  Alternatives: "Compare Aurum Ventura to virtual assistants, DIY management, and other administrative support options for your business.",
   Upload: "Securely upload documents and submit administrative requests to Aurum Ventura.",
   ClientIntake: "Complete client intake to set up outsourced back-office administrative services with Aurum Ventura.",
   AdminLogin: "Internal Aurum Ventura administration.",
@@ -3112,6 +3269,47 @@ function getBreadcrumbSchema(items, url) {
       "name": item.name,
       "item": item.path ? `https://www.aurumventura.net${item.path}` : url
     }))
+  };
+}
+
+function getFAQSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How is Aurum Ventura different from a virtual assistant?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Virtual assistants typically work as independent contractors on tasks you assign day-to-day. Aurum Ventura provides a defined scope of administrative support with reserved capacity, clear pricing, and a master agreement that protects both sides."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What's included in a scope of services?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Every scope is custom-built around your specific needs. We assess what administrative work is taking your time, then define exactly what Aurum Ventura will handle, reserved hours, and the fixed monthly fee."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How long does it take to get started?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "After you request a consultation, we do a needs assessment, provide a written proposal, and handle secure onboarding—which takes about 5–10 business days."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can you handle confidential business information?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Every team member signs a confidentiality agreement. Your data is encrypted in transit and at rest. Access is limited to staff actually working your account."
+        }
+      }
+    ]
   };
 }
 
@@ -3197,6 +3395,15 @@ export default function App({ initialPath } = {}) {
       }
     }
 
+    // FAQ schema
+    if (page === "FAQ") {
+      const faqScript = document.createElement("script");
+      faqScript.type = "application/ld+json";
+      faqScript.textContent = JSON.stringify(getFAQSchema());
+      document.head.appendChild(faqScript);
+      scripts.push(faqScript);
+    }
+
     return () => {
       scripts.forEach(script => { if (script.parentNode) document.head.removeChild(script); });
     };
@@ -3235,6 +3442,8 @@ export default function App({ initialPath } = {}) {
     Terms: <TermsPage setPage={navigate} />,
     Contact: <ContactPage />,
     ROICalculator: <ROICalculatorPage setPage={navigate} />,
+    FAQ: <FAQPage setPage={navigate} />,
+    Alternatives: <AlternativesPage setPage={navigate} />,
     Upload: <UploadPage />,
     ClientIntake: <ClientIntakePage />,
     AdminLogin: <AdminLoginPage setPage={navigate} />,

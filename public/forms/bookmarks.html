@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aurum Ventura Forms - Quick Access</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --dark-navy: #041944;
+            --corporate-teal: #09748B;
+            --aqua-teal: #26AEB4;
+            --ice-blue: #E6F3F9;
+            --blue-gray: #57677F;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--ice-blue) 0%, var(--white) 100%);
+            color: var(--blue-gray);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--dark-navy) 0%, var(--corporate-teal) 100%);
+            padding: 40px;
+            color: white;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(4, 25, 68, 0.15);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(4, 25, 68, 0.1);
+            border-top: 4px solid var(--corporate-teal);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 30px rgba(4, 25, 68, 0.15);
+        }
+
+        .card-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .card h2 {
+            color: var(--dark-navy);
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 13px;
+            color: var(--blue-gray);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .card a {
+            display: inline-block;
+            background: var(--corporate-teal);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .card a:hover {
+            background: var(--dark-navy);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(9, 116, 139, 0.3);
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            color: var(--dark-navy);
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--ice-blue);
+        }
+
+        .quick-links {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(4, 25, 68, 0.1);
+            margin-top: 20px;
+        }
+
+        .quick-links p {
+            font-size: 13px;
+            color: var(--blue-gray);
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .quick-links code {
+            background: var(--ice-blue);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: var(--dark-navy);
+        }
+
+        .footer {
+            text-align: center;
+            color: var(--blue-gray);
+            font-size: 12px;
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 AURUM VENTURA</h1>
+            <p>Forms Quick Access & Admin Dashboard</p>
+        </div>
+
+        <!-- CLIENT FORMS -->
+        <div class="section">
+            <h2 class="section-title">Client Forms</h2>
+            <div class="grid">
+                <div class="card">
+                    <div class="card-icon">📋</div>
+                    <h2>Service Agreement</h2>
+                    <p>Clients review and sign your service agreement. Pre-fills with their info.</p>
+                    <a href="service-agreement.html">Open Form</a>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">📝</div>
+                    <h2>Client Info Sheet</h2>
+                    <p>Collect business details, tools, vendors, and tasks from clients.</p>
+                    <a href="client-info-sheet.html">Open Form</a>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">✓</div>
+                    <h2>Onboarding Checklist</h2>
+                    <p>Internal guide showing 8-step onboarding timeline and milestones.</p>
+                    <a href="onboarding-checklist.html">View Checklist</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADMIN TOOLS -->
+        <div class="section">
+            <h2 class="section-title">Admin Dashboard</h2>
+            <div class="grid">
+                <div class="card">
+                    <div class="card-icon">⚙️</div>
+                    <h2>Generate & Customize</h2>
+                    <p>Create pre-filled links, customize terms, and send emails to clients.</p>
+                    <a href="admin.html">Go to Admin</a>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">🏠</div>
+                    <h2>Forms Hub</h2>
+                    <p>Main landing page with all forms and instructions for clients.</p>
+                    <a href="index.html">View Hub</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- QUICK INFO -->
+        <div class="quick-links">
+            <h3 style="color: var(--dark-navy); margin-bottom: 15px;">Quick Reference</h3>
+            <p><strong>Admin Dashboard:</strong> <code>aurumventura.net/forms/admin</code></p>
+            <p><strong>Service Agreement:</strong> <code>aurumventura.net/forms/service-agreement</code></p>
+            <p><strong>Client Info Sheet:</strong> <code>aurumventura.net/forms/client-info-sheet</code></p>
+            <p><strong>Onboarding Checklist:</strong> <code>aurumventura.net/forms/onboarding-checklist</code></p>
+            <p><strong>Forms Hub:</strong> <code>aurumventura.net/forms/</code></p>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2026 Aurum Ventura. Bookmark this page for quick access to all forms and admin tools.</p>
+        </div>
+    </div>
+</body>
+</html>

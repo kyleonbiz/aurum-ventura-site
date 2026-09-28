@@ -412,6 +412,47 @@
         // Set today's date as default
         document.getElementById('signatureDate').valueAsDate = new Date();
 
+        // Load custom terms from localStorage (saved from admin dashboard)
+        function loadCustomTerms() {
+            const saved = localStorage.getItem('aurumTerms');
+            if (saved) {
+                try {
+                    const terms = JSON.parse(saved);
+                    // Map of field names to table cell selectors
+                    const termMappings = {
+                        services: 'Services',
+                        plans: 'Plans',
+                        pricing: 'Price',
+                        unusedHours: 'Unused Hours',
+                        extraWork: 'Extra Work',
+                        turnaround: 'Turnaround',
+                        payment: 'Payment',
+                        termination: 'Termination',
+                        clientRole: 'Your Role',
+                        confidentiality: 'Confidentiality'
+                    };
+
+                    // Find and update each term in the table
+                    const rows = document.querySelectorAll('tr');
+                    Object.keys(termMappings).forEach(key => {
+                        const termName = termMappings[key];
+                        const row = Array.from(rows).find(r => r.textContent.includes(termName));
+                        if (row && terms[key]) {
+                            const cells = row.querySelectorAll('td');
+                            if (cells.length > 1) {
+                                cells[1].textContent = terms[key];
+                            }
+                        }
+                    });
+                } catch (e) {
+                    console.log('Could not load custom terms');
+                }
+            }
+        }
+
+        // Load custom terms on page load
+        loadCustomTerms();
+
         function clearSignature() {
             signaturePad.clear();
         }

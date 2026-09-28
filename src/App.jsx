@@ -3575,7 +3575,7 @@ export default function App({ initialPath } = {}) {
         .legal-body p { font-size: 0.95rem; line-height: 1.65; color: ${COLORS.slate}; margin: 0 0 1rem; }
         .legal-body a { color: ${COLORS.teal}; text-decoration: underline; }
 
-        .plain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.1rem 2.5rem; margin: 1.1rem 0 1.3rem; }
+        .plain-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.1rem 2rem; margin: 1.1rem 0 1.3rem; }
         .plain-grid-item { display: flex; gap: 0.7rem; align-items: baseline; padding: 0.6rem 0; border-bottom: 1px solid #E4E9EF; font-size: 0.92rem; color: ${COLORS.navy}; width: 100%; background: none; border-left: none; border-right: none; border-top: none; text-align: left; font-family: inherit; cursor: pointer; }
         .plain-grid-item:hover { color: ${COLORS.teal}; border-bottom-color: ${COLORS.teal}; }
         .plain-grid-item h3 { font: inherit; font-weight: inherit; color: inherit; margin: 0; }

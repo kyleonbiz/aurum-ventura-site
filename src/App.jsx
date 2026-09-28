@@ -96,7 +96,7 @@ export const SERVICES = [
   {
     slug: "vendor-administration",
     title: "Vendor Administration",
-    summary: "Maintain vendor records, organize W-9s and Certificates of Insurance, track expiration dates, and prepare routine vendor paperwork.",
+    summary: "Maintain Vendor Records, organize W-9s and Certificates of Insurance, track expiration dates, and prepare routine vendor paperwork.",
     examples: [
       "Building and maintaining a vendor contact directory",
       "Collecting and organizing W-9s and Certificates of Insurance",
@@ -106,7 +106,7 @@ export const SERVICES = [
   {
     slug: "crm-data-management",
     title: "CRM & Data Management",
-    summary: "Enter and update customer records, clean up duplicates, maintain spreadsheets, and handle routine data entry — keep your systems accurate.",
+    summary: "Enter and update customer records, clean up duplicates, maintain spreadsheets, and handle routine Data Entry — keep your systems accurate.",
     examples: [
       "Entering new customer records into your CRM after a sale closes",
       "Cleaning up duplicate or outdated contact entries",
@@ -172,7 +172,7 @@ export const SERVICES = [
     examples: [
       "Building a CRM from scratch and populating with existing customer data",
       "Creating administrative workflows and tracking systems for your business",
-      "Setting up vendor files, license tracking, and document organization systems",
+      "Setting up vendor files, License Tracking, and Document Organization systems",
       "Designing invoicing processes and payment tracking workflows",
     ],
   },
@@ -202,7 +202,7 @@ const NOT_LIST = [
 const CONFIDENTIALITY_PRINCIPLES = [
   ["Limited access", "Client information is accessed only as needed to perform agreed administrative services."],
   ["Purpose-based handling", "Documents and business information are used only for the administrative responsibilities authorized by the client."],
-  ["Organized digital workflows", "We encourage structured digital document management rather than unnecessary duplication or uncontrolled distribution of business information."],
+  ["Organized digital workflows", "We encourage structured digital Document Management rather than unnecessary duplication or uncontrolled distribution of business information."],
   ["Client control", "Clients determine what information Aurum Ventura receives and which administrative responsibilities we are authorized to manage."],
   ["Responsible communication", "Sensitive business information is not intentionally shared with unauthorized third parties."],
   ["Human oversight", "Technology may assist with organization, classification, or routine processing, but sensitive administrative work remains subject to human review where appropriate."],
@@ -211,7 +211,7 @@ const CONFIDENTIALITY_PRINCIPLES = [
 
 const TIME_COST = [
   ["Invoicing & payment follow-up", "2–3 hrs/wk"],
-  ["Filing & document organization", "2 hrs/wk"],
+  ["Filing & Document Organization", "2 hrs/wk"],
   ["License & renewal tracking", "1 hr/wk"],
   ["Vendor paperwork & records", "1–2 hrs/wk"],
   ["Data entry & CRM updates", "2 hrs/wk"],
@@ -249,27 +249,27 @@ const TIME_SINKS = [
 ];
 
 const INDUSTRY_EXAMPLES = {
-  "Contractors & Trades": ["Invoice administration", "CRM & data updates", "Recurring status reporting", "Forms & paperwork"],
-  "Property Management": ["Property & vendor records", "Vendor documentation", "Monthly reporting", "CRM updates"],
+  "Contractors & Trades": ["Invoice administration", "CRM "CRM & data updates" Data Updates", "Recurring Status Reporting", "Forms "Forms Forms & paperwork Paperwork" Paperwork"],
+  "Property Management": ["Property & Vendor Records", "Vendor documentation", "Monthly Reporting", "CRM Updates"],
   "Cleaning & Facility Services": ["Client invoicing", "Service scheduling", "Equipment tracking", "Performance reports"],
   "Construction/Subcontractors": ["Project documentation", "Subcontractor management", "Job costing", "Compliance records"],
   "Staffing & Recruiting": ["Candidate tracking", "Placement documentation", "Client reporting", "Contract management"],
-  "Real Estate": ["Transaction paperwork", "Document organization", "CRM updates", "Vendor records"],
-  "Professional Services": ["CRM updates", "Document management", "Invoice administration", "Status reporting"],
+  "Real Estate": ["Transaction paperwork", "Document organization", "CRM Updates", "Vendor records"],
+  "Professional Services": ["CRM Updates", "Document management", "Invoice administration", "Status Reporting"],
 };
 
 // Maps example labels to service slugs for internal linking
 const EXAMPLE_TO_SERVICE = {
   "Invoice administration": "invoice-administration",
-  "CRM & data updates": "crm-data-management",
-  "CRM updates": "crm-data-management",
-  "Recurring status reporting": "data-entry-reporting",
-  "Status reporting": "data-entry-reporting",
-  "Forms & paperwork": "forms-paperwork",
-  "Property & vendor records": "vendor-administration",
+  "CRM "CRM & data updates" Data Updates": "crm-data-management",
+  "CRM Updates": "crm-data-management",
+  "Recurring Status Reporting": "data-entry-reporting",
+  "Status Reporting": "data-entry-reporting",
+  "Forms "Forms Forms & paperwork Paperwork" Paperwork": "forms-paperwork",
+  "Property & Vendor Records": "vendor-administration",
   "Vendor documentation": "vendor-administration",
   "Vendor records": "vendor-administration",
-  "Monthly reporting": "data-entry-reporting",
+  "Monthly Reporting": "data-entry-reporting",
   "Client invoicing": "invoice-administration",
   "Service scheduling": "project-administration",
   "Equipment tracking": "project-administration",
@@ -1204,7 +1204,7 @@ function ProgramsPartnershipsPage({ setPage }) {
   const IMPLEMENTATION_SYSTEMS = [
     "Client intake workflows",
     "CRM structure and setup",
-    "Digital document organization",
+    "Digital Document Organization",
     "Administrative workflows",
     "Invoice administration workflows",
     "Vendor tracking and administration",
@@ -1528,7 +1528,7 @@ function AboutPage({ setPage }) {
           Businesses often account for payroll, materials, equipment, marketing, and other obvious operating expenses. But administrative time is different — hours spent searching for documents, organizing files, updating spreadsheets, processing routine paperwork, tracking expiration dates, handling invoices, and maintaining records are frequently spread across owners, managers, supervisors, and employees without the true cost ever being measured.
         </p>
         <p>
-          Aurum Ventura was built to help close that implementation gap. We provide outsourced back-office administrative support to small and growing businesses nationwide, operating remotely to deliver consistent, reliable support regardless of business location. Whether it's document organization, invoice administration, vendor records, CRM updates, license tracking, or project administration, Aurum Ventura handles the operational work that allows business owners to focus on growth.
+          Aurum Ventura was built to help close that implementation gap. We provide outsourced back-office administrative support to small and growing businesses nationwide, operating remotely to deliver consistent, reliable support regardless of business location. Whether it's Document Organization, Invoice Administration, Vendor Records, CRM updates, License Tracking, or Project Administration, Aurum Ventura handles the operational work that allows business owners to focus on growth.
         </p>
         <p>
           We help businesses and programs move away from outdated, paper-heavy processes by creating more organized digital workflows that make important information easier to locate, manage, and maintain. Instead of paperwork sitting in filing cabinets, vehicles, desks, inboxes, or scattered folders, we help develop more structured administrative environments. The goal is not simply to digitize paperwork. It is to help businesses create better systems around the administrative work they already have.
@@ -3229,7 +3229,7 @@ const PAGE_TITLES = {
 };
 const PAGE_DESCRIPTIONS = {
   Home: "We design and execute workflows to get you 10-16 hours/week back. Document Prep, Invoicing, Vendor Admin, CRM, License Tracking, and Custom Workflows for growing businesses nationwide.",
-  Services: "Recurring administrative services for businesses nationwide — document preparation, invoice administration, license tracking, vendor administration, CRM data management, project administration, and more.",
+  Services: "Recurring administrative services for businesses nationwide — Document Preparation, Invoice Administration, License Tracking, Vendor Administration, CRM Data Management, Project Administration, and more.",
   ProgramsPartnerships: "Implementation partnerships for organizations supporting entrepreneurs and small businesses. Hands-on operational systems and back-office implementation for entrepreneurship programs.",
   About: "Aurum Ventura is a Nashville-based outsourced administrative back office serving small and growing businesses nationwide. Learn about our approach to business operations.",
   Industries: "Back-office and administrative support for contractors, property managers, cleaning and landscaping, construction, staffing, real estate, professional services, and other industries nationwide.",
@@ -3328,7 +3328,7 @@ export function metaFor(page) {
     if (industry) {
       return {
         title: `${industry} | Back-Office & Administrative Support — ${SITE_NAME}`,
-        description: `Professional outsourced administrative support for ${industry.toLowerCase()} businesses nationwide. Custom-scoped services including document management, invoicing, license tracking, vendor administration, and more.`
+        description: `Professional outsourced administrative support for ${industry.toLowerCase()} businesses nationwide. Custom-scoped services including Document Management, invoicing, License Tracking, Vendor Administration, and more.`
       };
     }
   }

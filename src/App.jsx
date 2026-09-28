@@ -661,6 +661,63 @@ function Nav({ page, setPage }) {
   );
 }
 
+function Footer({ setPage }) {
+  const go = (key) => (e) => { e.preventDefault(); setPage(key); };
+  return (
+    <footer className="footer">
+      <div className="footer-inner">
+        <div className="footer-cols">
+          <div>
+            <h3>Company</h3>
+            <a href={pathFor("About")} onClick={go("About")}>About</a>
+            <a href={pathFor("Services")} onClick={go("Services")}>Services</a>
+            <a href={pathFor("Industries")} onClick={go("Industries")}>Industries</a>
+          </div>
+          <div>
+            <h3>How We Work</h3>
+            <a href={pathFor("HowItWorks")} onClick={go("HowItWorks")}>How It Works</a>
+            <a href={pathFor("FAQ")} onClick={go("FAQ")}>FAQ</a>
+            <a href={pathFor("Alternatives")} onClick={go("Alternatives")}>Why Aurum?</a>
+            <a href={pathFor("Security")} onClick={go("Security")}>Security &amp; Confidentiality</a>
+          </div>
+          <div>
+            <h3>Get in Touch</h3>
+            <a href={pathFor("Contact")} onClick={go("Contact")}>Request a Consultation</a>
+            <p className="footer-contact">admin@aurumventura.net</p>
+            <p className="footer-contact">850-653-7797</p>
+          </div>
+          <div>
+            <h3>For Clients</h3>
+            <a href={pathFor("ClientIntake")} onClick={go("ClientIntake")}>Client Intake</a>
+            <a href={pathFor("Upload")} onClick={go("Upload")}>Upload Documents</a>
+          </div>
+          <div>
+            <h3>Tools for Small Business</h3>
+            <a href="/tools/onboarding" target="_blank" rel="noopener noreferrer">Client Onboarding Tool</a>
+          </div>
+        </div>
+      </div>
+      <p className="footer-tagline">Human-Led. Technology-Supported.</p>
+      <p style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.6)", marginTop: "0.6rem", marginBottom: "0.8rem" }}>Powered by ProWorx</p>
+      <Swoosh style={{ width: "140px", height: "46px", opacity: 0.5, margin: "0 auto" }} />
+      <div className="footer-legal-bar">
+        <p className="footer-legal">
+          &copy; {new Date().getFullYear()} Aurum Ventura Enterprise LLC. Nashville-based remote administrative support for businesses nationwide.
+        </p>
+        <p className="footer-legal-links">
+          <a href={pathFor("About")} onClick={go("About")}>About</a>
+          <span aria-hidden="true">&middot;</span>
+          <a href={pathFor("Security")} onClick={go("Security")}>Security &amp; Confidentiality</a>
+          <span aria-hidden="true">&middot;</span>
+          <a href={pathFor("Privacy")} onClick={go("Privacy")}>Privacy Policy</a>
+          <span aria-hidden="true">&middot;</span>
+          <a href={pathFor("Terms")} onClick={go("Terms")}>Terms of Service</a>
+        </p>
+      </div>
+    </footer>
+  );
+}
+
 function IndustryPanel({ setPage }) {
   const [active, setActive] = useState(0);
   const go = (slug) => (e) => { e.preventDefault(); setPage(slug); };
@@ -3752,10 +3809,27 @@ export default function App({ initialPath } = {}) {
           .admin-review-grid { grid-template-columns: 1fr; }
         }
 
+        /* Footer */
+        .footer { background: ${COLORS.navy}; color: ${COLORS.white}; padding: 3rem 1.5rem 0; margin-top: 1.5rem; }
+        .footer-inner { max-width: 1100px; margin: 0 auto; padding-bottom: 1.5rem; }
+        .footer-cols { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem 1.5rem; width: 100%; }
+        .footer-cols > div { flex: 1 1 180px; }
+        .footer-cols h3 { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: ${COLORS.aqua}; margin-bottom: 0.8rem; }
+        .footer-cols a { display: block; background: none; border: none; color: rgba(255,255,255,0.8); font-size: 0.87rem; padding: 0.3rem 0; text-align: left; }
+        .footer-cols a:hover { color: ${COLORS.white}; }
+        .footer-contact { color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-top: 0.3rem; }
+        .footer-tagline { text-align: center; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: ${COLORS.aqua}; margin: 0 0 1.2rem; }
+        .footer-legal-bar { width: 100%; margin-top: 1.5rem; padding: 1.4rem 1.5rem 1.6rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .footer-legal { color: rgba(255,255,255,0.55); font-size: 0.78rem; margin: 0; }
+        .footer-legal-links { margin: 0.6rem 0 0; font-size: 0.82rem; }
+        .footer-legal-links a { color: rgba(255,255,255,0.8); text-decoration: underline; text-underline-offset: 2px; }
+        .footer-legal-links a:hover { color: ${COLORS.white}; }
+        .footer-legal-links span { color: rgba(255,255,255,0.35); margin: 0 0.6rem; }
       ` }} />
 
       <Nav page={page} setPage={navigate} />
       {content}
+      <Footer setPage={navigate} />
     </div>
   );
 }

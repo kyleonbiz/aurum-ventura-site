@@ -3808,10 +3808,10 @@ export default function App({ initialPath } = {}) {
         /* Footer */
         .footer { background: ${COLORS.navy}; color: ${COLORS.white}; padding: 3rem 1.5rem 0; margin-top: 1.5rem; }
         .footer-inner { max-width: 1100px; margin: 0 auto; padding-bottom: 1.5rem; }
-        .footer-cols { display: flex; flex-wrap: wrap; justify-content: center; gap: 2rem 1.5rem; width: 100%; }
-        .footer-cols > div { flex: 0 1 180px; text-align: center; }
-        .footer-cols h3 { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: ${COLORS.aqua}; margin-bottom: 0.8rem; text-align: center; }
-        .footer-cols a { display: block; background: none; border: none; color: rgba(255,255,255,0.8); font-size: 0.87rem; padding: 0.3rem 0; text-align: center; }
+        .footer-cols { display: flex; flex-wrap: wrap; justify-content: space-around; gap: 2rem 1.5rem; width: 100%; }
+        .footer-cols > div { flex: 0 1 160px; }
+        .footer-cols h3 { font-family: 'Montserrat', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: ${COLORS.aqua}; margin-bottom: 0.8rem; }
+        .footer-cols a { display: block; background: none; border: none; color: rgba(255,255,255,0.8); font-size: 0.87rem; padding: 0.3rem 0; text-align: left; }
         .footer-cols a:hover { color: ${COLORS.white}; }
         .footer-contact { color: rgba(255,255,255,0.6); font-size: 0.85rem; margin-top: 0.3rem; }
         .footer-tagline { text-align: center; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: ${COLORS.aqua}; margin: 0 0 1.2rem; }

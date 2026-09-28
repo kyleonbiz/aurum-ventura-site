@@ -14,15 +14,6 @@ import { logAudit } from "../_lib/audit.js";
 import { clientIp } from "../_lib/ratelimit.js";
 import { isMeaningfulText } from "../../shared/uploadShared.js";
 
-const ONBOARDING_CHECKLIST = [
-  "Send welcome email and onboarding overview",
-  "Collect signed services agreement",
-  "Set up client folder access",
-  "Confirm scope of services with client",
-  "Schedule kickoff call",
-  "Add client to monthly reporting cycle",
-];
-
 export default async function handler(req, res) {
   if (!requireAdmin(req, res)) return;
   const { id, action } = req.query;
@@ -239,12 +230,6 @@ async function handleApprove(req, res, id) {
       const areas = Array.isArray(intake.administrative_areas) ? intake.administrative_areas : [];
       for (const a of areas) {
         await tx`insert into client_service_interests (client_id, area_name) values (${client.id}, ${a})`;
-      }
-
-      let sortOrder = 0;
-      for (const task of ONBOARDING_CHECKLIST) {
-        await tx`insert into client_onboarding_tasks (client_id, task, sort_order) values (${client.id}, ${task}, ${sortOrder})`;
-        sortOrder += 1;
       }
 
       await tx`

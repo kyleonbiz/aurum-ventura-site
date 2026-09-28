@@ -187,7 +187,6 @@ const STEPS = [
   ["Needs Assessment", "We document what's actually taking time and where a defined scope would help."],
   ["Proposal", "A written recommendation outlining your custom scope, reserved capacity, and monthly service fee."],
   ["Agreement & Scope", "The Master Agreement and your Scope & Service Level Exhibit are signed."],
-  ["Secure Onboarding", "Intake forms, document transfer, and system access are set up — typically 5–10 business days."],
   ["Active Service", "Requests go through, tracked against capacity, with a monthly report on what moved."],
 ];
 
@@ -1214,7 +1213,6 @@ function ProgramsPartnershipsPage({ setPage }) {
     "Internal administrative SOPs",
     "Data tracking and reporting",
     "Business file organization",
-    "Onboarding workflows",
     "General back-office operational structure",
   ];
 
@@ -2097,7 +2095,7 @@ function FAQPage({ setPage }) {
     },
     {
       q: "How long does it take to get started?",
-      a: "After you request a consultation, we do a needs assessment (typically a 30-minute call), provide a written proposal, and then handle secure onboarding—which takes about 5–10 business days. Then you're live."
+      a: "After you request a consultation, we do a needs assessment (typically a 30-minute call), provide a written proposal, and set up your access—which takes about 5–10 business days. Then you're live."
     },
     {
       q: "Can you handle confidential or sensitive business information?",
@@ -3303,7 +3301,7 @@ function getFAQSchema() {
         "name": "How long does it take to get started?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "After you request a consultation, we do a needs assessment, provide a written proposal, and handle secure onboarding—which takes about 5–10 business days."
+          "text": "After you request a consultation, we do a needs assessment, provide a written proposal, and set up your access—which takes about 5–10 business days."
         }
       },
       {

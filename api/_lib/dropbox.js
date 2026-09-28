@@ -28,14 +28,14 @@ function getClient() {
   throw Object.assign(new Error("Dropbox is not configured"), { code: "STORAGE_NOT_CONFIGURED" });
 }
 
-// Builds /Clients/[Legal Name]/03 Client Uploads/[YEAR]/[MONTH]/ — Dropbox
+// Builds /Clients/[Legal Name]/02 Client Uploads/[YEAR]/[MONTH]/ — Dropbox
 // creates any missing parent folders automatically on file upload, so no
 // separate "create folder" call is needed.
 export function folderPathFor(clientLegalName, date = new Date()) {
   const year = date.getUTCFullYear();
   const month = String(date.getUTCMonth() + 1).padStart(2, "0");
   const safeName = String(clientLegalName).replace(/[\/\\]/g, "-").trim();
-  return `/Clients/${safeName}/03 Client Uploads/${year}/${month}`;
+  return `/Clients/${safeName}/02 Client Uploads/${year}/${month}`;
 }
 
 // buffer: Buffer/Uint8Array of file bytes. storedFilename: server-generated
@@ -62,17 +62,16 @@ export function isStorageConfigured() {
 
 const CLIENT_SUBFOLDERS = [
   "01 Signed Agreements",
-  "02 Onboarding",
-  "03 Client Uploads",
-  "04 Completed Documents",
-  "05 Licenses & Renewals",
-  "06 Vendors",
-  "07 Invoices",
-  "08 CRM & Data",
-  "09 Projects",
-  "10 Admin Requests",
-  "11 Monthly Reports",
-  "12 Scope Changes",
+  "02 Client Uploads",
+  "03 Completed Documents",
+  "04 Licenses & Renewals",
+  "05 Vendors",
+  "06 Invoices",
+  "07 CRM & Data",
+  "08 Projects",
+  "09 Admin Requests",
+  "10 Monthly Reports",
+  "11 Scope Changes",
   "99 Archive",
 ];
 

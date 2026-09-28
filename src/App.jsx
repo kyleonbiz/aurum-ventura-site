@@ -691,6 +691,10 @@ function Footer({ setPage }) {
             <a href={pathFor("ClientIntake")} onClick={go("ClientIntake")}>Client Intake</a>
             <a href={pathFor("Upload")} onClick={go("Upload")}>Upload Documents</a>
           </div>
+          <div>
+            <h3>Tools for Small Business</h3>
+            <a href="/tools/onboarding" target="_blank" rel="noopener noreferrer">Client Onboarding Tool</a>
+          </div>
         </div>
       </div>
       <p className="footer-tagline">Human-Led. Technology-Supported.</p>

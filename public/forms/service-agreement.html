@@ -427,11 +427,11 @@
             // Create PDF
             const element = document.querySelector('.container');
             const opt = {
-                margin: 10,
+                margin: [12, 12, 12, 12],
                 filename: `${businessName}_Service_Agreement.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+                html2canvas: { scale: 2, useCORS: true, allowTaint: true },
+                jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4', compress: true }
             };
 
             html2pdf().set(opt).from(element).save().then(() => {

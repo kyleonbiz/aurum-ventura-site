@@ -869,15 +869,13 @@ function HomePage({ setPage }) {
         <Swoosh style={{ position: "absolute", top: "8%", right: "-5%", width: "560px", height: "220px", opacity: 0.35, zIndex: 0 }} />
         <div className="hero-inner">
           <h1>Back Office.<br />Without the Hire.</h1>
-          <p className="hero-sub">
-            Get 10–16 hours/week back while we handle:
+          <p className="hero-sub" style={{ fontSize: "1.1rem", marginBottom: "1.2rem", maxWidth: "620px" }}>
+            We design your workflows. We execute them. You get 10–16 hours/week back.
           </p>
-          <ul style={{ fontSize: "1.05rem", lineHeight: "1.8", color: COLORS.slate, marginBottom: "1.6rem", maxWidth: "500px", paddingLeft: "1.5rem" }}>
-            <li>Document management & filing</li>
-            <li>Invoicing & payment tracking</li>
-            <li>CRM data & vendor records</li>
-            <li>License renewals & compliance tracking</li>
-          </ul>
+          <p style={{ fontSize: "1.02rem", lineHeight: "1.7", color: COLORS.slate, marginBottom: "1.6rem", maxWidth: "620px" }}>
+            <strong>What we handle:</strong><br />
+            Document prep • Invoicing • License tracking • Vendor admin • CRM • Project admin • Data reporting • And custom workflows
+          </p>
           <p style={{ fontSize: "0.9rem", fontWeight: "500", color: COLORS.teal, marginBottom: "1.6rem", maxWidth: "620px" }}>
             Based in Nashville, Tennessee. Remote service to businesses nationwide.
           </p>

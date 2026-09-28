@@ -34,7 +34,7 @@ const GOOGLE_BUSINESS_URL = "https://share.google/RR4rQeNwXhJky9eVF";
 
 const ORGANIZATION_SCHEMA = {
   "@context": "https://schema.org",
-  "@type": "Organization",
+  "@type": "LocalBusiness",
   "name": "Aurum Ventura Enterprise LLC",
   "url": "https://www.aurumventura.net",
   "logo": "https://www.aurumventura.net/logo-mark.png",
@@ -54,7 +54,10 @@ const ORGANIZATION_SCHEMA = {
     "email": "admin@aurumventura.net",
     "contactType": "customer service"
   },
-  "sameAs": GOOGLE_BUSINESS_URL !== "YOUR_GOOGLE_BUSINESS_URL_HERE" ? [GOOGLE_BUSINESS_URL] : []
+  "sameAs": GOOGLE_BUSINESS_URL !== "YOUR_GOOGLE_BUSINESS_URL_HERE" ? [GOOGLE_BUSINESS_URL] : [],
+  "priceRange": "$$",
+  "servesCuisine": "Business Services",
+  "knowsAbout": ["Administrative Support", "Back Office Services", "Document Management", "Invoice Administration", "CRM Management", "Project Administration"]
 };
 
 
@@ -352,6 +355,7 @@ export function pathFor(key) {
     case "Privacy": return "/privacy";
     case "Terms": return "/terms";
     case "Contact": return "/contact";
+    case "ROICalculator": return "/roi-calculator";
     case "Upload": return "/upload";
     case "ClientIntake": return "/client-intake";
     case "AdminLogin": return "/admin";
@@ -374,6 +378,7 @@ export function pageFromPath(pathname) {
   if (path === "/privacy") return "Privacy";
   if (path === "/terms") return "Terms";
   if (path === "/contact") return "Contact";
+  if (path === "/roi-calculator") return "ROICalculator";
   if (path === "/upload") return "Upload";
   if (path === "/client-intake") return "ClientIntake";
   if (path === "/admin" || path === "/admin/login") return "AdminLogin";
@@ -1973,6 +1978,103 @@ function ContactPage() {
   );
 }
 
+function ROICalculatorPage({ setPage }) {
+  const [hours, setHours] = useState(10);
+  const [rate, setRate] = useState(30);
+  const go = (key) => (e) => { e.preventDefault(); setPage(key); };
+
+  const weeklyTime = hours;
+  const monthlyTime = hours * 4.3;
+  const yearlyTime = hours * 52;
+  const weeklyCost = hours * rate;
+  const monthlyCost = weeklyCost * 4.3;
+  const yearlyCost = weeklyTime * rate;
+
+  return (
+    <div>
+      <section className="page-head">
+        <p className="kicker">Time Savings Calculator</p>
+        <h1>Calculate Your ROI</h1>
+        <p className="hero-sub">
+          See how much time and money you could save by outsourcing administrative work to Aurum Ventura.
+        </p>
+      </section>
+      <section className="section" style={{ maxWidth: "600px", margin: "0 auto" }}>
+        <div style={{ background: "#f5f5f5", padding: "2rem", borderRadius: "8px" }}>
+          <div style={{ marginBottom: "2rem" }}>
+            <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "600" }}>
+              Hours spent on admin work per week
+            </label>
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              <input
+                type="range"
+                min="1"
+                max="50"
+                value={hours}
+                onChange={(e) => setHours(Number(e.target.value))}
+                style={{ flex: 1 }}
+              />
+              <span style={{ fontSize: "1.2rem", fontWeight: "600", minWidth: "50px" }}>{hours} hrs</span>
+            </div>
+          </div>
+
+          <div style={{ marginBottom: "2rem" }}>
+            <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "600" }}>
+              Your hourly rate ($)
+            </label>
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              <input
+                type="range"
+                min="10"
+                max="200"
+                step="5"
+                value={rate}
+                onChange={(e) => setRate(Number(e.target.value))}
+                style={{ flex: 1 }}
+              />
+              <span style={{ fontSize: "1.2rem", fontWeight: "600", minWidth: "70px" }}>${rate}/hr</span>
+            </div>
+          </div>
+
+          <div style={{ borderTop: "2px solid #ddd", paddingTop: "1.5rem", marginTop: "2rem" }}>
+            <h3 style={{ margin: "0 0 1rem 0", color: COLORS.teal }}>Your Potential Savings</h3>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+              <div style={{ padding: "1rem", background: COLORS.white, borderRadius: "4px" }}>
+                <p style={{ margin: "0 0 0.5rem 0", fontSize: "0.9rem", color: COLORS.slate }}>Per Week</p>
+                <p style={{ margin: 0, fontSize: "1.5rem", fontWeight: "600", color: COLORS.navy }}>
+                  ${weeklyCost.toLocaleString()}
+                </p>
+              </div>
+              <div style={{ padding: "1rem", background: COLORS.white, borderRadius: "4px" }}>
+                <p style={{ margin: "0 0 0.5rem 0", fontSize: "0.9rem", color: COLORS.slate }}>Per Month</p>
+                <p style={{ margin: 0, fontSize: "1.5rem", fontWeight: "600", color: COLORS.navy }}>
+                  ${monthlyCost.toLocaleString(undefined, {maximumFractionDigits: 0})}
+                </p>
+              </div>
+              <div style={{ padding: "1rem", background: COLORS.white, borderRadius: "4px", gridColumn: "1 / -1" }}>
+                <p style={{ margin: "0 0 0.5rem 0", fontSize: "0.9rem", color: COLORS.slate }}>Per Year</p>
+                <p style={{ margin: 0, fontSize: "1.5rem", fontWeight: "600", color: COLORS.navy }}>
+                  ${yearlyCost.toLocaleString()}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <p style={{ margin: "1.5rem 0 0 0", fontSize: "0.85rem", color: COLORS.slate, textAlign: "center" }}>
+            *Based on hours per week × your hourly rate. Actual savings depend on scope of work and service fee.
+          </p>
+        </div>
+      </section>
+
+      <section className="cta-band">
+        <h2>Ready to reclaim your time?</h2>
+        <p>Let's talk about your specific needs and get you a custom quote.</p>
+        <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Request a Consultation</a>
+      </section>
+    </div>
+  );
+}
+
 function readDirectoryEntry(entry) {
   return new Promise((resolve) => {
     if (entry.isFile) {
@@ -2959,6 +3061,7 @@ const PAGE_TITLES = {
   Privacy: `Privacy Policy — ${SITE_NAME}`,
   Terms: `Terms of Service — ${SITE_NAME}`,
   Contact: `Contact — ${SITE_NAME}`,
+  ROICalculator: `Calculate Your Time Savings — ${SITE_NAME}`,
   Upload: `Upload Documents — ${SITE_NAME}`,
   ClientIntake: `Client Intake — ${SITE_NAME}`,
   AdminLogin: `Admin — ${SITE_NAME}`,
@@ -2975,11 +3078,42 @@ const PAGE_DESCRIPTIONS = {
   Privacy: "Privacy policy for Aurum Ventura's website and back-office administrative services for businesses nationwide.",
   Terms: "Terms of service for Aurum Ventura's remote back-office administrative support services.",
   Contact: "Contact Aurum Ventura to request a consultation about outsourced back-office administrative support for your business.",
+  ROICalculator: "Free calculator to estimate how much time and money you could save by outsourcing administrative tasks to Aurum Ventura.",
   Upload: "Securely upload documents and submit administrative requests to Aurum Ventura.",
   ClientIntake: "Complete client intake to set up outsourced back-office administrative services with Aurum Ventura.",
   AdminLogin: "Internal Aurum Ventura administration.",
   AdminIntakes: "Internal Aurum Ventura administration.",
 };
+
+function getServiceSchema(service, url) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": service.title,
+    "description": service.summary,
+    "provider": {
+      "@type": "LocalBusiness",
+      "name": "Aurum Ventura Enterprise LLC",
+      "url": "https://www.aurumventura.net"
+    },
+    "url": url,
+    "areaServed": { "@type": "Country", "name": "United States" }
+  };
+}
+
+function getBreadcrumbSchema(items, url) {
+  // items should be array of {name, path} or {name} for current
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": items.map((item, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "name": item.name,
+      "item": item.path ? `https://www.aurumventura.net${item.path}` : url
+    }))
+  };
+}
 
 export function metaFor(page) {
   if (PAGE_TITLES[page]) return { title: PAGE_TITLES[page], description: PAGE_DESCRIPTIONS[page] };
@@ -3014,6 +3148,60 @@ export default function App({ initialPath } = {}) {
     return () => { if (script.parentNode) document.head.removeChild(script); };
   }, []);
 
+  // Inject page-specific schema (Service, BreadcrumbList)
+  useEffect(() => {
+    const scripts = [];
+    const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
+
+    // Service schema
+    const service = SERVICES.find((s) => s.slug === page);
+    if (service) {
+      const script = document.createElement("script");
+      script.type = "application/ld+json";
+      script.textContent = JSON.stringify(getServiceSchema(service, pathname));
+      document.head.appendChild(script);
+      scripts.push(script);
+
+      // Breadcrumb schema for service
+      const breadcrumb = document.createElement("script");
+      breadcrumb.type = "application/ld+json";
+      breadcrumb.textContent = JSON.stringify(getBreadcrumbSchema(
+        [
+          { name: "Home", path: "/" },
+          { name: "Services", path: "/services" },
+          { name: service.title }
+        ],
+        pathname
+      ));
+      document.head.appendChild(breadcrumb);
+      scripts.push(breadcrumb);
+    }
+
+    // Industry schema and breadcrumb
+    if (typeof page === "string" && page.startsWith("industry:")) {
+      const slug = page.slice("industry:".length);
+      const industry = slugToIndustry(slug);
+      if (industry) {
+        const breadcrumb = document.createElement("script");
+        breadcrumb.type = "application/ld+json";
+        breadcrumb.textContent = JSON.stringify(getBreadcrumbSchema(
+          [
+            { name: "Home", path: "/" },
+            { name: "Industries", path: "/industries" },
+            { name: industry }
+          ],
+          pathname
+        ));
+        document.head.appendChild(breadcrumb);
+        scripts.push(breadcrumb);
+      }
+    }
+
+    return () => {
+      scripts.forEach(script => { if (script.parentNode) document.head.removeChild(script); });
+    };
+  }, [page]);
+
   const navigate = (key, search = "") => {
     if (key !== page || search) window.history.pushState({}, "", pathFor(key) + search);
     setPage(key);
@@ -3046,6 +3234,7 @@ export default function App({ initialPath } = {}) {
     Privacy: <PrivacyPage setPage={navigate} />,
     Terms: <TermsPage setPage={navigate} />,
     Contact: <ContactPage />,
+    ROICalculator: <ROICalculatorPage setPage={navigate} />,
     Upload: <UploadPage />,
     ClientIntake: <ClientIntakePage />,
     AdminLogin: <AdminLoginPage setPage={navigate} />,

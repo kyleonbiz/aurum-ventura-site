@@ -1,4 +1,23 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /client-intake
+Disallow: /upload
+Crawl-delay: 1
+
+User-agent: Googlebot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /client-intake
+Disallow: /upload
+
+User-agent: bingbot
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /client-intake
+Disallow: /upload
 
 Sitemap: https://www.aurumventura.net/sitemap.xml

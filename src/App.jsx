@@ -874,7 +874,7 @@ function HomePage({ setPage }) {
           </p>
           <p style={{ fontSize: "1.02rem", lineHeight: "1.7", color: COLORS.slate, marginBottom: "1.6rem", maxWidth: "620px" }}>
             <strong>What we handle:</strong><br />
-            Document prep • Invoicing • License tracking • Vendor admin • CRM • Project admin • Data reporting • And custom workflows
+            Document Prep • Invoicing • License Tracking • Vendor Admin • CRM • Project Admin • Data Reporting • Custom Workflows
           </p>
           <p style={{ fontSize: "0.9rem", fontWeight: "500", color: COLORS.teal, marginBottom: "1.6rem", maxWidth: "620px" }}>
             Based in Nashville, Tennessee. Remote service to businesses nationwide.
@@ -3228,7 +3228,7 @@ const PAGE_TITLES = {
   AdminIntakes: `Client Intakes — ${SITE_NAME}`,
 };
 const PAGE_DESCRIPTIONS = {
-  Home: "We design and execute workflows to get you 10-16 hours/week back. Document prep, invoicing, vendor admin, CRM, license tracking, and custom workflows for growing businesses nationwide.",
+  Home: "We design and execute workflows to get you 10-16 hours/week back. Document Prep, Invoicing, Vendor Admin, CRM, License Tracking, and Custom Workflows for growing businesses nationwide.",
   Services: "Recurring administrative services for businesses nationwide — document preparation, invoice administration, license tracking, vendor administration, CRM data management, project administration, and more.",
   ProgramsPartnerships: "Implementation partnerships for organizations supporting entrepreneurs and small businesses. Hands-on operational systems and back-office implementation for entrepreneurship programs.",
   About: "Aurum Ventura is a Nashville-based outsourced administrative back office serving small and growing businesses nationwide. Learn about our approach to business operations.",

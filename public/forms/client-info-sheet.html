@@ -36,7 +36,17 @@
             background: white;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(4, 25, 68, 0.1);
-            overflow: hidden;
+            overflow: visible;
+            padding: 20px;
+        }
+
+        @media print {
+            .container {
+                max-width: 100%;
+                box-shadow: none;
+                border-radius: 0;
+                padding: 10px;
+            }
         }
 
         .header {
@@ -443,15 +453,34 @@
             }
 
             const element = document.querySelector('.container');
+            const clone = element.cloneNode(true);
+
+            // Remove unnecessary styling for PDF
+            clone.style.boxShadow = 'none';
+            clone.style.borderRadius = '0';
+            clone.style.maxWidth = '100%';
+            clone.style.margin = '0';
+            clone.style.padding = '10mm';
+
             const opt = {
-                margin: [12, 12, 12, 12],
+                margin: [10, 10, 10, 10],
                 filename: `${businessName}_Client_Info_Sheet.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, allowTaint: true },
-                jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4', compress: true }
+                image: { type: 'jpeg', quality: 0.95 },
+                html2canvas: {
+                    scale: 1.5,
+                    useCORS: true,
+                    allowTaint: true,
+                    logging: false,
+                    windowHeight: 1400
+                },
+                jsPDF: {
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                }
             };
 
-            html2pdf().set(opt).from(element).save().then(() => {
+            html2pdf().set(opt).from(clone).save().then(() => {
                 document.getElementById('successMessage').style.display = 'block';
                 setTimeout(() => {
                     document.getElementById('successMessage').style.display = 'none';

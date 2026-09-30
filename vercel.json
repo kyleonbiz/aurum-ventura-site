@@ -7,8 +7,6 @@
   "rewrites": [
     { "source": "/admin/:path*", "destination": "/admin/index.html" },
 
-    { "source": "/api/chat", "destination": "/api/chat" },
-
     { "source": "/api/upload/init", "destination": "/api/upload?step=init" },
     { "source": "/api/upload/file", "destination": "/api/upload?step=file" },
     { "source": "/api/upload/complete", "destination": "/api/upload?step=complete" },

@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { ChatWidget } from "./ChatWidget.jsx";
 import {
   CATEGORIES as UPLOAD_CATEGORIES,
   MIN_DESCRIPTION_LENGTH,
@@ -3827,7 +3826,6 @@ export default function App({ initialPath } = {}) {
       <Nav page={page} setPage={navigate} />
       {content}
       <Footer setPage={navigate} />
-      <ChatWidget />
     </div>
   );
 }

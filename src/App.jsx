@@ -800,14 +800,15 @@ function BusinessSystemsCheckupQuiz() {
     return val.toFixed(1);
   };
 
-  const handleAnswer = (idx) => {
+  const handleAnswer = (idx, answerIndex = null) => {
     const newAnswers = [...answers];
-    newAnswers[currentQuestion] = idx;
+    newAnswers[answerIndex !== null ? answerIndex : currentQuestion] = idx;
     setAnswers(newAnswers);
   };
 
   const goNext = () => {
-    if (answers[currentQuestion] === null) return;
+    const checkIndex = stage === "question9" ? 8 : stage === "question10" ? 9 : currentQuestion;
+    if (answers[checkIndex] === null) return;
     if (currentQuestion === 7) {
       setStage("question9");
     } else if (currentQuestion === 8) {
@@ -1090,7 +1091,7 @@ function BusinessSystemsCheckupQuiz() {
                 <button
                   key={idx}
                   type="button"
-                  onClick={() => handleAnswer(idx)}
+                  onClick={() => handleAnswer(idx, 8)}
                   style={{
                     padding: "1rem 1.5rem",
                     border: answers[8] === idx ? "2px solid" + COLORS.teal : "1px solid #ddd",
@@ -1120,7 +1121,7 @@ function BusinessSystemsCheckupQuiz() {
                 <button
                   key={idx}
                   type="button"
-                  onClick={() => handleAnswer(idx)}
+                  onClick={() => handleAnswer(idx, 9)}
                   style={{
                     padding: "1rem 1.5rem",
                     border: answers[9] === idx ? "2px solid" + COLORS.teal : "1px solid #ddd",

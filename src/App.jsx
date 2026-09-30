@@ -750,38 +750,416 @@ function IndustryPanel({ setPage }) {
   );
 }
 
-function TimeSelector({ setPage }) {
-  const [selected, setSelected] = useState([]);
-  const toggle = (slug) =>
-    setSelected((s) => (s.includes(slug) ? s.filter((x) => x !== slug) : [...s, slug]));
-  const go = (e) => {
-    e.preventDefault();
-    const labels = TIME_SINKS.filter((t) => selected.includes(t.slug)).map((t) => t.label);
-    const query = labels.length ? `?areas=${encodeURIComponent(labels.join(", "))}` : "";
-    setPage("Contact", query);
+function BusinessSystemsCheckupQuiz() {
+  const [stage, setStage] = useState("intro");
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [answers, setAnswers] = useState([null, null, null, null, null, null, null, null, null, null]);
+  const [contact, setContact] = useState({ firstName: "", lastName: "", email: "" });
+  const [results, setResults] = useState(null);
+
+  const QUESTIONS = [
+    { id: 1, title: "Customer requests", text: "In a typical week, how much time do you spend responding to new customer requests and organizing the details?", area: "New requests & customer details" },
+    { id: 2, title: "Pricing & estimates", text: "How much time do you spend pricing jobs, creating estimates, sending them, or making changes?", area: "Pricing & estimates" },
+    { id: 3, title: "Scheduling", text: "How much time do you spend scheduling jobs, rescheduling them, or going back and forth about dates and times?", area: "Scheduling & rescheduling" },
+    { id: 4, title: "Finding information", text: "How much time do you spend searching texts, emails, photos, notes, or apps for customer and job information?", area: "Finding job information" },
+    { id: 5, title: "Running the job", text: "How much time do you spend organizing job details, checklists, materials, notes, and what needs to happen next?", area: "Job details & task tracking" },
+    { id: 6, title: "Invoices & payments", text: "How much time do you spend creating invoices, sending them, checking payment status, or following up on unpaid work?", area: "Invoices & payment follow-up" },
+    { id: 7, title: "Follow-up", text: "How much time do you spend following up on open estimates, past customers, reviews, or repeat work?", area: "Lead, customer & review follow-up" },
+    { id: 8, title: "Back-office work", text: "How much time do you spend organizing receipts, documents, customer records, and other routine business admin?", area: "Back-office admin" },
+  ];
+
+  const OPTION_VALUES = [
+    { label: "Less than 1 hour", value: 0.5 },
+    { label: "1–2 hours", value: 1.5 },
+    { label: "3–5 hours", value: 4 },
+    { label: "More than 5 hours", value: 6 },
+  ];
+
+  const HOURLY_RATES = [
+    { label: "Less than $50/hour", value: 40, explanation: "using about $40/hour for the range you selected" },
+    { label: "$50–$74/hour", value: 62, explanation: "using about $62/hour, the midpoint of the range you selected" },
+    { label: "$75–$99/hour", value: 87, explanation: "using about $87/hour, the midpoint of the range you selected" },
+    { label: "$100–$149/hour", value: 125, explanation: "using about $125/hour, the midpoint of the range you selected" },
+    { label: "$150+/hour", value: 150, explanation: "using $150/hour as a conservative value for the range you selected" },
+    { label: "Not sure", value: null, explanation: "No dollar value is displayed" },
+  ];
+
+  const AFTER_HOURS = [
+    { label: "Almost never", text: "Your admin is mostly staying inside the workweek, which is a good sign." },
+    { label: "Occasionally", text: "Admin is occasionally spilling into your evenings or weekends." },
+    { label: "Most weeks", text: "You told us admin follows you into evenings or weekends most weeks." },
+    { label: "Nearly every day", text: "You told us admin is reaching into your personal time nearly every day." },
+  ];
+
+  const formatCurrency = (val) => {
+    return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(val);
   };
+
+  const formatHours = (val) => {
+    if (val === Math.floor(val)) return String(val);
+    return val.toFixed(1);
+  };
+
+  const handleAnswer = (idx) => {
+    const newAnswers = [...answers];
+    newAnswers[currentQuestion] = idx;
+    setAnswers(newAnswers);
+  };
+
+  const goNext = () => {
+    if (answers[currentQuestion] === null) return;
+    if (currentQuestion === 7) {
+      setStage("question9");
+    } else if (currentQuestion === 8) {
+      setStage("question10");
+    } else if (currentQuestion === 9) {
+      setStage("contact");
+    } else {
+      setCurrentQuestion(currentQuestion + 1);
+    }
+  };
+
+  const goBack = () => {
+    if (stage === "question9") {
+      setCurrentQuestion(7);
+      setStage("questions");
+    } else if (stage === "question10") {
+      setStage("question9");
+    } else if (stage === "contact") {
+      setStage("question10");
+    } else if (currentQuestion > 0) {
+      setCurrentQuestion(currentQuestion - 1);
+    }
+  };
+
+  const calculateResults = () => {
+    const adminHours = OPTION_VALUES[answers[0]].value +
+      OPTION_VALUES[answers[1]].value +
+      OPTION_VALUES[answers[2]].value +
+      OPTION_VALUES[answers[3]].value +
+      OPTION_VALUES[answers[4]].value +
+      OPTION_VALUES[answers[5]].value +
+      OPTION_VALUES[answers[6]].value +
+      OPTION_VALUES[answers[7]].value;
+
+    const recoveredHours = adminHours * 0.5;
+    const hourlyRate = HOURLY_RATES[answers[8]];
+    const weeklyValue = hourlyRate.value ? recoveredHours * hourlyRate.value : null;
+    const annualValue = weeklyValue ? weeklyValue * 52 : null;
+
+    const topThree = QUESTIONS.slice(0, 8)
+      .map((q, i) => ({ area: q.area, hours: OPTION_VALUES[answers[i]].value, index: i }))
+      .sort((a, b) => b.hours - a.hours)
+      .slice(0, 3);
+
+    return {
+      firstName: contact.firstName,
+      adminHours: formatHours(adminHours),
+      recoveredHours: formatHours(recoveredHours),
+      weeklyValue,
+      annualValue: annualValue ? formatCurrency(annualValue) : null,
+      hourlyRateLabel: hourlyRate.explanation,
+      topThree,
+      afterHoursText: AFTER_HOURS[answers[9]].text,
+    };
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const result = calculateResults();
+    setResults(result);
+    setStage("results");
+  };
+
+  const handleRetake = () => {
+    setStage("intro");
+    setCurrentQuestion(0);
+    setAnswers([null, null, null, null, null, null, null, null, null, null]);
+    setContact({ firstName: "", lastName: "", email: "" });
+    setResults(null);
+  };
+
+  if (stage === "intro") {
+    return (
+      <section className="cta-band">
+        <h2>What&rsquo;s Taking Up Your Time?</h2>
+        <p style={{ fontSize: "1.05rem", marginBottom: "1.5rem", maxWidth: "600px" }}>
+          Take a 2-minute Business Systems Checkup to estimate how much time you're spending on administrative work each week.
+        </p>
+        <p style={{ marginBottom: "1.5rem", color: COLORS.slate, maxWidth: "600px" }}>
+          This quick assessment shows you where your time is going — and gives you a concrete number for how much capacity could be freed up with better back-office support.
+        </p>
+        <button
+          className="btn-primary"
+          onClick={() => setStage("questions")}
+          style={{ cursor: "pointer" }}
+        >
+          Start the Checkup →
+        </button>
+      </section>
+    );
+  }
+
+  if (stage === "results") {
+    return (
+      <section className="cta-band">
+        <h2>Your Business Systems Checkup Results</h2>
+        <div style={{ maxWidth: "700px", margin: "2rem auto", textAlign: "left" }}>
+          <div style={{ background: "#E6F3F9", borderRadius: "12px", padding: "2rem", marginBottom: "2rem", border: "1px solid #B8D4E8" }}>
+            <p style={{ fontSize: "1.1rem", margin: "0 0 1.5rem", color: COLORS.navy }}>
+              <strong>Hi {results.firstName},</strong>
+            </p>
+            <p style={{ fontSize: "1.05rem", fontWeight: "600", color: COLORS.navy, margin: "0 0 0.5rem" }}>
+              You spend about <span style={{ fontSize: "1.3rem", color: COLORS.teal }}>{results.adminHours}</span> hours each week on business admin.
+            </p>
+            <p style={{ color: COLORS.slate, margin: "1rem 0 0", fontSize: "0.95rem", lineHeight: "1.6" }}>
+              With better back-office systems and support, here's what that could look like:
+            </p>
+
+            <div style={{ marginTop: "2rem" }}>
+              <div style={{ marginBottom: "1.5rem", paddingBottom: "1.5rem", borderBottom: "1px solid #B8D4E8" }}>
+                <p style={{ fontSize: "0.85rem", fontWeight: "600", textTransform: "uppercase", color: COLORS.teal, margin: "0 0 0.5rem", letterSpacing: "0.05em" }}>Potential Hours Recovered per Week</p>
+                <p style={{ fontSize: "2rem", fontWeight: "700", color: COLORS.navy, margin: "0" }}>{results.recoveredHours}</p>
+                <p style={{ fontSize: "0.85rem", color: COLORS.slate, margin: "0.5rem 0 0", fontStyle: "italic" }}>assuming 50% potential reduction with organized systems and support</p>
+              </div>
+
+              {results.annualValue && (
+                <div style={{ marginBottom: "1.5rem", paddingBottom: "1.5rem", borderBottom: "1px solid #B8D4E8" }}>
+                  <p style={{ fontSize: "0.85rem", fontWeight: "600", textTransform: "uppercase", color: COLORS.teal, margin: "0 0 0.5rem", letterSpacing: "0.05em" }}>Potential Annual Working-Time Value</p>
+                  <p style={{ fontSize: "2rem", fontWeight: "700", color: COLORS.navy, margin: "0" }}>{results.annualValue}</p>
+                  <p style={{ fontSize: "0.85rem", color: COLORS.slate, margin: "0.5rem 0 0", fontStyle: "italic" }}>({results.hourlyRateLabel})</p>
+                </div>
+              )}
+
+              <div>
+                <p style={{ fontSize: "0.85rem", fontWeight: "600", textTransform: "uppercase", color: COLORS.teal, margin: "0 0 1rem", letterSpacing: "0.05em" }}>Your Biggest Time Drains</p>
+                {results.topThree.map((item, i) => (
+                  <div key={i} style={{ marginBottom: "0.8rem", paddingBottom: "0.8rem", borderBottom: i < results.topThree.length - 1 ? "1px solid #E6F3F9" : "none" }}>
+                    <p style={{ margin: "0", color: COLORS.navy, fontWeight: "600" }}>{i + 1}. {item.area}</p>
+                    <p style={{ margin: "0.3rem 0 0", color: COLORS.slate, fontSize: "0.9rem" }}>About {item.hours} hours/week from your answers</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ marginTop: "1.5rem", paddingTop: "1.5rem", borderTop: "1px solid #B8D4E8" }}>
+              <p style={{ margin: "0", fontSize: "0.9rem", color: COLORS.navy, fontStyle: "italic", lineHeight: "1.6" }}>
+                {results.afterHoursText}
+              </p>
+            </div>
+          </div>
+
+          <div style={{ background: "#FFF3E6", borderRadius: "12px", padding: "1.5rem", marginBottom: "2rem", border: "1px solid #F0D4B8", fontSize: "0.85rem", color: COLORS.navy }}>
+            <p style={{ margin: "0 0 0.8rem" }}>
+              <strong>About this estimate:</strong> This result is based on your answers using a 50% potential reduction estimate. This is illustrative, not a guarantee. Your actual time savings depend on your specific business, current systems, and how administrative work gets organized.
+            </p>
+          </div>
+
+          <div style={{ textAlign: "center" }}>
+            <p style={{ fontSize: "1rem", fontWeight: "600", color: COLORS.navy, margin: "0 0 1.5rem" }}>
+              Interested in exploring how Aurum Ventura can help recover those hours?
+            </p>
+            <button
+              className="btn-primary"
+              onClick={() => window.location.href = "/contact"}
+              style={{ cursor: "pointer", marginRight: "1rem" }}
+            >
+              Request a Consultation →
+            </button>
+            <button
+              className="btn-secondary"
+              onClick={handleRetake}
+              style={{ cursor: "pointer", marginTop: "1rem" }}
+            >
+              Retake the Checkup
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (stage === "contact") {
+    return (
+      <section className="cta-band">
+        <h2>Unlock Your Personalized Results</h2>
+        <p style={{ marginBottom: "2rem", color: COLORS.slate }}>Tell us a bit about yourself and we'll show you your detailed checkup results — plus give you concrete numbers for the time you could recover.</p>
+        <form onSubmit={handleSubmit} style={{ maxWidth: "500px", margin: "0 auto" }}>
+          <div style={{ marginBottom: "1.2rem" }}>
+            <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "600", color: COLORS.navy }}>
+              First Name
+              <input
+                required
+                type="text"
+                value={contact.firstName}
+                onChange={(e) => setContact({ ...contact, firstName: e.target.value })}
+                style={{ display: "block", width: "100%", padding: "0.8rem", marginTop: "0.5rem", border: "1px solid #ddd", borderRadius: "4px", fontSize: "1rem" }}
+              />
+            </label>
+          </div>
+          <div style={{ marginBottom: "1.2rem" }}>
+            <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "600", color: COLORS.navy }}>
+              Last Name
+              <input
+                required
+                type="text"
+                value={contact.lastName}
+                onChange={(e) => setContact({ ...contact, lastName: e.target.value })}
+                style={{ display: "block", width: "100%", padding: "0.8rem", marginTop: "0.5rem", border: "1px solid #ddd", borderRadius: "4px", fontSize: "1rem" }}
+              />
+            </label>
+          </div>
+          <div style={{ marginBottom: "1.5rem" }}>
+            <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: "600", color: COLORS.navy }}>
+              Email
+              <input
+                required
+                type="email"
+                value={contact.email}
+                onChange={(e) => setContact({ ...contact, email: e.target.value })}
+                style={{ display: "block", width: "100%", padding: "0.8rem", marginTop: "0.5rem", border: "1px solid #ddd", borderRadius: "4px", fontSize: "1rem" }}
+              />
+            </label>
+          </div>
+          <div style={{ display: "flex", gap: "1rem" }}>
+            <button type="button" className="btn-secondary" onClick={goBack} style={{ cursor: "pointer", flex: 1 }}>
+              ← Back
+            </button>
+            <button type="submit" className="btn-primary" style={{ cursor: "pointer", flex: 1 }}>
+              See My Results →
+            </button>
+          </div>
+        </form>
+      </section>
+    );
+  }
+
+  const q = currentQuestion < 8 ? QUESTIONS[currentQuestion] : null;
+  const progress = Math.round(((currentQuestion + 1) / 10) * 100);
+  const isQuestion9 = stage === "question9";
+  const isQuestion10 = stage === "question10";
+
   return (
     <section className="cta-band">
-      <h2>What&rsquo;s taking up your time?</h2>
-      <p>Select what&rsquo;s eating your week — we&rsquo;ll show you what we can handle.</p>
-      <div className="tag-list selector-tags">
-        {TIME_SINKS.map((t) => (
+      <div style={{ maxWidth: "700px", margin: "0 auto" }}>
+        <div style={{ marginBottom: "2rem", fontSize: "0.9rem", fontWeight: "600", textTransform: "uppercase", color: COLORS.teal }}>
+          Question {isQuestion9 ? 9 : isQuestion10 ? 10 : currentQuestion + 1} of 10 • {progress}%
+        </div>
+
+        <div style={{ width: "100%", height: "8px", backgroundColor: "#E4E9EF", borderRadius: "4px", marginBottom: "2rem", overflow: "hidden" }}>
+          <div style={{ height: "100%", backgroundColor: COLORS.teal, width: `${progress}%`, transition: "width 0.3s ease" }} />
+        </div>
+
+        {!isQuestion9 && !isQuestion10 && (
+          <>
+            <h2 style={{ fontSize: "1.4rem", marginBottom: "0.5rem" }}>{q.title}</h2>
+            <p style={{ fontSize: "1.05rem", marginBottom: "2rem", color: COLORS.slate }}>{q.text}</p>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginBottom: "2rem" }}>
+              {OPTION_VALUES.map((opt, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => handleAnswer(idx)}
+                  style={{
+                    padding: "1rem 1.5rem",
+                    border: answers[currentQuestion] === idx ? "2px solid" + COLORS.teal : "1px solid #ddd",
+                    backgroundColor: answers[currentQuestion] === idx ? "#E6F3F9" : "white",
+                    color: COLORS.navy,
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    fontSize: "1rem",
+                    fontWeight: "500",
+                    textAlign: "left",
+                  }}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+
+        {isQuestion9 && (
+          <>
+            <h2 style={{ fontSize: "1.4rem", marginBottom: "0.5rem" }}>Your Working Time</h2>
+            <p style={{ fontSize: "1.05rem", marginBottom: "2rem", color: COLORS.slate }}>About how much is one hour of your paid work usually worth?</p>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginBottom: "2rem" }}>
+              {HOURLY_RATES.map((opt, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => handleAnswer(idx)}
+                  style={{
+                    padding: "1rem 1.5rem",
+                    border: answers[8] === idx ? "2px solid" + COLORS.teal : "1px solid #ddd",
+                    backgroundColor: answers[8] === idx ? "#E6F3F9" : "white",
+                    color: COLORS.navy,
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    fontSize: "1rem",
+                    fontWeight: "500",
+                    textAlign: "left",
+                  }}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+
+        {isQuestion10 && (
+          <>
+            <h2 style={{ fontSize: "1.4rem", marginBottom: "0.5rem" }}>After Hours</h2>
+            <p style={{ fontSize: "1.05rem", marginBottom: "2rem", color: COLORS.slate }}>How often does business admin follow you into evenings or weekends?</p>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginBottom: "2rem" }}>
+              {AFTER_HOURS.map((opt, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => handleAnswer(idx)}
+                  style={{
+                    padding: "1rem 1.5rem",
+                    border: answers[9] === idx ? "2px solid" + COLORS.teal : "1px solid #ddd",
+                    backgroundColor: answers[9] === idx ? "#E6F3F9" : "white",
+                    color: COLORS.navy,
+                    borderRadius: "6px",
+                    cursor: "pointer",
+                    fontSize: "1rem",
+                    fontWeight: "500",
+                    textAlign: "left",
+                  }}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+
+        <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
           <button
-            key={t.slug}
             type="button"
-            className={"tag tag-toggle" + (selected.includes(t.slug) ? " selected" : "")}
-            onClick={() => toggle(t.slug)}
+            className="btn-secondary"
+            onClick={goBack}
+            style={{ cursor: "pointer", opacity: currentQuestion === 0 && stage === "questions" ? 0.5 : 1, pointerEvents: currentQuestion === 0 && stage === "questions" ? "none" : "auto" }}
           >
-            {t.label}
+            ← Back
           </button>
-        ))}
+          <button
+            type="button"
+            className="btn-primary"
+            onClick={goNext}
+            disabled={answers[isQuestion10 ? 9 : isQuestion9 ? 8 : currentQuestion] === null}
+            style={{ cursor: "pointer", opacity: answers[isQuestion10 ? 9 : isQuestion9 ? 8 : currentQuestion] === null ? 0.5 : 1 }}
+          >
+            Next →
+          </button>
+        </div>
       </div>
-      <p className="selector-response">
-        {selected.length === 0
-          ? "Pick a few areas above to see what we can take off your plate."
-          : `Aurum Ventura can take ${selected.length} of those administrative area${selected.length > 1 ? "s" : ""} off your plate.`}
-      </p>
-      <a className="btn-primary" href={pathFor("Contact")} onClick={go}>See What We Can Take Off Your Plate &rarr;</a>
     </section>
   );
 }
@@ -978,7 +1356,7 @@ function HomePage({ setPage }) {
         <a className="btn-text" href={pathFor("About")} onClick={go("About")} style={{ marginTop: "1rem", display: "block" }}>Learn how we work &rarr;</a>
       </section>
 
-      <TimeSelector setPage={setPage} />
+      <BusinessSystemsCheckupQuiz />
     </div>
   );
 }

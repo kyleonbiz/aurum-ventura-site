@@ -1081,22 +1081,12 @@ const PRODUCT_FAMILIES = [
   {
     title: "Growth Systems",
     summary: "Customer acquisition, prospecting, outreach, follow-up, and lead-support systems.",
-    items: ["Automated Outreach", "Prospect Discovery", "Customer Finding", "Follow-Up Automation"],
-  },
-  {
-    title: "Operations Systems",
-    summary: "Administrative workflows, internal automation, task routing, documentation, and process systems.",
-    items: ["Workflow Automation", "Administrative Automation", "Reporting Systems", "Internal Business Tools"],
+    items: ["Automated Outreach", "Prospect Discovery", "Follow-Up Automation"],
   },
   {
     title: "Intelligence Systems",
     summary: "Prospect research, business intelligence, reporting, market information, and operational insight.",
     items: ["Prospect Intelligence", "Market Research", "Business Data", "Competitive Intelligence"],
-  },
-  {
-    title: "Workflow Systems",
-    summary: "Connected processes that move information and work between the tools a business already uses.",
-    items: [],
   },
 ];
 
@@ -3426,7 +3416,7 @@ const PAGE_TITLES = {
 const PAGE_DESCRIPTIONS = {
   Home: "We design and execute workflows to get you 10-16 hours/week back. Document Prep, Invoicing, Vendor Admin, CRM, License Tracking, and Custom Workflows for growing businesses nationwide.",
   Services: "Recurring administrative services for businesses nationwide — Document Preparation, Invoice Administration, License Tracking, Vendor Administration, CRM Data Management, Project Administration, and more.",
-  Products: "Automated business systems for growing companies: growth systems for outreach and follow-up, operations systems for admin workflows, intelligence systems for prospect research, and workflow systems that connect your existing tools.",
+  Products: "Automated business systems for growing companies: growth systems for outreach and follow-up, and intelligence systems for prospect research, market data, and competitive insight.",
   ProgramsPartnerships: "Implementation partnerships for organizations supporting entrepreneurs and small businesses. Hands-on operational systems and back-office implementation for entrepreneurship programs.",
   About: "Aurum Ventura is a Nashville-based outsourced administrative back office serving small and growing businesses nationwide. Learn about our approach to business operations.",
   Industries: "Back-office and administrative support for contractors, property managers, cleaning and landscaping, construction, staffing, real estate, professional services, and other industries nationwide.",

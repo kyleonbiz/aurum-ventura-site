@@ -1119,7 +1119,7 @@ function ProductsPage({ setPage }) {
               <h3>{f.title}</h3>
               <p>{f.summary}</p>
               {f.items.length > 0 && (
-                <ul className="plain-list">
+                <ul className="plain-list" style={{ textAlign: "left", display: "inline-block" }}>
                   {f.items.map((item) => <li key={item}>{item}</li>)}
                 </ul>
               )}

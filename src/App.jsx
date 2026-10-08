@@ -1042,10 +1042,8 @@ function HomePage({ setPage }) {
       <section className="section">
         <h2>Business operations, built better.</h2>
         <p className="section-lead">
-          We provide the people, the process, and the technology: hands-on administrative support today, plus
-          automated systems that reduce repetitive work as your business grows.
+          We provide the people, the process, and the technology: hands-on administrative support that grows with your business.
         </p>
-        <a className="btn-text" href={pathFor("Products")} onClick={go("Products")}>Explore Our Systems &rarr;</a>
       </section>
 
       <PeopleProcessTechnology />
@@ -1132,13 +1130,6 @@ function ServicesPage({ setPage }) {
         <ul className="plain-list">
           {NOT_LIST.map((n) => <li key={n}>{n}</li>)}
         </ul>
-      </section>
-      <section className="section alt">
-        <h2>Need more than support?</h2>
-        <p className="section-lead">
-          Aurum Ventura also develops automated systems that can reduce repetitive work and improve how your business operates.
-        </p>
-        <a className="btn-text" href={pathFor("Products")} onClick={go("Products")}>Explore Our Systems &rarr;</a>
       </section>
       <section className="cta-band">
         <h2>Not sure which categories apply?</h2>
@@ -1896,10 +1887,6 @@ function AboutPage({ setPage }) {
           Our team provides the people and operational expertise that handle the work. Process expertise connects that
           work into organized, repeatable workflows. Technology, where it fits, scales the operation and reduces repetitive effort.
         </p>
-        <p style={{ marginBottom: "1.2rem" }}>
-          Our services and our systems are two sides of the same approach. Our services operate and support business
-          functions, and our systems automate the repetitive work behind them.
-        </p>
         <p style={{ fontStyle: "italic", color: "#57677F" }}>
           Tell us where your business is getting bogged down. We&rsquo;ll help you build the system around it.
         </p>
@@ -2268,7 +2255,7 @@ function TermsPage({ setPage }) {
 }
 
 const FUNNEL_STEPS = ["Areas", "Your business", "Priorities"];
-const INTEREST_OPTIONS = ALL_PRODUCTS.map((p) => p.name);
+const INTEREST_OPTIONS = SERVICES.map((s) => s.title);
 
 function ContactPage() {
   const [form, setForm] = useState({ name: "", business: "", email: "", phone: "", type: "", message: "" });
@@ -2282,9 +2269,12 @@ function ContactPage() {
     const areas = params.get("areas");
     const products = params.get("products");
     if (products) {
-      setInterests(products.split(", ").filter((name) => INTEREST_OPTIONS.includes(name)));
+      setForm((f) => (f.message ? f : { ...f, message: `I'm interested in: ${products}.` }));
     }
     if (areas) {
+      const labels = areas.split(", ");
+      const slugs = TIME_SINKS.filter((t) => labels.includes(t.label)).map((t) => t.slug);
+      setInterests(SERVICES.filter((s) => slugs.includes(s.slug)).map((s) => s.title));
       setForm((f) => (f.message ? f : { ...f, message: `I need help with: ${areas}.` }));
     }
   }, []);

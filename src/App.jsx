@@ -1114,6 +1114,13 @@ function ProductsPage({ setPage }) {
   if (sort === "name") products = [...products].sort((a, b) => a.item.localeCompare(b.item));
   const initials = (name) => name.split(" ").map((w) => w[0]).slice(0, 2).join("");
   const [requestList, setRequestList] = useState([]);
+  const [zoomed, setZoomed] = useState(null);
+  useEffect(() => {
+    if (!zoomed) return undefined;
+    const onKey = (e) => { if (e.key === "Escape") setZoomed(null); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [zoomed]);
   const toggleRequest = (name) => setRequestList((prev) => (prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]));
   const sendRequest = () => setPage("Contact", "?products=" + encodeURIComponent(requestList.join(", ")));
   return (
@@ -1172,7 +1179,9 @@ function ProductsPage({ setPage }) {
                 {products.map(({ item, family }) => (
                   <div className="shop-card" key={item}>
                     {PRODUCT_IMAGES[item] ? (
-                      <img className="shop-image shop-image-photo" src={PRODUCT_IMAGES[item]} alt={`${item} product box`} loading="lazy" />
+                      <button type="button" className="shop-image-button" onClick={() => setZoomed(item)} aria-label={`View larger image of ${item}`}>
+                        <img className="shop-image shop-image-photo" src={PRODUCT_IMAGES[item]} alt={`${item} product box`} loading="lazy" />
+                      </button>
                     ) : (
                       <div className="shop-image" aria-hidden="true">{initials(item)}</div>
                     )}
@@ -1196,6 +1205,12 @@ function ProductsPage({ setPage }) {
           </div>
         </div>
       </section>
+      {zoomed && PRODUCT_IMAGES[zoomed] && (
+        <div className="shop-zoom-overlay" role="dialog" aria-modal="true" aria-label={`${zoomed} product box`} onClick={() => setZoomed(null)}>
+          <button type="button" className="shop-zoom-close" onClick={() => setZoomed(null)} aria-label="Close larger image">&times;</button>
+          <img src={PRODUCT_IMAGES[zoomed]} alt={`${zoomed} product box`} onClick={(e) => e.stopPropagation()} />
+        </div>
+      )}
       {requestList.length > 0 && (
         <div className="shop-requestbar" role="region" aria-label="Request list">
           <span>{requestList.length} in your request list</span>
@@ -3821,6 +3836,10 @@ export default function App({ initialPath } = {}) {
         .shop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.2rem 1.4rem; }
         .shop-card { display: flex; flex-direction: column; gap: 0.35rem; }
         .shop-image { aspect-ratio: 4 / 3; background: linear-gradient(135deg, ${COLORS.ice}, #B8D4E8); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; color: ${COLORS.teal}; margin-bottom: 0.6rem; }
+        .shop-image-button { display: block; width: 100%; padding: 0; background: none; border: none; cursor: zoom-in; }
+        .shop-zoom-overlay { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 100; background: rgba(4, 25, 68, 0.9); display: flex; align-items: center; justify-content: center; padding: 1.5rem; cursor: zoom-out; }
+        .shop-zoom-overlay img { max-width: 100%; max-height: 90vh; width: auto; height: auto; border-radius: 4px; cursor: default; }
+        .shop-zoom-close { position: absolute; top: 0.8rem; right: 1rem; background: none; border: none; color: ${COLORS.white}; font-size: 2.4rem; line-height: 1; cursor: pointer; padding: 0.2rem 0.5rem; }
         .shop-image-photo { display: block; width: 100%; height: auto; object-fit: cover; background: none; padding: 0; font-size: 0; }
         .shop-family { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: ${COLORS.teal}; margin: 0; }
         .shop-name { font-size: 1.2rem; margin: 0; }

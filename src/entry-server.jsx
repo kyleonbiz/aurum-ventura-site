@@ -18,6 +18,8 @@ export const ROUTES = [
   "ClientIntake",
   "FAQ",
   "Alternatives",
+  "ProgramsPartnerships",
+  "ROICalculator",
   ...SERVICES.map((s) => s.slug),
   ...ALL_PRODUCTS.map((p) => "product:" + p.slug),
 ].map((key) => ({ path: pathFor(key), ...metaFor(key) }));

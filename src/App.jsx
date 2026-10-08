@@ -56,7 +56,6 @@ const ORGANIZATION_SCHEMA = {
   },
   "sameAs": GOOGLE_BUSINESS_URL !== "YOUR_GOOGLE_BUSINESS_URL_HERE" ? [GOOGLE_BUSINESS_URL] : [],
   "priceRange": "$$",
-  "servesCuisine": "Business Services",
   "knowsAbout": ["Administrative Support", "Back Office Services", "Document Management", "Invoice Administration", "CRM Management", "Project Administration"]
 };
 
@@ -3688,6 +3687,34 @@ function getFAQSchema() {
   };
 }
 
+// Structured data for the page being rendered. Absolute URLs use the page path
+// so every prerendered page declares its own Service/Breadcrumb/FAQ schema.
+function schemasFor(page, pathname) {
+  const url = "https://www.aurumventura.net" + pathname;
+  const schemas = [ORGANIZATION_SCHEMA];
+  const service = SERVICES.find((s) => s.slug === page);
+  if (service) {
+    schemas.push(getServiceSchema(service, url));
+    schemas.push(getBreadcrumbSchema([
+      { name: "Home", path: "/" },
+      { name: "Services", path: "/services" },
+      { name: service.title },
+    ], url));
+  }
+  if (typeof page === "string" && page.startsWith("industry:")) {
+    const industry = slugToIndustry(page.slice("industry:".length));
+    if (industry) {
+      schemas.push(getBreadcrumbSchema([
+        { name: "Home", path: "/" },
+        { name: "Industries", path: "/industries" },
+        { name: industry },
+      ], url));
+    }
+  }
+  if (page === "FAQ") schemas.push(getFAQSchema());
+  return schemas;
+}
+
 export function metaFor(page) {
   if (typeof page === "string" && page.startsWith("product:")) {
     const product = ALL_PRODUCTS.find((p) => p.slug === page.slice("product:".length));
@@ -3722,77 +3749,11 @@ export default function App({ initialPath } = {}) {
   const [page, setPage] = useState(() =>
     pageFromPath(initialPath ?? (typeof window !== "undefined" ? window.location.pathname : "/"))
   );
-  // Inject Organization JSON-LD schema
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.type = "application/ld+json";
-    script.textContent = JSON.stringify(ORGANIZATION_SCHEMA);
-    document.head.appendChild(script);
-    return () => { if (script.parentNode) document.head.removeChild(script); };
-  }, []);
+  // Structured data is part of the rendered markup (not injected in an effect),
+  // so the prerendered HTML carries it for crawlers that don't run JavaScript.
+  const pathname = typeof window !== "undefined" ? window.location.pathname : (initialPath ?? "/");
+  const schemas = schemasFor(page, pathname);
 
-  // Inject page-specific schema (Service, BreadcrumbList)
-  useEffect(() => {
-    const scripts = [];
-    const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
-
-    // Service schema
-    const service = SERVICES.find((s) => s.slug === page);
-    if (service) {
-      const script = document.createElement("script");
-      script.type = "application/ld+json";
-      script.textContent = JSON.stringify(getServiceSchema(service, pathname));
-      document.head.appendChild(script);
-      scripts.push(script);
-
-      // Breadcrumb schema for service
-      const breadcrumb = document.createElement("script");
-      breadcrumb.type = "application/ld+json";
-      breadcrumb.textContent = JSON.stringify(getBreadcrumbSchema(
-        [
-          { name: "Home", path: "/" },
-          { name: "Services", path: "/services" },
-          { name: service.title }
-        ],
-        pathname
-      ));
-      document.head.appendChild(breadcrumb);
-      scripts.push(breadcrumb);
-    }
-
-    // Industry schema and breadcrumb
-    if (typeof page === "string" && page.startsWith("industry:")) {
-      const slug = page.slice("industry:".length);
-      const industry = slugToIndustry(slug);
-      if (industry) {
-        const breadcrumb = document.createElement("script");
-        breadcrumb.type = "application/ld+json";
-        breadcrumb.textContent = JSON.stringify(getBreadcrumbSchema(
-          [
-            { name: "Home", path: "/" },
-            { name: "Industries", path: "/industries" },
-            { name: industry }
-          ],
-          pathname
-        ));
-        document.head.appendChild(breadcrumb);
-        scripts.push(breadcrumb);
-      }
-    }
-
-    // FAQ schema
-    if (page === "FAQ") {
-      const faqScript = document.createElement("script");
-      faqScript.type = "application/ld+json";
-      faqScript.textContent = JSON.stringify(getFAQSchema());
-      document.head.appendChild(faqScript);
-      scripts.push(faqScript);
-    }
-
-    return () => {
-      scripts.forEach(script => { if (script.parentNode) document.head.removeChild(script); });
-    };
-  }, [page]);
 
   const navigate = (key, search = "") => {
     if (key !== page || search) window.history.pushState({}, "", pathFor(key) + search);
@@ -3848,6 +3809,9 @@ export default function App({ initialPath } = {}) {
 
   return (
     <div className="app">
+      {schemas.map((schema, i) => (
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</g, "\\u003c") }} />
+      ))}
       <style dangerouslySetInnerHTML={{ __html: `
         * { box-sizing: border-box; }
         .app {

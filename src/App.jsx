@@ -1279,7 +1279,7 @@ function ProductsPage({ setPage }) {
                     )}
                     <p className="shop-family">{family}</p>
                     <h3 className="shop-name">
-                      <a href={pathFor("product:" + productSlug(item))} onClick={go("product:" + productSlug(item))} style={{ color: "inherit", textDecoration: "none" }}>{item}</a>
+                      <a className="shop-name-link" href={pathFor("product:" + productSlug(item))} onClick={go("product:" + productSlug(item))}>{item}<span className="shop-name-arrow" aria-hidden="true"> &rarr;</span></a>
                     </h3>
                     <span className="shop-soon">Coming soon</span>
                     <button
@@ -4041,6 +4041,10 @@ export default function App({ initialPath } = {}) {
         @media (max-width: 720px) { .shop-detail { grid-template-columns: 1fr; gap: 1.5rem; } }
         .shop-family { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: ${COLORS.teal}; margin: 0; }
         .shop-name { font-size: 1.2rem; margin: 0; }
+        .shop-name-link { color: ${COLORS.navy}; text-decoration: underline; text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+        .shop-name-link:hover, .shop-name-link:focus-visible { color: ${COLORS.teal}; }
+        .shop-name-arrow { display: inline-block; margin-left: 0.3rem; transition: transform 0.15s ease; }
+        .shop-name-link:hover .shop-name-arrow, .shop-name-link:focus-visible .shop-name-arrow { transform: translateX(3px); }
         .shop-card .btn-text { align-self: flex-start; margin-top: 0.3rem; font-size: 0.88rem; }
         .shop-soon { align-self: flex-start; margin-top: 0.3rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: ${COLORS.slate}; border: 1px solid #C9D3DE; border-radius: 999px; padding: 0.3rem 0.8rem; }
         .shop-add { align-self: flex-start; margin-top: 0.4rem; background: ${COLORS.white}; border: 1px solid ${COLORS.teal}; border-radius: 4px; padding: 0.5rem 0.9rem; font-family: inherit; font-size: 0.82rem; font-weight: 600; color: ${COLORS.teal}; cursor: pointer; }

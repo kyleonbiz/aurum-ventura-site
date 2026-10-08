@@ -338,6 +338,7 @@ function slugToIndustry(slug) {
 }
 
 export function pathFor(key) {
+  if (typeof key === "string" && key.startsWith("product:")) return "/products/" + key.slice("product:".length);
   if (typeof key === "string" && key.startsWith("admin-intake:")) return "/admin/intakes/" + key.slice("admin-intake:".length);
   switch (key) {
     case "Home": return "/";
@@ -390,6 +391,8 @@ export function pageFromPath(pathname) {
   if (path === "/admin/intakes") return "AdminIntakes";
   const adminIntakeMatch = path.match(/^\/admin\/intakes\/([^/]+)$/);
   if (adminIntakeMatch) return adminIntakeDetailKey(adminIntakeMatch[1]);
+  const productMatch = path.match(/^\/products\/([^/]+)$/);
+  if (productMatch && ALL_PRODUCTS.some((p) => p.slug === productMatch[1])) return "product:" + productMatch[1];
   const serviceMatch = path.match(/^\/services\/([^/]+)$/);
   if (serviceMatch && SERVICES.some((s) => s.slug === serviceMatch[1])) return serviceMatch[1];
   const industryMatch = path.match(/^\/industries\/([^/]+)$/);
@@ -1100,6 +1103,59 @@ const PRODUCT_IMAGES = {
   "Competitive Intelligence": "/products/competitive-intelligence.webp",
 };
 
+const PRODUCT_DETAILS = {
+  "Automated Outreach": {
+    description: "An automated prospecting system that identifies potential customers, organizes prospect information, prepares outreach, and manages follow-up workflows.",
+    builtFor: "Small businesses that need consistent outbound prospecting without manually managing every step.",
+    handles: "Prospect discovery \u2192 qualification \u2192 data organization \u2192 outreach \u2192 follow-up \u2192 reporting",
+    receive: ["Automated workflow", "Prospect database", "Outreach sequences", "Follow-up automation", "Activity reporting"],
+  },
+};
+
+const productSlug = (name) => name.toLowerCase().replace(/ /g, "-");
+export const ALL_PRODUCTS = PRODUCT_FAMILIES.flatMap((f) =>
+  f.items.map((item) => ({ name: item, family: f.title, slug: productSlug(item) }))
+);
+
+function ProductDetailPage({ slug, setPage }) {
+  const go = (key) => (e) => { e.preventDefault(); setPage(key); };
+  const product = ALL_PRODUCTS.find((p) => p.slug === slug);
+  const details = PRODUCT_DETAILS[product.name];
+  const image = PRODUCT_IMAGES[product.name];
+  return (
+    <div>
+      <section className="section" style={{ paddingTop: "2.5rem" }}>
+        <div className="shop-detail">
+          {image && <img className="shop-detail-image" src={image} alt={`${product.name} product box`} />}
+          <div>
+            <a className="btn-text" href={pathFor("Products")} onClick={go("Products")} style={{ fontSize: "0.9rem" }}>&larr; All products</a>
+            <p className="shop-family" style={{ marginTop: "1.2rem" }}>{product.family}</p>
+            <h1>{product.name}</h1>
+            {details ? (
+              <>
+                <p className="section-lead">{details.description}</p>
+                <h3>Built for</h3>
+                <p>{details.builtFor}</p>
+                <h3>The system handles</h3>
+                <p>{details.handles}</p>
+                <h3>You receive</h3>
+                <ul className="plain-list">
+                  {details.receive.map((r) => <li key={r}>{r}</li>)}
+                </ul>
+              </>
+            ) : (
+              <p className="section-lead">Full details for this product are coming soon.</p>
+            )}
+            <div style={{ marginTop: "2rem" }}>
+              <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Request Access</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function ProductsPage({ setPage }) {
   const go = (key) => (e) => { e.preventDefault(); setPage(key); };
   const allFamilies = PRODUCT_FAMILIES.filter((f) => f.items.length > 0).map((f) => f.title);
@@ -1186,7 +1242,9 @@ function ProductsPage({ setPage }) {
                       <div className="shop-image" aria-hidden="true">{initials(item)}</div>
                     )}
                     <p className="shop-family">{family}</p>
-                    <h3 className="shop-name">{item}</h3>
+                    <h3 className="shop-name">
+                      <a href={pathFor("product:" + productSlug(item))} onClick={go("product:" + productSlug(item))} style={{ color: "inherit", textDecoration: "none" }}>{item}</a>
+                    </h3>
                     <span className="shop-soon">Coming soon</span>
                     <button
                       type="button"
@@ -3521,6 +3579,16 @@ function getFAQSchema() {
 }
 
 export function metaFor(page) {
+  if (typeof page === "string" && page.startsWith("product:")) {
+    const product = ALL_PRODUCTS.find((p) => p.slug === page.slice("product:".length));
+    if (product) {
+      const details = PRODUCT_DETAILS[product.name];
+      return {
+        title: `${product.name} — ${SITE_NAME}`,
+        description: details ? details.description : `${product.name}, a ${product.family.toLowerCase()} product from Aurum Ventura.`,
+      };
+    }
+  }
   if (PAGE_TITLES[page]) return { title: PAGE_TITLES[page], description: PAGE_DESCRIPTIONS[page] };
   const service = SERVICES.find((s) => s.slug === page);
   if (service) return { title: `${service.title} — ${SITE_NAME}`, description: service.summary };
@@ -3660,8 +3728,10 @@ export default function App({ initialPath } = {}) {
   const service = SERVICES.find((s) => s.slug === page);
   const isAdminIntakeDetail = typeof page === "string" && page.startsWith("admin-intake:");
   const isIndustryDetail = typeof page === "string" && page.startsWith("industry:");
+  const isProductDetail = typeof page === "string" && page.startsWith("product:");
   const content = pages[page]
     || (service ? <ServiceDetailPage slug={page} setPage={navigate} />
+    : isProductDetail ? <ProductDetailPage slug={page.slice("product:".length)} setPage={navigate} />
     : isIndustryDetail ? <IndustryDetailPage slug={page.slice("industry:".length)} setPage={navigate} />
     : isAdminIntakeDetail ? <AdminIntakeDetailPage intakeId={page.slice("admin-intake:".length)} setPage={navigate} />
     : pages.Home);
@@ -3841,6 +3911,13 @@ export default function App({ initialPath } = {}) {
         .shop-zoom-overlay img { max-width: 100%; max-height: 90vh; width: auto; height: auto; border-radius: 4px; cursor: default; }
         .shop-zoom-close { position: absolute; top: 0.8rem; right: 1rem; background: none; border: none; color: ${COLORS.white}; font-size: 2.4rem; line-height: 1; cursor: pointer; padding: 0.2rem 0.5rem; }
         .shop-image-photo { display: block; width: 100%; height: auto; object-fit: cover; background: none; padding: 0; font-size: 0; }
+        .shop-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; max-width: 1100px; margin: 0 auto; }
+        .shop-detail-image { display: block; width: 100%; height: auto; border-radius: 4px; }
+        .shop-detail h1 { font-size: clamp(2rem, 4vw, 2.8rem); margin: 0.4rem 0 1rem; }
+        .shop-detail h3 { font-size: 1.2rem; margin: 1.6rem 0 0.4rem; }
+        .shop-detail p { font-size: 0.98rem; line-height: 1.65; color: ${COLORS.slate}; margin: 0; }
+        .shop-detail .section-lead { color: ${COLORS.navy}; }
+        @media (max-width: 720px) { .shop-detail { grid-template-columns: 1fr; gap: 1.5rem; } }
         .shop-family { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: ${COLORS.teal}; margin: 0; }
         .shop-name { font-size: 1.2rem; margin: 0; }
         .shop-card .btn-text { align-self: flex-start; margin-top: 0.3rem; font-size: 0.88rem; }

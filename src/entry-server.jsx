@@ -1,5 +1,5 @@
 import { renderToString } from "react-dom/server";
-import App, { SERVICES, pathFor, metaFor } from "./App.jsx";
+import App, { SERVICES, ALL_PRODUCTS, pathFor, metaFor } from "./App.jsx";
 
 // Every PUBLIC route this site has — used by scripts/prerender.mjs to
 // know what static HTML files to generate, and to build sitemap.xml.
@@ -19,6 +19,7 @@ export const ROUTES = [
   "FAQ",
   "Alternatives",
   ...SERVICES.map((s) => s.slug),
+  ...ALL_PRODUCTS.map((p) => "product:" + p.slug),
 ].map((key) => ({ path: pathFor(key), ...metaFor(key) }));
 
 // The /admin area is dynamic (intake IDs aren't known at build time), so

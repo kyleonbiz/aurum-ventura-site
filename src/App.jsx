@@ -1106,6 +1106,7 @@ const PRODUCT_IMAGES = {
   "Follow-Up Automation": "/products/follow-up-automation.webp",
   "Market Research": "/products/market-research.webp",
   "Prospect Intelligence": "/products/prospect-intelligence.webp",
+  "Business Data": "/products/business-data.webp",
 };
 
 function ProductsPage({ setPage }) {

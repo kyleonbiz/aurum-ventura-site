@@ -1171,7 +1171,7 @@ function ProductsPage({ setPage }) {
                     <div className="shop-image" aria-hidden="true">{initials(item)}</div>
                     <p className="shop-family">{family}</p>
                     <h3 className="shop-name">{item}</h3>
-                    <a className="btn-text" href={pathFor("Contact")} onClick={go("Contact")}>Request Access &rarr;</a>
+                    <span className="shop-soon">Coming soon</span>
                   </div>
                 ))}
               </div>
@@ -3795,6 +3795,7 @@ export default function App({ initialPath } = {}) {
         .shop-family { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: ${COLORS.teal}; margin: 0; }
         .shop-name { font-size: 1.2rem; margin: 0; }
         .shop-card .btn-text { align-self: flex-start; margin-top: 0.3rem; font-size: 0.88rem; }
+        .shop-soon { align-self: flex-start; margin-top: 0.3rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: ${COLORS.slate}; border: 1px solid #C9D3DE; border-radius: 999px; padding: 0.3rem 0.8rem; }
         @media (max-width: 900px) { .shop-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 720px) {
           .shop-layout { grid-template-columns: 1fr; gap: 1.5rem; }

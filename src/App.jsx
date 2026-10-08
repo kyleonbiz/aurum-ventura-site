@@ -1100,6 +1100,10 @@ const PRODUCT_FAMILIES = [
   },
 ];
 
+const PRODUCT_IMAGES = {
+  "Automated Outreach": "/products/automated-outreach.webp",
+};
+
 function ProductsPage({ setPage }) {
   const go = (key) => (e) => { e.preventDefault(); setPage(key); };
   const allFamilies = PRODUCT_FAMILIES.filter((f) => f.items.length > 0).map((f) => f.title);
@@ -1171,7 +1175,11 @@ function ProductsPage({ setPage }) {
               <div className="shop-grid">
                 {products.map(({ item, family }) => (
                   <div className="shop-card" key={item}>
-                    <div className="shop-image" aria-hidden="true">{initials(item)}</div>
+                    {PRODUCT_IMAGES[item] ? (
+                      <img className="shop-image shop-image-photo" src={PRODUCT_IMAGES[item]} alt={`${item} product box`} loading="lazy" />
+                    ) : (
+                      <div className="shop-image" aria-hidden="true">{initials(item)}</div>
+                    )}
                     <p className="shop-family">{family}</p>
                     <h3 className="shop-name">{item}</h3>
                     <span className="shop-soon">Coming soon</span>
@@ -3817,6 +3825,7 @@ export default function App({ initialPath } = {}) {
         .shop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.2rem 1.4rem; }
         .shop-card { display: flex; flex-direction: column; gap: 0.35rem; }
         .shop-image { aspect-ratio: 4 / 3; background: linear-gradient(135deg, ${COLORS.ice}, #B8D4E8); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; color: ${COLORS.teal}; margin-bottom: 0.6rem; }
+        .shop-image-photo { display: block; width: 100%; height: auto; object-fit: cover; background: none; padding: 0; font-size: 0; }
         .shop-family { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: ${COLORS.teal}; margin: 0; }
         .shop-name { font-size: 1.2rem; margin: 0; }
         .shop-card .btn-text { align-self: flex-start; margin-top: 0.3rem; font-size: 0.88rem; }

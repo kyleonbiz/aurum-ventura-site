@@ -1107,6 +1107,7 @@ const PRODUCT_IMAGES = {
   "Market Research": "/products/market-research.webp",
   "Prospect Intelligence": "/products/prospect-intelligence.webp",
   "Business Data": "/products/business-data.webp",
+  "Competitive Intelligence": "/products/competitive-intelligence.webp",
 };
 
 function ProductsPage({ setPage }) {

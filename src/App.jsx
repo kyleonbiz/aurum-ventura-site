@@ -1113,6 +1113,9 @@ function ProductsPage({ setPage }) {
     .flatMap((f) => f.items.map((item) => ({ item, family: f.title })));
   if (sort === "name") products = [...products].sort((a, b) => a.item.localeCompare(b.item));
   const initials = (name) => name.split(" ").map((w) => w[0]).slice(0, 2).join("");
+  const [requestList, setRequestList] = useState([]);
+  const toggleRequest = (name) => setRequestList((prev) => (prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]));
+  const sendRequest = () => setPage("Contact", "?products=" + encodeURIComponent(requestList.join(", ")));
   return (
     <div>
       <section className="page-head">
@@ -1172,6 +1175,14 @@ function ProductsPage({ setPage }) {
                     <p className="shop-family">{family}</p>
                     <h3 className="shop-name">{item}</h3>
                     <span className="shop-soon">Coming soon</span>
+                    <button
+                      type="button"
+                      className="shop-add"
+                      aria-pressed={requestList.includes(item)}
+                      onClick={() => toggleRequest(item)}
+                    >
+                      {requestList.includes(item) ? "Remove from list" : "Add to request list"}
+                    </button>
                   </div>
                 ))}
               </div>
@@ -1181,6 +1192,15 @@ function ProductsPage({ setPage }) {
           </div>
         </div>
       </section>
+      {requestList.length > 0 && (
+        <div className="shop-requestbar" role="region" aria-label="Request list">
+          <span>{requestList.length} in your request list</span>
+          <div className="shop-requestbar-actions">
+            <button type="button" className="shop-requestbar-clear" onClick={() => setRequestList([])}>Clear</button>
+            <button type="button" className="btn-primary" onClick={sendRequest}>Send request</button>
+          </div>
+        </div>
+      )}
       <section className="section alt">
         <h2>Need someone to operate it for you?</h2>
         <p className="section-lead">
@@ -2042,9 +2062,14 @@ function ContactPage() {
   const [sent, setSent] = useState(false);
 
   useEffect(() => {
-    const areas = new URLSearchParams(window.location.search).get("areas");
+    const params = new URLSearchParams(window.location.search);
+    const areas = params.get("areas");
+    const products = params.get("products");
     if (areas) {
       setForm((f) => (f.message ? f : { ...f, message: `I need help with: ${areas}.` }));
+    }
+    if (products) {
+      setForm((f) => (f.message ? f : { ...f, message: `I'm interested in these products: ${products}.` }));
     }
   }, []);
 
@@ -3796,6 +3821,12 @@ export default function App({ initialPath } = {}) {
         .shop-name { font-size: 1.2rem; margin: 0; }
         .shop-card .btn-text { align-self: flex-start; margin-top: 0.3rem; font-size: 0.88rem; }
         .shop-soon { align-self: flex-start; margin-top: 0.3rem; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: ${COLORS.slate}; border: 1px solid #C9D3DE; border-radius: 999px; padding: 0.3rem 0.8rem; }
+        .shop-add { align-self: flex-start; margin-top: 0.4rem; background: ${COLORS.white}; border: 1px solid ${COLORS.teal}; border-radius: 4px; padding: 0.5rem 0.9rem; font-family: inherit; font-size: 0.82rem; font-weight: 600; color: ${COLORS.teal}; cursor: pointer; }
+        .shop-add[aria-pressed="true"] { background: ${COLORS.teal}; color: ${COLORS.white}; }
+        .shop-requestbar { position: sticky; bottom: 0; z-index: 50; background: ${COLORS.navy}; color: ${COLORS.white}; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; padding: 0.9rem 1.5rem; font-size: 0.92rem; }
+        .shop-requestbar-actions { display: flex; align-items: center; gap: 1rem; }
+        .shop-requestbar-clear { background: none; border: none; color: ${COLORS.white}; font-family: inherit; font-size: 0.85rem; text-decoration: underline; cursor: pointer; }
+        .shop-requestbar .btn-primary { background: ${COLORS.aqua}; }
         @media (max-width: 900px) { .shop-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 720px) {
           .shop-layout { grid-template-columns: 1fr; gap: 1.5rem; }

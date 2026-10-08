@@ -24,6 +24,10 @@ export const ROUTES = [
   ...ALL_PRODUCTS.map((p) => "product:" + p.slug),
 ].map((key) => ({ path: pathFor(key), ...metaFor(key) }));
 
+// Industry detail pages are rendered from a template, not listed above, so
+// the one with approved copy is added here to get prerendered and sitemapped.
+ROUTES.push({ path: "/industries/contractors-trades", ...metaFor("industry:contractors-trades") });
+
 // The /admin area is dynamic (intake IDs aren't known at build time), so
 // only its shell ("/admin") gets a real prerendered file — vercel.json
 // rewrites every other /admin/* path to that same shell, and the client

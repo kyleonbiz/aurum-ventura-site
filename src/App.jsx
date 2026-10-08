@@ -91,11 +91,17 @@ export const SERVICES = [
       "Sending you a reminder ahead of an upcoming expiration date",
       "Filing renewal confirmations and updated documents as they come in",
     ],
+    faq: [
+      {
+        q: "How do I keep track of business license renewals and expiration dates?",
+        a: "Keep one renewal calendar for every license, permit, and certification, with each expiration date and the agency that issues it. Set reminders 60 and 30 days before each date, and file each renewal confirmation with the license record. We can build and maintain that calendar for you. Your state licensing board sets the requirements and deadlines.",
+      },
+    ],
   },
   {
     slug: "vendor-administration",
     title: "Vendor Administration",
-    summary: "Maintain Vendor Records, organize W-9s and Certificates of Insurance, track expiration dates, and prepare routine vendor paperwork.",
+    summary: "Collect and organize vendor W-9s and Certificates of Insurance, track expiration dates, and keep vendor records current.",
     examples: [
       "Building and maintaining a vendor contact directory",
       "Collecting and organizing W-9s and Certificates of Insurance",
@@ -247,7 +253,7 @@ const TIME_SINKS = [
 ];
 
 const INDUSTRY_EXAMPLES = {
-  "Contractors & Trades": ["Invoice Administration", "CRM & Data Updates", "Recurring Status Reporting", "Forms & Paperwork"],
+  "Contractors & Trades": ["Project documentation", "Invoice Administration", "License & permit tracking", "Vendor records"],
   "Property Management": ["Property & Vendor Records", "Vendor Documentation", "Monthly Reporting", "CRM Updates"],
   "Cleaning & Facility Services": ["Client Invoicing", "Service Scheduling", "Equipment Tracking", "Performance Reports"],
   "Construction/Subcontractors": ["Project Documentation", "Subcontractor Management", "Job Costing", "Compliance Records"],
@@ -264,6 +270,7 @@ const EXAMPLE_TO_SERVICE = {
   "Recurring Status Reporting": "data-entry-reporting",
   "Status Reporting": "data-entry-reporting",
   "Forms & Paperwork": "forms-paperwork",
+  "License & permit tracking": "license-renewal-tracking",
   "Property & Vendor Records": "vendor-administration",
   "Vendor documentation": "vendor-administration",
   "Vendor records": "vendor-administration",
@@ -283,6 +290,69 @@ const EXAMPLE_TO_SERVICE = {
   "Transaction paperwork": "forms-paperwork",
   "Document organization": "document-preparation-management",
   "Document management": "document-preparation-management",
+};
+
+// Approved copy for industry pages that need more than the generic template.
+// Rendered by IndustryDetailPage; the industry name stays the H1.
+const INDUSTRY_PAGE_COPY = {
+  "Contractors & Trades": {
+    metaTitle: "Administrative Support for Contractors & Trades | Aurum Ventura",
+    metaDescription: "Remote administrative support for contractors and trades: job folders, progress reports, invoices, and license and insurance tracking.",
+    heroSub: "The paperwork behind every job, handled remotely, so you can stay on the job site.",
+    sections: [
+      {
+        heading: "The office work that follows the crew",
+        paragraphs: [
+          "Every job creates paperwork: a project folder, progress updates, change orders, invoices, and renewal dates for licenses and insurance. Someone has to track it, and on a small crew that is usually the owner, after hours.",
+          "When it slips, the cost shows up as late invoices, lapsed certificates, and a folder nobody can find.",
+        ],
+      },
+      {
+        heading: "Example: a new job, start to finish",
+        note: "Illustrative example, not a client case.",
+        steps: [
+          "A new job is booked. We set up the job folder and tracker in ProWorx.",
+          "As the job moves through each stage, we update its status and file the change orders and permits.",
+          "Invoices go out against the work orders, and missing paperwork is flagged before billing.",
+          "Every Friday, you get a short progress summary for each open job.",
+        ],
+      },
+      {
+        heading: "Who we work with",
+        paragraphs: ["Owner-operated and growing businesses in:"],
+        bullets: [
+          "General contractors and remodelers",
+          "Specialty trades, including electrical, plumbing, HVAC, and roofing",
+        ],
+        after: "If you run a crew and the office work is piling up on you, we can help. Tell us your trade on the contact page.",
+      },
+      {
+        heading: "How it works",
+        steps: [
+          "Tell us what you need. Share the tasks that take the most time.",
+          "We build a scope. You get a Scope of Services built around your jobs and your team.",
+          "Get your custom quote. Pricing is custom and follows the scope.",
+        ],
+      },
+      {
+        heading: "Common questions",
+        faq: [
+          {
+            q: "Do you decide which licenses or permits I need?",
+            a: "No. We track deadlines and paperwork. Your state licensing board sets the requirements.",
+          },
+          {
+            q: "Do you work in ProWorx?",
+            a: "Yes, we use ProWorx for project tracking.",
+          },
+          {
+            q: "How is pricing set?",
+            a: "Every engagement is quoted from a custom scope of services. Pricing is custom, not a set package.",
+          },
+        ],
+      },
+    ],
+  },
 };
 
 // Build reverse mapping: industry → service slugs
@@ -1355,6 +1425,17 @@ function ServiceDetailPage({ slug, setPage }) {
           {service.examples.map((ex) => <li key={ex}>{ex}</li>)}
         </ul>
       </section>
+      {service.faq && (
+        <section className="section alt">
+          <h2>Common Questions</h2>
+          {service.faq.map((item) => (
+            <div key={item.q} style={{ marginBottom: "1rem" }}>
+              <p><strong>{item.q}</strong></p>
+              <p>{item.a}</p>
+            </div>
+          ))}
+        </section>
+      )}
       {SERVICE_INDUSTRIES[slug] && SERVICE_INDUSTRIES[slug].length > 0 && (
         <section className="section alt">
           <h2>Used by These Industries</h2>
@@ -1415,7 +1496,7 @@ function IndustryDetailPage({ slug, setPage }) {
         <p className="kicker">Industries We Serve</p>
         <h1>{industry}</h1>
         <p className="hero-sub">
-          {industry} businesses often juggle customer or project workflows while administrative tasks pile up. We handle the back-office work so you can focus on serving clients and growing.
+          {INDUSTRY_PAGE_COPY[industry] ? INDUSTRY_PAGE_COPY[industry].heroSub : `${industry} businesses often juggle customer or project workflows while administrative tasks pile up. We handle the back-office work so you can focus on serving clients and growing.`}
         </p>
       </section>
 
@@ -1444,6 +1525,23 @@ function IndustryDetailPage({ slug, setPage }) {
           </div>
         </section>
       )}
+
+      {INDUSTRY_PAGE_COPY[industry] && INDUSTRY_PAGE_COPY[industry].sections.map((section) => (
+        <section className="section" key={section.heading}>
+          <h2>{section.heading}</h2>
+          {section.note && <p className="section-lead"><em>{section.note}</em></p>}
+          {(section.paragraphs || []).map((p) => <p key={p}>{p}</p>)}
+          {section.steps && <ol>{section.steps.map((s) => <li key={s}>{s}</li>)}</ol>}
+          {section.bullets && <ul className="plain-list">{section.bullets.map((b) => <li key={b}>{b}</li>)}</ul>}
+          {section.after && <p>{section.after}</p>}
+          {(section.faq || []).map((item) => (
+            <div key={item.q} style={{ marginBottom: "1rem" }}>
+              <p><strong>{item.q}</strong></p>
+              <p>{item.a}</p>
+            </div>
+          ))}
+        </section>
+      ))}
 
       <section className="cta-band">
         <h2>Ready to handle {industry.toLowerCase()} operations more efficiently?</h2>
@@ -3732,6 +3830,9 @@ export function metaFor(page) {
   if (typeof page === "string" && page.startsWith("industry:")) {
     const slug = page.slice("industry:".length);
     const industry = slugToIndustry(slug);
+    if (industry && INDUSTRY_PAGE_COPY[industry]) {
+      return { title: INDUSTRY_PAGE_COPY[industry].metaTitle, description: INDUSTRY_PAGE_COPY[industry].metaDescription };
+    }
     if (industry) {
       return {
         title: `${industry} | Back-Office & Administrative Support — ${SITE_NAME}`,

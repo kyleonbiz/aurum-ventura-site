@@ -1102,6 +1102,7 @@ const PRODUCT_FAMILIES = [
 
 function ProductsPage({ setPage }) {
   const go = (key) => (e) => { e.preventDefault(); setPage(key); };
+  const [openFamily, setOpenFamily] = useState(null);
   return (
     <div>
       <section className="page-head">
@@ -1114,17 +1115,39 @@ function ProductsPage({ setPage }) {
       </section>
       <section className="section">
         <div className="two-path-grid">
-          {PRODUCT_FAMILIES.map((f) => (
-            <div className="two-path-card" key={f.title}>
-              <h3>{f.title}</h3>
-              <p>{f.summary}</p>
-              {f.items.length > 0 && (
-                <ul className="plain-list" style={{ textAlign: "left", display: "inline-block" }}>
-                  {f.items.map((item) => <li key={item}>{item}</li>)}
-                </ul>
-              )}
-            </div>
-          ))}
+          {PRODUCT_FAMILIES.map((f, i) => {
+            const isOpen = openFamily === i;
+            return (
+              <div className="two-path-card" key={f.title}>
+                <h3>{f.title}</h3>
+                <p>{f.summary}</p>
+                <button
+                  type="button"
+                  className="btn-text"
+                  aria-expanded={isOpen}
+                  onClick={() => setOpenFamily(isOpen ? null : i)}
+                  style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontFamily: "inherit" }}
+                >
+                  {isOpen ? "Hide catalog ↑" : "View catalog →"}
+                </button>
+                {isOpen && (
+                  f.items.length > 0 ? (
+                    <ul className="plain-list" style={{ textAlign: "left", display: "inline-block", listStyle: "none", padding: 0 }}>
+                      {f.items.map((item) => (
+                        <li key={item} style={{ margin: "0 0 0.7rem" }}>
+                          <strong style={{ color: COLORS.navy, fontWeight: 600 }}>{item}</strong>
+                          {" "}
+                          <a className="btn-text" href={pathFor("Contact")} onClick={go("Contact")} style={{ fontSize: "0.85rem" }}>Request Access &rarr;</a>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p style={{ fontStyle: "italic" }}>Catalog coming soon.</p>
+                  )
+                )}
+              </div>
+            );
+          })}
         </div>
       </section>
       <section className="section alt">

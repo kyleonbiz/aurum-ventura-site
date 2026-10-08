@@ -1102,11 +1102,17 @@ const PRODUCT_FAMILIES = [
 
 function ProductsPage({ setPage }) {
   const go = (key) => (e) => { e.preventDefault(); setPage(key); };
-  const [activeFamily, setActiveFamily] = useState("All");
-  const filters = ["All", ...PRODUCT_FAMILIES.map((f) => f.title)];
-  const tiles = PRODUCT_FAMILIES
-    .filter((f) => activeFamily === "All" || f.title === activeFamily)
+  const allFamilies = PRODUCT_FAMILIES.filter((f) => f.items.length > 0).map((f) => f.title);
+  const [selected, setSelected] = useState(allFamilies);
+  const [sort, setSort] = useState("featured");
+  const toggle = (name) => setSelected((prev) => (prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]));
+  const clearFilters = () => setSelected(allFamilies);
+  const activeChips = allFamilies.filter((name) => selected.includes(name) && selected.length < allFamilies.length);
+  let products = PRODUCT_FAMILIES
+    .filter((f) => selected.includes(f.title))
     .flatMap((f) => f.items.map((item) => ({ item, family: f.title })));
+  if (sort === "name") products = [...products].sort((a, b) => a.item.localeCompare(b.item));
+  const initials = (name) => name.split(" ").map((w) => w[0]).slice(0, 2).join("");
   return (
     <div>
       <section className="page-head">
@@ -1117,46 +1123,63 @@ function ProductsPage({ setPage }) {
           work, and operate more efficiently.
         </p>
       </section>
-      <section className="section">
-        <div role="group" aria-label="Filter products by family" style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem", justifyContent: "center", marginBottom: "2.2rem" }}>
-          {filters.map((name) => {
-            const on = activeFamily === name;
-            return (
-              <button
-                key={name}
-                type="button"
-                aria-pressed={on}
-                onClick={() => setActiveFamily(name)}
-                style={{
-                  padding: "0.5rem 1.1rem",
-                  borderRadius: "999px",
-                  border: `1px solid ${COLORS.teal}`,
-                  background: on ? COLORS.teal : COLORS.white,
-                  color: on ? COLORS.white : COLORS.teal,
-                  fontFamily: "inherit",
-                  fontSize: "0.85rem",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
-              >
-                {name}
-              </button>
-            );
-          })}
-        </div>
-        {tiles.length > 0 ? (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: "1.2rem" }}>
-            {tiles.map(({ item, family }) => (
-              <div key={item} style={{ background: COLORS.ice, borderLeft: `3px solid ${COLORS.aqua}`, borderRadius: "4px", padding: "1.6rem 1.4rem", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-                <span style={{ fontSize: "0.72rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: COLORS.teal }}>{family}</span>
-                <h3 style={{ fontSize: "1.25rem" }}>{item}</h3>
-                <a className="btn-text" href={pathFor("Contact")} onClick={go("Contact")} style={{ marginTop: "auto", fontSize: "0.9rem" }}>Request Access &rarr;</a>
+      <section className="section" style={{ paddingTop: "2rem" }}>
+        <div className="shop-layout">
+          <aside className="shop-sidebar">
+            <h3 style={{ fontSize: "1.1rem" }}>Product Family</h3>
+            {PRODUCT_FAMILIES.map((f) => {
+              const empty = f.items.length === 0;
+              return (
+                <label key={f.title} className="shop-filter">
+                  <input
+                    type="checkbox"
+                    checked={selected.includes(f.title)}
+                    disabled={empty}
+                    onChange={() => toggle(f.title)}
+                  />
+                  <span style={{ opacity: empty ? 0.5 : 1 }}>{f.title}</span>
+                  <span className="shop-count">{f.items.length}</span>
+                </label>
+              );
+            })}
+          </aside>
+          <div>
+            <div className="shop-toolbar">
+              <div>
+                <p className="shop-count-line">{products.length} {products.length === 1 ? "product" : "products"} found</p>
+                {activeChips.length > 0 && (
+                  <div className="shop-chips">
+                    <span style={{ fontSize: "0.85rem", color: COLORS.slate }}>Filters:</span>
+                    {activeChips.map((name) => (
+                      <button key={name} type="button" className="shop-chip" onClick={() => toggle(name)} aria-label={`Remove ${name} filter`}>
+                        {name} &times;
+                      </button>
+                    ))}
+                    <button type="button" className="shop-clear" onClick={clearFilters}>Clear Filters</button>
+                  </div>
+                )}
               </div>
-            ))}
+              <select className="shop-select" aria-label="Sort products" value={sort} onChange={(e) => setSort(e.target.value)}>
+                <option value="featured">Featured</option>
+                <option value="name">Name, A&ndash;Z</option>
+              </select>
+            </div>
+            {products.length > 0 ? (
+              <div className="shop-grid">
+                {products.map(({ item, family }) => (
+                  <div className="shop-card" key={item}>
+                    <div className="shop-image" aria-hidden="true">{initials(item)}</div>
+                    <p className="shop-family">{family}</p>
+                    <h3 className="shop-name">{item}</h3>
+                    <a className="btn-text" href={pathFor("Contact")} onClick={go("Contact")}>Request Access &rarr;</a>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p style={{ fontStyle: "italic", color: COLORS.slate }}>Catalog coming soon.</p>
+            )}
           </div>
-        ) : (
-          <p style={{ textAlign: "center", fontStyle: "italic", color: COLORS.slate }}>Catalog coming soon.</p>
-        )}
+        </div>
       </section>
       <section className="section alt">
         <h2>Need someone to operate it for you?</h2>
@@ -3754,6 +3777,31 @@ export default function App({ initialPath } = {}) {
         .two-path-card h3 { font: inherit; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 1.3rem; color: ${COLORS.navy}; margin: 0 0 0.4rem; }
         .two-path-card p { font-size: 0.95rem; line-height: 1.65; color: ${COLORS.navy}; margin: 0 0 0.8rem; }
         .two-path-card .btn-text { font-size: 0.9rem; }
+        .shop-layout { display: grid; grid-template-columns: 220px 1fr; gap: 2.5rem; max-width: 1200px; margin: 0 auto; align-items: start; }
+        .shop-sidebar { display: flex; flex-direction: column; gap: 0.75rem; border-right: 1px solid #E4E9EF; padding-right: 1.5rem; }
+        .shop-filter { display: flex; align-items: center; gap: 0.6rem; font-size: 0.92rem; color: ${COLORS.navy}; cursor: pointer; }
+        .shop-filter:has(input:disabled) { cursor: not-allowed; }
+        .shop-filter input { accent-color: ${COLORS.teal}; margin: 0; }
+        .shop-filter .shop-count { margin-left: auto; color: ${COLORS.slate}; font-size: 0.82rem; }
+        .shop-toolbar { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.6rem; }
+        .shop-count-line { font-size: 0.9rem; color: ${COLORS.slate}; margin: 0 0 0.6rem; }
+        .shop-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+        .shop-chip { background: ${COLORS.ice}; border: 1px solid #B8D4E8; border-radius: 999px; padding: 0.3rem 0.8rem; font-family: inherit; font-size: 0.82rem; color: ${COLORS.navy}; cursor: pointer; }
+        .shop-clear { background: none; border: none; padding: 0.3rem 0.2rem; font-family: inherit; font-size: 0.82rem; color: ${COLORS.teal}; text-decoration: underline; cursor: pointer; }
+        .shop-select { padding: 0.5rem 0.8rem; border: 1px solid #C9D3DE; border-radius: 4px; font-family: inherit; font-size: 0.88rem; background: ${COLORS.white}; color: ${COLORS.navy}; }
+        .shop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.2rem 1.4rem; }
+        .shop-card { display: flex; flex-direction: column; gap: 0.35rem; }
+        .shop-image { aspect-ratio: 4 / 3; background: linear-gradient(135deg, ${COLORS.ice}, #B8D4E8); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; color: ${COLORS.teal}; margin-bottom: 0.6rem; }
+        .shop-family { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: ${COLORS.teal}; margin: 0; }
+        .shop-name { font-size: 1.2rem; margin: 0; }
+        .shop-card .btn-text { align-self: flex-start; margin-top: 0.3rem; font-size: 0.88rem; }
+        @media (max-width: 900px) { .shop-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 720px) {
+          .shop-layout { grid-template-columns: 1fr; gap: 1.5rem; }
+          .shop-sidebar { flex-direction: row; flex-wrap: wrap; gap: 0.6rem 1.2rem; border-right: none; padding-right: 0; padding-bottom: 1rem; border-bottom: 1px solid #E4E9EF; }
+          .shop-sidebar h3 { width: 100%; }
+          .shop-grid { grid-template-columns: 1fr 1fr; gap: 1.6rem 1rem; }
+        }
         @media (max-width: 760px) { .two-path-grid { grid-template-columns: 1fr; } }
 
         /* Programs & Partnerships Page */

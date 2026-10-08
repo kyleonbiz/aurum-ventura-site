@@ -1117,10 +1117,10 @@ const PRODUCT_DETAILS = {
     receive: ["Targeted prospect research", "Verified business data", "Custom filters and segmentation", "Actionable lead lists"],
   },
   "Follow-Up Automation": {
-    description: "Keeps prospects engaged with automated email and multi-channel follow-ups, sent at the right time and tracked in one system.",
+    description: "Keeps prospects engaged with automated email follow-ups, sent at the right time and tracked in one system.",
     builtFor: "Businesses that lose leads because follow-up is inconsistent or depends on someone remembering to send it.",
-    handles: "Automated email sequences \u2192 multi-channel follow-ups \u2192 smart scheduling \u2192 tracking and optimization",
-    receive: ["Automated email sequences", "Multi-channel follow-ups (email, SMS, and more)", "Smart scheduling", "Performance tracking"],
+    handles: "Automated email sequences \u2192 follow-up scheduling \u2192 smart timing \u2192 tracking and optimization",
+    receive: ["Automated email sequences", "Email follow-up sequences", "Smart scheduling", "Performance tracking"],
   },
   "Prospect Intelligence": {
     description: "Company, contact, and market insight that helps you understand the businesses you want to reach and the people who make the decisions.",
@@ -2170,23 +2170,46 @@ function TermsPage({ setPage }) {
   );
 }
 
+const FUNNEL_STEPS = ["Areas", "Your business", "Priorities"];
+const INTEREST_OPTIONS = ALL_PRODUCTS.map((p) => p.name);
+
 function ContactPage() {
   const [form, setForm] = useState({ name: "", business: "", email: "", phone: "", type: "", message: "" });
+  const [interests, setInterests] = useState([]);
+  const [step, setStep] = useState(0);
+  const [stepError, setStepError] = useState("");
   const [sent, setSent] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const areas = params.get("areas");
     const products = params.get("products");
+    if (products) {
+      setInterests(products.split(", ").filter((name) => INTEREST_OPTIONS.includes(name)));
+    }
     if (areas) {
       setForm((f) => (f.message ? f : { ...f, message: `I need help with: ${areas}.` }));
-    }
-    if (products) {
-      setForm((f) => (f.message ? f : { ...f, message: `I'm interested in these products: ${products}.` }));
     }
   }, []);
 
   const update = (k) => (e) => setForm({ ...form, [k]: e.target.value });
+  const toggleInterest = (name) => {
+    setStepError("");
+    setInterests((prev) => (prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name]));
+  };
+  const continueFromAreas = (e) => {
+    e.preventDefault();
+    if (interests.length === 0) {
+      setStepError("Choose at least one area to continue.");
+      return;
+    }
+    setStepError("");
+    setStep(1);
+  };
+  const continueFromBusiness = (e) => {
+    e.preventDefault();
+    setStep(2);
+  };
   const submit = (e) => {
     e.preventDefault();
     setSent(true);
@@ -2209,60 +2232,112 @@ function ContactPage() {
     <div>
       <section className="page-head">
         <p className="kicker">Contact</p>
-        <h1>Request a Consultation</h1>
+        <h1>Request Access</h1>
         <p className="hero-sub">
-          Tell us a bit about your business and what administrative work is taking your time.
-          We'll follow up to set up a short call.
+          Three quick steps: tell us what you need, a little about your business, and what is taking your time.
+          We'll follow up by email to set up a short call.
         </p>
       </section>
       <section className="section">
         <div className="contact-grid">
-          <form className="contact-form" onSubmit={submit}>
-            <label>
-              Name
-              <input required value={form.name} onChange={update("name")} />
-            </label>
-            <label>
-              Business Name
-              <input required value={form.business} onChange={update("business")} />
-            </label>
-            <div className="form-row">
-              <label>
-                Email
-                <input type="email" required value={form.email} onChange={update("email")} />
-              </label>
-              <label>
-                Phone
-                <input type="tel" value={form.phone} onChange={update("phone")} />
-              </label>
-            </div>
-            <label>
-              Business Type
-              <select value={form.type} onChange={update("type")}>
-                <option value="">Select one</option>
-                <option>Service business</option>
-                <option>Property management</option>
-                <option>Real estate</option>
-                <option>Hospitality / restaurant</option>
-                <option>Cleaning / landscaping</option>
-                <option>Contractor</option>
-                <option>Retail</option>
-                <option>Professional services</option>
-                <option>Other</option>
-              </select>
-            </label>
-            <label>
-              What administrative work is taking your time?
-              <textarea rows={4} value={form.message} onChange={update("message")} />
-            </label>
-            <button className="btn-primary" type="submit">Send Request</button>
-          </form>
+          <div>
+            <ol className="funnel-progress" aria-label="Request progress">
+              {FUNNEL_STEPS.map((label, i) => (
+                <li key={label} className={"funnel-step" + (i === step ? " on" : i < step ? " done" : "")}>
+                  <span className="funnel-dot">{i < step ? "\u2713" : i + 1}</span>
+                  <span>{label}</span>
+                </li>
+              ))}
+            </ol>
+
+            {step === 0 && (
+              <form className="contact-form" onSubmit={continueFromAreas}>
+                <fieldset style={{ border: "none", padding: 0, margin: 0 }}>
+                  <legend style={{ fontWeight: 600, color: COLORS.navy, marginBottom: "0.6rem" }}>
+                    Which areas interest you? Choose all that apply.
+                  </legend>
+                  {INTEREST_OPTIONS.map((name) => (
+                    <label key={name} className="funnel-option">
+                      <input type="checkbox" checked={interests.includes(name)} onChange={() => toggleInterest(name)} />
+                      <span>{name}</span>
+                    </label>
+                  ))}
+                </fieldset>
+                {stepError && <p className="funnel-error" role="alert">{stepError}</p>}
+                <div className="funnel-actions">
+                  <span />
+                  <button className="btn-primary" type="submit">Continue</button>
+                </div>
+              </form>
+            )}
+
+            {step === 1 && (
+              <form className="contact-form" onSubmit={continueFromBusiness}>
+                <label>
+                  Name
+                  <input required value={form.name} onChange={update("name")} />
+                </label>
+                <label>
+                  Business Name
+                  <input required value={form.business} onChange={update("business")} />
+                </label>
+                <div className="form-row">
+                  <label>
+                    Email
+                    <input type="email" required value={form.email} onChange={update("email")} />
+                  </label>
+                  <label>
+                    Phone
+                    <input type="tel" value={form.phone} onChange={update("phone")} />
+                  </label>
+                </div>
+                <label>
+                  Business Type
+                  <select value={form.type} onChange={update("type")}>
+                    <option value="">Select one</option>
+                    <option>Service business</option>
+                    <option>Property management</option>
+                    <option>Real estate</option>
+                    <option>Hospitality / restaurant</option>
+                    <option>Cleaning / landscaping</option>
+                    <option>Contractor</option>
+                    <option>Retail</option>
+                    <option>Professional services</option>
+                    <option>Other</option>
+                  </select>
+                </label>
+                <div className="funnel-actions">
+                  <button type="button" className="btn-text" onClick={() => setStep(0)}>&larr; Back</button>
+                  <button className="btn-primary" type="submit">Continue</button>
+                </div>
+              </form>
+            )}
+
+            {step === 2 && (
+              <form className="contact-form" onSubmit={submit}>
+                <div className="funnel-summary">
+                  <strong>Interested in:</strong> {interests.join(", ")}<br />
+                  <strong>Business:</strong> {form.business}{form.type ? ` (${form.type})` : ""}<br />
+                  <strong>Contact:</strong> {form.name}, {form.email}
+                </div>
+                <label>
+                  What administrative work is taking your time?
+                  <textarea rows={4} value={form.message} onChange={update("message")} />
+                </label>
+                <div className="funnel-actions">
+                  <button type="button" className="btn-text" onClick={() => setStep(1)}>&larr; Back</button>
+                  <button className="btn-primary" type="submit">Send Request</button>
+                </div>
+              </form>
+            )}
+          </div>
           <div className="contact-side">
             <h2>Direct Contact</h2>
             <p>admin@aurumventura.net</p>
-            <p>850-653-7797</p>             <h2>Connect</h2>
+            <p>850-653-7797</p>
+            <h2>Connect</h2>
             <p>
-              <a 
+              <a
                 href={GOOGLE_BUSINESS_URL !== "YOUR_GOOGLE_BUSINESS_URL_HERE" ? GOOGLE_BUSINESS_URL : "#"}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -2271,7 +2346,6 @@ function ContactPage() {
                 View Aurum Ventura on Google
               </a>
             </p>
-
             <h2>Typical Response</h2>
             <p>Within one business day.</p>
           </div>
@@ -3947,6 +4021,17 @@ export default function App({ initialPath } = {}) {
         .shop-zoom-overlay img { max-width: 100%; max-height: 90vh; width: auto; height: auto; border-radius: 4px; cursor: default; }
         .shop-zoom-close { position: absolute; top: 0.8rem; right: 1rem; background: none; border: none; color: ${COLORS.white}; font-size: 2.4rem; line-height: 1; cursor: pointer; padding: 0.2rem 0.5rem; }
         .shop-image-photo { display: block; width: 100%; height: auto; object-fit: cover; background: none; padding: 0; font-size: 0; }
+        .funnel-progress { display: flex; flex-wrap: wrap; gap: 1rem 1.6rem; list-style: none; padding: 0; margin: 0 0 2rem; }
+        .funnel-step { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: ${COLORS.slate}; }
+        .funnel-step.on, .funnel-step.done { color: ${COLORS.navy}; }
+        .funnel-step.on { font-weight: 600; }
+        .funnel-dot { width: 1.8rem; height: 1.8rem; border-radius: 50%; border: 1px solid #C9D3DE; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; background: ${COLORS.white}; }
+        .funnel-step.on .funnel-dot, .funnel-step.done .funnel-dot { background: ${COLORS.teal}; border-color: ${COLORS.teal}; color: ${COLORS.white}; }
+        .funnel-option { display: flex; align-items: center; gap: 0.6rem; font-size: 0.95rem; color: ${COLORS.navy}; margin: 0.55rem 0; cursor: pointer; }
+        .funnel-option input { accent-color: ${COLORS.teal}; margin: 0; }
+        .funnel-actions { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-top: 1rem; }
+        .funnel-summary { background: ${COLORS.ice}; border-left: 3px solid ${COLORS.aqua}; padding: 1rem 1.2rem; font-size: 0.95rem; line-height: 1.7; color: ${COLORS.navy}; }
+        .funnel-error { color: #D63D2E; font-size: 0.9rem; margin: 0.8rem 0 0; }
         .shop-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; max-width: 1100px; margin: 0 auto; }
         .shop-detail-image { display: block; width: 100%; height: auto; border-radius: 4px; }
         .shop-detail h1 { font-size: clamp(2rem, 4vw, 2.8rem); margin: 0.4rem 0 1rem; }

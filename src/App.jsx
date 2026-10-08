@@ -1807,17 +1807,17 @@ function IndustryDetailPage({ slug, setPage }) {
       )}
 
       {INDUSTRY_PAGE_COPY[industry] && INDUSTRY_PAGE_COPY[industry].sections.map((section) => (
-        <section className="section" key={section.heading}>
+        <section className="section industry-section" key={section.heading}>
           <h2>{section.heading}</h2>
           {section.note && <p className="section-lead"><em>{section.note}</em></p>}
-          {(section.paragraphs || []).map((p) => <p key={p}>{p}</p>)}
-          {section.steps && <ol>{section.steps.map((s) => <li key={s}>{s}</li>)}</ol>}
-          {section.bullets && <ul className="plain-list">{section.bullets.map((b) => <li key={b}>{b}</li>)}</ul>}
-          {section.after && <p>{section.after}</p>}
+          {(section.paragraphs || []).map((p) => <p className="industry-text" key={p}>{p}</p>)}
+          {section.steps && <ol className="industry-list">{section.steps.map((s) => <li key={s}>{s}</li>)}</ol>}
+          {section.bullets && <ul className="industry-list">{section.bullets.map((b) => <li key={b}>{b}</li>)}</ul>}
+          {section.after && <p className="industry-text">{section.after}</p>}
           {(section.faq || []).map((item) => (
-            <div key={item.q} style={{ marginBottom: "1rem" }}>
-              <p><strong>{item.q}</strong></p>
-              <p>{item.a}</p>
+            <div className="faq-item" key={item.q}>
+              <p className="faq-q"><strong>{item.q}</strong></p>
+              <p className="industry-text">{item.a}</p>
             </div>
           ))}
         </section>
@@ -4465,6 +4465,13 @@ export default function App({ initialPath } = {}) {
 
         .plain-list { margin: 0.8rem 0 0; padding-left: 1.2rem; color: ${COLORS.slate}; }
         .plain-list li { margin-bottom: 0.5rem; line-height: 1.5; }
+
+        .industry-section h2 { margin-bottom: 1rem; }
+        .industry-text { max-width: 680px; margin-bottom: 1rem; }
+        .industry-list { max-width: 680px; margin: 0 0 1.2rem; padding-left: 1.3rem; color: ${COLORS.slate}; }
+        .industry-list li { margin-bottom: 0.6rem; line-height: 1.55; }
+        .faq-item { max-width: 680px; margin-bottom: 1.3rem; }
+        .faq-q { margin-bottom: 0.35rem; color: ${COLORS.navy}; }
 
         .cta-band { text-align: center; padding: 2.8rem 1.5rem; border-top: 1px solid #E4E9EF; }
         .cta-band h2 { margin-bottom: 0.5rem; }

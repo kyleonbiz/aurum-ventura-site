@@ -4,6 +4,10 @@
   "outputDirectory": "dist",
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    { "source": "/products", "destination": "/systems", "permanent": true },
+    { "source": "/products/:slug", "destination": "/systems/:slug", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/admin/:path*", "destination": "/admin/index.html" },
 

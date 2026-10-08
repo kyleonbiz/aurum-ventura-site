@@ -732,13 +732,13 @@ function slugToIndustry(slug) {
 }
 
 export function pathFor(key) {
-  if (typeof key === "string" && key.startsWith("product:")) return "/products/" + key.slice("product:".length);
+  if (typeof key === "string" && key.startsWith("product:")) return "/systems/" + key.slice("product:".length);
   if (typeof key === "string" && key.startsWith("industry:")) return "/industries/" + key.slice("industry:".length);
   if (typeof key === "string" && key.startsWith("admin-intake:")) return "/admin/intakes/" + key.slice("admin-intake:".length);
   switch (key) {
     case "Home": return "/";
     case "Services": return "/services";
-    case "Products": return "/products";
+    case "Products": return "/systems";
     case "ProgramsPartnerships": return "/programs-partnerships";
     case "ProWorx": return "https://www.proworx.io";
     case "PreferredPartners": return "/preferred-partners";
@@ -766,7 +766,7 @@ export function pageFromPath(pathname) {
   const path = pathname.replace(/\/+$/, "") || "/";
   if (path === "/") return "Home";
   if (path === "/services") return "Services";
-  if (path === "/products") return "Products";
+  if (path === "/systems" || path === "/products") return "Products";
   if (path === "/programs-partnerships") return "ProgramsPartnerships";
   if (path === "/preferred-partners") return "PreferredPartners";
   if (path === "/partnership-opportunities") return "PartnershipOpportunities";
@@ -786,7 +786,7 @@ export function pageFromPath(pathname) {
   if (path === "/admin/intakes") return "AdminIntakes";
   const adminIntakeMatch = path.match(/^\/admin\/intakes\/([^/]+)$/);
   if (adminIntakeMatch) return adminIntakeDetailKey(adminIntakeMatch[1]);
-  const productMatch = path.match(/^\/products\/([^/]+)$/);
+  const productMatch = path.match(/^\/(?:systems|products)\/([^/]+)$/);
   if (productMatch && ALL_PRODUCTS.some((p) => p.slug === productMatch[1])) return "product:" + productMatch[1];
   // Old industry links were built as /services/industry:<slug>; send them to the industry page.
   const legacyIndustryMatch = path.match(/^\/services\/industry:([^/]+)$/);
@@ -1074,7 +1074,7 @@ function Footer({ setPage }) {
             <h3>Company</h3>
             <a href={pathFor("About")} onClick={go("About")}>About</a>
             <a href={pathFor("Services")} onClick={go("Services")}>Services</a>
-            <a href={pathFor("Products")} onClick={go("Products")}>Products</a>
+            <a href={pathFor("Products")} onClick={go("Products")}>Systems</a>
             <a href={pathFor("Industries")} onClick={go("Industries")}>Industries</a>
           </div>
           <div>
@@ -1483,13 +1483,13 @@ const PRODUCT_FAMILIES = [
 ];
 
 const PRODUCT_IMAGES = {
-  "Automated Outreach": "/products/automated-outreach.webp",
-  "Prospect Discovery": "/products/prospect-discovery.webp",
-  "Follow-Up Automation": "/products/follow-up-automation.webp",
-  "Market Research": "/products/market-research.webp",
-  "Prospect Intelligence": "/products/prospect-intelligence.webp",
-  "Business Data": "/products/business-data.webp",
-  "Competitive Intelligence": "/products/competitive-intelligence.webp",
+  "Automated Outreach": "/systems/automated-outreach.webp",
+  "Prospect Discovery": "/systems/prospect-discovery.webp",
+  "Follow-Up Automation": "/systems/follow-up-automation.webp",
+  "Market Research": "/systems/market-research.webp",
+  "Prospect Intelligence": "/systems/prospect-intelligence.webp",
+  "Business Data": "/systems/business-data.webp",
+  "Competitive Intelligence": "/systems/competitive-intelligence.webp",
 };
 
 const PRODUCT_DETAILS = {
@@ -1553,7 +1553,7 @@ function ProductDetailPage({ slug, setPage }) {
         <div className="shop-detail">
           {image && <img className="shop-detail-image" src={image} alt={`${product.name} product box`} />}
           <div>
-            <a className="btn-text" href={pathFor("Products")} onClick={go("Products")} style={{ fontSize: "0.9rem" }}>&larr; All products</a>
+            <a className="btn-text" href={pathFor("Products")} onClick={go("Products")} style={{ fontSize: "0.9rem" }}>&larr; All systems</a>
             <p className="shop-family" style={{ marginTop: "1.2rem" }}>{product.family}</p>
             <h1>{product.name}</h1>
             {details ? (
@@ -1567,6 +1567,8 @@ function ProductDetailPage({ slug, setPage }) {
                 <ul className="plain-list">
                   {details.receive.map((r) => <li key={r}>{r}</li>)}
                 </ul>
+                <h3>Setup and ongoing support</h3>
+                <p className="industry-text">Setup and ongoing support are included with every system.</p>
                 <h3>Common questions</h3>
                 <div className="faq-item">
                   <p className="faq-q"><strong>How is pricing set?</strong></p>
@@ -4016,7 +4018,7 @@ export const SITE_NAME = "Aurum Ventura Enterprise LLC";
 const PAGE_TITLES = {
   Home: "Back Office Administrative Support | Aurum Ventura",
   Services: `Services | Aurum Ventura`,
-  Products: `Business Systems & Products | Aurum Ventura`,
+  Products: `Business Systems | Aurum Ventura`,
   ProgramsPartnerships: `Programs & Partnerships | Aurum Ventura`,
   About: `About | Aurum Ventura`,
   Industries: `Industries | Aurum Ventura`,

@@ -9,7 +9,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const SITE_URL = "https://www.aurumventura.net";
-const TOP_LEVEL_PATHS = new Set(["/services", "/products", "/about", "/industries", "/how-it-works", "/security", "/contact"]);
+const TOP_LEVEL_PATHS = new Set(["/services", "/systems", "/about", "/industries", "/how-it-works", "/security", "/contact"]);
 // Disallowed in robots.txt, so they don't belong in the sitemap.
 const NOT_IN_SITEMAP = new Set(["/upload", "/client-intake"]);
 

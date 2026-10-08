@@ -32,7 +32,7 @@ export async function sendClientConfirmationEmail({ to, contactName, referenceNu
     `We will contact you if additional information or clarification is required.`,
     ``,
     `Aurum Ventura Enterprise LLC`,
-    `Business Administrative Services`,
+    `Business Operations & Systems`,
     `"Your Business. Our Back Office."`,
   ].join("\n");
 
@@ -96,7 +96,7 @@ export async function sendIntakeConfirmationEmail({ to, contactName, companyName
     `We will contact you if additional information is required.`,
     ``,
     `Aurum Ventura Enterprise LLC`,
-    `Business Administrative Services`,
+    `Business Operations & Systems`,
     `"Your Business. Our Back Office."`,
   ].join("\n");
 
@@ -147,7 +147,7 @@ export async function sendIntakeApprovedEmail({ to, contactName, companyName, cl
     `Your account is now active. We will provide any additional instructions or document requests as needed.`,
     ``,
     `Aurum Ventura Enterprise LLC`,
-    `Business Administrative Services`,
+    `Business Operations & Systems`,
     `"Your Business. Our Back Office."`,
   ].join("\n");
 
@@ -176,7 +176,7 @@ export async function sendIntakeMoreInfoRequestedEmail({ to, contactName, compan
     adminMessage,
     ``,
     `Aurum Ventura Enterprise LLC`,
-    `Business Administrative Services`,
+    `Business Operations & Systems`,
     `"Your Business. Our Back Office."`,
   ].join("\n");
 

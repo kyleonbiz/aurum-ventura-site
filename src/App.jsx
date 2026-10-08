@@ -865,7 +865,7 @@ function Nav({ page, setPage }) {
           <img src="/logo-mark.png" alt="Aurum Ventura" className="nav-mark" width="47" height="34" />
           <span className="nav-word">
             Aurum Ventura
-            <small>Business Administrative Services</small>
+            <small>Business Operations &amp; Systems</small>
           </span>
         </a>
         <nav className="nav-links">

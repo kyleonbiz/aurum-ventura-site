@@ -1102,7 +1102,11 @@ const PRODUCT_FAMILIES = [
 
 function ProductsPage({ setPage }) {
   const go = (key) => (e) => { e.preventDefault(); setPage(key); };
-  const [openFamily, setOpenFamily] = useState(null);
+  const [activeFamily, setActiveFamily] = useState("All");
+  const filters = ["All", ...PRODUCT_FAMILIES.map((f) => f.title)];
+  const tiles = PRODUCT_FAMILIES
+    .filter((f) => activeFamily === "All" || f.title === activeFamily)
+    .flatMap((f) => f.items.map((item) => ({ item, family: f.title })));
   return (
     <div>
       <section className="page-head">
@@ -1114,41 +1118,45 @@ function ProductsPage({ setPage }) {
         </p>
       </section>
       <section className="section">
-        <div className="two-path-grid">
-          {PRODUCT_FAMILIES.map((f, i) => {
-            const isOpen = openFamily === i;
+        <div role="group" aria-label="Filter products by family" style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem", justifyContent: "center", marginBottom: "2.2rem" }}>
+          {filters.map((name) => {
+            const on = activeFamily === name;
             return (
-              <div className="two-path-card" key={f.title}>
-                <h3>{f.title}</h3>
-                <p>{f.summary}</p>
-                <button
-                  type="button"
-                  className="btn-text"
-                  aria-expanded={isOpen}
-                  onClick={() => setOpenFamily(isOpen ? null : i)}
-                  style={{ background: "none", border: "none", padding: 0, cursor: "pointer", fontFamily: "inherit" }}
-                >
-                  {isOpen ? "Hide catalog ↑" : "View catalog →"}
-                </button>
-                {isOpen && (
-                  f.items.length > 0 ? (
-                    <ul className="plain-list" style={{ textAlign: "left", display: "inline-block", listStyle: "none", padding: 0 }}>
-                      {f.items.map((item) => (
-                        <li key={item} style={{ margin: "0 0 0.7rem" }}>
-                          <strong style={{ color: COLORS.navy, fontWeight: 600 }}>{item}</strong>
-                          {" "}
-                          <a className="btn-text" href={pathFor("Contact")} onClick={go("Contact")} style={{ fontSize: "0.85rem" }}>Request Access &rarr;</a>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p style={{ fontStyle: "italic" }}>Catalog coming soon.</p>
-                  )
-                )}
-              </div>
+              <button
+                key={name}
+                type="button"
+                aria-pressed={on}
+                onClick={() => setActiveFamily(name)}
+                style={{
+                  padding: "0.5rem 1.1rem",
+                  borderRadius: "999px",
+                  border: `1px solid ${COLORS.teal}`,
+                  background: on ? COLORS.teal : COLORS.white,
+                  color: on ? COLORS.white : COLORS.teal,
+                  fontFamily: "inherit",
+                  fontSize: "0.85rem",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                }}
+              >
+                {name}
+              </button>
             );
           })}
         </div>
+        {tiles.length > 0 ? (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: "1.2rem" }}>
+            {tiles.map(({ item, family }) => (
+              <div key={item} style={{ background: COLORS.ice, borderLeft: `3px solid ${COLORS.aqua}`, borderRadius: "4px", padding: "1.6rem 1.4rem", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                <span style={{ fontSize: "0.72rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: COLORS.teal }}>{family}</span>
+                <h3 style={{ fontSize: "1.25rem" }}>{item}</h3>
+                <a className="btn-text" href={pathFor("Contact")} onClick={go("Contact")} style={{ marginTop: "auto", fontSize: "0.9rem" }}>Request Access &rarr;</a>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p style={{ textAlign: "center", fontStyle: "italic", color: COLORS.slate }}>Catalog coming soon.</p>
+        )}
       </section>
       <section className="section alt">
         <h2>Need someone to operate it for you?</h2>

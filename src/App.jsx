@@ -644,10 +644,16 @@ const INDUSTRY_PAGE_COPY = {
 
 export const INDUSTRY_SLUGS = AUDIENCE.map((industry) => industryToSlug(industry));
 
+// Example labels are matched without regard to capitalization.
+function serviceForExample(example) {
+  const key = Object.keys(EXAMPLE_TO_SERVICE).find((k) => k.toLowerCase() === example.toLowerCase());
+  return key ? EXAMPLE_TO_SERVICE[key] : undefined;
+}
+
 // Build reverse mapping: industry → service slugs
 const INDUSTRY_SERVICES = {};
 Object.entries(INDUSTRY_EXAMPLES).forEach(([industry, examples]) => {
-  const serviceSlugs = new Set(examples.map(ex => EXAMPLE_TO_SERVICE[ex]).filter(Boolean));
+  const serviceSlugs = new Set(examples.map(serviceForExample).filter(Boolean));
   INDUSTRY_SERVICES[industry] = Array.from(serviceSlugs);
 });
 
@@ -697,6 +703,7 @@ function slugToIndustry(slug) {
 
 export function pathFor(key) {
   if (typeof key === "string" && key.startsWith("product:")) return "/products/" + key.slice("product:".length);
+  if (typeof key === "string" && key.startsWith("industry:")) return "/industries/" + key.slice("industry:".length);
   if (typeof key === "string" && key.startsWith("admin-intake:")) return "/admin/intakes/" + key.slice("admin-intake:".length);
   switch (key) {
     case "Home": return "/";
@@ -751,6 +758,9 @@ export function pageFromPath(pathname) {
   if (adminIntakeMatch) return adminIntakeDetailKey(adminIntakeMatch[1]);
   const productMatch = path.match(/^\/products\/([^/]+)$/);
   if (productMatch && ALL_PRODUCTS.some((p) => p.slug === productMatch[1])) return "product:" + productMatch[1];
+  // Old industry links were built as /services/industry:<slug>; send them to the industry page.
+  const legacyIndustryMatch = path.match(/^\/services\/industry:([^/]+)$/);
+  if (legacyIndustryMatch && slugToIndustry(legacyIndustryMatch[1])) return "industry:" + legacyIndustryMatch[1];
   const serviceMatch = path.match(/^\/services\/([^/]+)$/);
   if (serviceMatch && SERVICES.some((s) => s.slug === serviceMatch[1])) return serviceMatch[1];
   const industryMatch = path.match(/^\/industries\/([^/]+)$/);
@@ -1099,7 +1109,7 @@ function IndustryPanel({ setPage }) {
         <p className="industry-panel-label">Examples for {AUDIENCE[active]}</p>
         <ul className="plain-list industry-examples">
           {INDUSTRY_EXAMPLES[AUDIENCE[active]].map((ex) => {
-            const slug = EXAMPLE_TO_SERVICE[ex];
+            const slug = serviceForExample(ex);
             return slug ? (
               <li key={ex}>
                 <a href={pathFor(slug)} onClick={go(slug)}>{ex}</a>

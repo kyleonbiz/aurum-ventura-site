@@ -342,6 +342,7 @@ export function pathFor(key) {
   switch (key) {
     case "Home": return "/";
     case "Services": return "/services";
+    case "Products": return "/products";
     case "ProgramsPartnerships": return "/programs-partnerships";
     case "ProWorx": return "https://www.proworx.io";
     case "PreferredPartners": return "/preferred-partners";
@@ -369,6 +370,7 @@ export function pageFromPath(pathname) {
   const path = pathname.replace(/\/+$/, "") || "/";
   if (path === "/") return "Home";
   if (path === "/services") return "Services";
+  if (path === "/products") return "Products";
   if (path === "/programs-partnerships") return "ProgramsPartnerships";
   if (path === "/preferred-partners") return "PreferredPartners";
   if (path === "/partnership-opportunities") return "PartnershipOpportunities";
@@ -441,7 +443,7 @@ const PROGRAMS_DROPDOWN_ITEMS = [
 ];
 
 function Nav({ page, setPage }) {
-  const items = ["Home", "Services", "ProgramsPartnerships", "Industries", "About", "HowItWorks"];
+  const items = ["Home", "Services", "Products", "ProgramsPartnerships", "Industries", "About", "HowItWorks"];
   const [open, setOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
   const [programsDropdownOpen, setProgramsDropdownOpen] = useState(false);
@@ -671,6 +673,7 @@ function Footer({ setPage }) {
             <h3>Company</h3>
             <a href={pathFor("About")} onClick={go("About")}>About</a>
             <a href={pathFor("Services")} onClick={go("Services")}>Services</a>
+            <a href={pathFor("Products")} onClick={go("Products")}>Products</a>
             <a href={pathFor("Industries")} onClick={go("Industries")}>Industries</a>
           </div>
           <div>
@@ -964,6 +967,15 @@ function HomePage({ setPage }) {
         <a className="btn-text" href={pathFor("Services")} onClick={go("Services")} style={{ marginTop: "0.8rem", display: "inline-block" }}>See the full list of services &rarr;</a>
       </section>
 
+      <section className="section">
+        <h2>Business operations, built better.</h2>
+        <p className="section-lead">
+          We provide the people, the process, and the technology: hands-on administrative support today, plus
+          automated systems that reduce repetitive work as your business grows.
+        </p>
+        <a className="btn-text" href={pathFor("Products")} onClick={go("Products")}>Explore Our Systems &rarr;</a>
+      </section>
+
       <PeopleProcessTechnology />
 
       <section className="section alt">
@@ -1049,10 +1061,84 @@ function ServicesPage({ setPage }) {
           {NOT_LIST.map((n) => <li key={n}>{n}</li>)}
         </ul>
       </section>
+      <section className="section alt">
+        <h2>Need more than support?</h2>
+        <p className="section-lead">
+          Aurum Ventura also develops automated systems that can reduce repetitive work and improve how your business operates.
+        </p>
+        <a className="btn-text" href={pathFor("Products")} onClick={go("Products")}>Explore Our Systems &rarr;</a>
+      </section>
       <section className="cta-band">
         <h2>Not sure which categories apply?</h2>
         <p>We'll work it out together in a short consultation.</p>
         <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>See How We Can Help</a>
+      </section>
+    </div>
+  );
+}
+
+const PRODUCT_FAMILIES = [
+  {
+    title: "Growth Systems",
+    summary: "Customer acquisition, prospecting, outreach, follow-up, and lead-support systems.",
+    items: ["Automated Outreach", "Prospect Discovery", "Customer Finding", "Follow-Up Automation"],
+  },
+  {
+    title: "Operations Systems",
+    summary: "Administrative workflows, internal automation, task routing, documentation, and process systems.",
+    items: ["Workflow Automation", "Administrative Automation", "Reporting Systems", "Internal Business Tools"],
+  },
+  {
+    title: "Intelligence Systems",
+    summary: "Prospect research, business intelligence, reporting, market information, and operational insight.",
+    items: ["Prospect Intelligence", "Market Research", "Business Data", "Competitive Intelligence"],
+  },
+  {
+    title: "Workflow Systems",
+    summary: "Connected processes that move information and work between the tools a business already uses.",
+    items: [],
+  },
+];
+
+function ProductsPage({ setPage }) {
+  const go = (key) => (e) => { e.preventDefault(); setPage(key); };
+  return (
+    <div>
+      <section className="page-head">
+        <p className="kicker">Aurum Ventura Systems</p>
+        <h1>Business Systems Built to Work for You</h1>
+        <p className="hero-sub">
+          Automated tools and systems designed to help growing businesses find opportunities, streamline repetitive
+          work, and operate more efficiently.
+        </p>
+      </section>
+      <section className="section">
+        <div className="two-path-grid">
+          {PRODUCT_FAMILIES.map((f) => (
+            <div className="two-path-card" key={f.title}>
+              <h3>{f.title}</h3>
+              <p>{f.summary}</p>
+              {f.items.length > 0 && (
+                <ul className="plain-list">
+                  {f.items.map((item) => <li key={item}>{item}</li>)}
+                </ul>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+      <section className="section alt">
+        <h2>Need someone to operate it for you?</h2>
+        <p className="section-lead">
+          Our team can help implement and manage the systems alongside your existing operations.
+        </p>
+        <a className="btn-text" href={pathFor("Services")} onClick={go("Services")}>Explore Our Services &rarr;</a>
+      </section>
+      <section className="cta-band">
+        <h2>Tell us where your business is getting bogged down.</h2>
+        <p>We&rsquo;ll help you build the system around it.</p>
+        <a className="btn-primary" href={pathFor("Contact")} onClick={go("Contact")}>Request Access</a>
+        <a className="btn-text" href={pathFor("HowItWorks")} onClick={go("HowItWorks")} style={{ marginLeft: "1.2rem" }}>Learn More &rarr;</a>
       </section>
     </div>
   );
@@ -1515,6 +1601,24 @@ function AboutPage({ setPage }) {
             We combine modern technology with human oversight to deliver dependable, precise, and practical back-office support — giving business owners and teams more time to focus on operating, serving customers, and moving their businesses forward.
           </p>
         </div>
+      </section>
+
+      <section className="section alt">
+        <h2>People. Process. Technology.</h2>
+        <p className="section-lead">
+          The core idea behind Aurum Ventura is simple: People + Process + Technology.
+        </p>
+        <p style={{ marginBottom: "1.2rem" }}>
+          Our team provides the people and operational expertise that handle the work. Process expertise connects that
+          work into organized, repeatable workflows. Technology, where it fits, scales the operation and reduces repetitive effort.
+        </p>
+        <p style={{ marginBottom: "1.2rem" }}>
+          Our services and our systems are two sides of the same approach. Our services operate and support business
+          functions, and our systems automate the repetitive work behind them.
+        </p>
+        <p style={{ fontStyle: "italic", color: "#57677F" }}>
+          Tell us where your business is getting bogged down. We&rsquo;ll help you build the system around it.
+        </p>
       </section>
 
       <section className="section alt">
@@ -3209,6 +3313,7 @@ export const SITE_NAME = "Aurum Ventura Enterprise LLC";
 const PAGE_TITLES = {
   Home: "Back Office Administrative Support | Aurum Ventura",
   Services: `Services — ${SITE_NAME}`,
+  Products: `Business Systems & Products — ${SITE_NAME}`,
   ProgramsPartnerships: `Programs & Partnerships — ${SITE_NAME}`,
   About: `About — ${SITE_NAME}`,
   Industries: `Industries — ${SITE_NAME}`,
@@ -3228,6 +3333,7 @@ const PAGE_TITLES = {
 const PAGE_DESCRIPTIONS = {
   Home: "We design and execute workflows to get you 10-16 hours/week back. Document Prep, Invoicing, Vendor Admin, CRM, License Tracking, and Custom Workflows for growing businesses nationwide.",
   Services: "Recurring administrative services for businesses nationwide — Document Preparation, Invoice Administration, License Tracking, Vendor Administration, CRM Data Management, Project Administration, and more.",
+  Products: "Automated business systems for growing companies: growth systems for outreach and follow-up, operations systems for admin workflows, intelligence systems for prospect research, and workflow systems that connect your existing tools.",
   ProgramsPartnerships: "Implementation partnerships for organizations supporting entrepreneurs and small businesses. Hands-on operational systems and back-office implementation for entrepreneurship programs.",
   About: "Aurum Ventura is a Nashville-based outsourced administrative back office serving small and growing businesses nationwide. Learn about our approach to business operations.",
   Industries: "Back-office and administrative support for contractors, property managers, cleaning and landscaping, construction, staffing, real estate, professional services, and other industries nationwide.",
@@ -3434,6 +3540,7 @@ export default function App({ initialPath } = {}) {
   const pages = {
     Home: <HomePage setPage={navigate} />,
     Services: <ServicesPage setPage={navigate} />,
+    Products: <ProductsPage setPage={navigate} />,
     ProgramsPartnerships: <ProgramsPartnershipsPage setPage={navigate} />,
     PreferredPartners: <PreferredPartnersPage setPage={navigate} />,
     PartnershipOpportunities: <PartnershipOpportunitiesPage setPage={navigate} />,

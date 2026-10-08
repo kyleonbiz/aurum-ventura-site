@@ -6,6 +6,7 @@ import App, { SERVICES, pathFor, metaFor } from "./App.jsx";
 export const ROUTES = [
   "Home",
   "Services",
+  "Products",
   "About",
   "Industries",
   "HowItWorks",

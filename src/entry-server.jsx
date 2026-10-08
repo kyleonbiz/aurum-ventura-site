@@ -1,5 +1,5 @@
 import { renderToString } from "react-dom/server";
-import App, { SERVICES, ALL_PRODUCTS, pathFor, metaFor } from "./App.jsx";
+import App, { SERVICES, ALL_PRODUCTS, INDUSTRY_SLUGS, pathFor, metaFor } from "./App.jsx";
 
 // Every PUBLIC route this site has — used by scripts/prerender.mjs to
 // know what static HTML files to generate, and to build sitemap.xml.
@@ -25,8 +25,10 @@ export const ROUTES = [
 ].map((key) => ({ path: pathFor(key), ...metaFor(key) }));
 
 // Industry detail pages are rendered from a template, not listed above, so
-// the one with approved copy is added here to get prerendered and sitemapped.
-ROUTES.push({ path: "/industries/contractors-trades", ...metaFor("industry:contractors-trades") });
+// they're added here to get prerendered and sitemapped.
+for (const slug of INDUSTRY_SLUGS) {
+  ROUTES.push({ path: "/industries/" + slug, ...metaFor("industry:" + slug) });
+}
 
 // The /admin area is dynamic (intake IDs aren't known at build time), so
 // only its shell ("/admin") gets a real prerendered file — vercel.json

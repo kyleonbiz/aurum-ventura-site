@@ -292,6 +292,20 @@ const EXAMPLE_TO_SERVICE = {
   "Document management": "document-preparation-management",
 };
 
+// Shared sections for industry pages. Each page's copy is tailored above them.
+const HOW_IT_WORKS = {
+  heading: "How it works",
+  steps: [
+    "Tell us what you need. Share the tasks that take the most time.",
+    "We build a scope. You get a Scope of Services built around your jobs and your team.",
+    "Get your custom quote. Pricing is custom and follows the scope.",
+  ],
+};
+const PRICING_FAQ = {
+  q: "How is pricing set?",
+  a: "Every engagement is quoted from a custom scope of services. Pricing is custom, not a set package.",
+};
+
 // Approved copy for industry pages that need more than the generic template.
 // Rendered by IndustryDetailPage; the industry name stays the H1.
 const INDUSTRY_PAGE_COPY = {
@@ -353,7 +367,282 @@ const INDUSTRY_PAGE_COPY = {
       },
     ],
   },
+  "Property Management": {
+    metaTitle: "Administrative Support for Property Management | Aurum Ventura",
+    metaDescription: "Remote administrative support for property managers: vendor files, insurance certificates, invoices, and monthly reports.",
+    heroSub: "Vendor files, insurance certificates, and monthly reports, kept current so your properties run without a paperwork backlog.",
+    sections: [
+      {
+        heading: "The paperwork behind every property",
+        paragraphs: [
+          "Each property depends on vendors whose insurance certificates and records expire on their own schedule. When one lapses unnoticed, the cost shows up as an uninsured repair or a vendor you can't pay.",
+          "Monthly reporting and vendor records pile up on the same desk, usually the manager's, and get done last.",
+        ],
+      },
+      {
+        heading: "Example: a vendor joins the portfolio",
+        note: "Illustrative example, not a client case.",
+        steps: [
+          "A new vendor is onboarded. We set up its file and collect its W-9 and certificate of insurance.",
+          "We log the expiration date and flag the certificate before it lapses.",
+          "When a renewed certificate arrives, we file it and update the vendor record.",
+          "Each month, you get a summary of vendor files and open items.",
+        ],
+      },
+      {
+        heading: "Who we work with",
+        paragraphs: ["Owner-operated and growing businesses in:"],
+        bullets: [
+          "Residential property management",
+          "Commercial property management",
+          "Small and mid-size management companies",
+        ],
+        after: "If your team is buried in vendor files and monthly reports, tell us on the contact page and we'll scope it.",
+      },
+      HOW_IT_WORKS,
+      {
+        heading: "Common questions",
+        faq: [
+          {
+            q: "Do you track vendor insurance certificates?",
+            a: "Yes. We log expiration dates, flag certificates before they lapse, and file renewed certificates.",
+          },
+          {
+            q: "Do you decide which vendors to use or what insurance they need?",
+            a: "No. You make those decisions. We keep the records current.",
+          },
+          PRICING_FAQ,
+        ],
+      },
+    ],
+  },
+  "Cleaning & Facility Services": {
+    metaTitle: "Administrative Support for Cleaning & Facility Services | Aurum Ventura",
+    metaDescription: "Remote administrative support for cleaning and facility services: client invoices, service records, and performance reports.",
+    heroSub: "Client invoices, service records, and performance reports, kept organized so your billing stays on time.",
+    sections: [
+      {
+        heading: "Recurring contracts, recurring paperwork",
+        paragraphs: [
+          "Recurring service contracts create a steady stream of invoices, schedule changes, and client reports. Missed invoices and unlogged service changes are where cleaning and facility businesses lose money.",
+        ],
+      },
+      {
+        heading: "Example: a new recurring client",
+        note: "Illustrative example, not a client case.",
+        steps: [
+          "A new recurring client is set up with its service records and invoice terms.",
+          "Schedule changes are logged as they come in, so the records match the work.",
+          "Invoices go out once you approve the amount and recipient.",
+          "Each month, you get a performance summary for each client.",
+        ],
+      },
+      {
+        heading: "Who we work with",
+        paragraphs: ["Owner-operated and growing businesses in:"],
+        bullets: [
+          "Commercial cleaning and janitorial companies",
+          "Facility maintenance providers",
+          "Landscaping and grounds crews with recurring contracts",
+        ],
+        after: "If invoicing and client reporting are slipping behind the crews, tell us on the contact page and we'll scope it.",
+      },
+      HOW_IT_WORKS,
+      {
+        heading: "Common questions",
+        faq: [
+          {
+            q: "Who decides the invoice amounts?",
+            a: "You do. We prepare and send invoices once you approve the amount and recipient.",
+          },
+          PRICING_FAQ,
+        ],
+      },
+    ],
+  },
+  "Construction/Subcontractors": {
+    metaTitle: "Subcontractor Compliance & Admin Support | Aurum Ventura",
+    metaDescription: "Remote administrative support for construction and subcontractor businesses: subcontractor files, insurance certificates, and job records.",
+    heroSub: "Subcontractor paperwork, insurance certificates, and job records, kept current so you know who is cleared before the next payment.",
+    sections: [
+      {
+        heading: "Compliance risk runs through every job",
+        paragraphs: [
+          "A general contractor carries the compliance risk for every subcontractor on the job. A missing W-9, an expired certificate of insurance, or an unfiled change order can hold up a payment or leave you exposed.",
+        ],
+      },
+      {
+        heading: "Example: a subcontractor joins a job",
+        note: "Illustrative example, not a client case.",
+        steps: [
+          "A subcontractor is added to the job. We collect its W-9 and certificate of insurance and set up its file in ProWorx.",
+          "We log each certificate's expiration date and flag it before it lapses.",
+          "Change orders and job records are filed against the right project.",
+          "Each week, you get a list of open items: missing, expiring, or unfiled documents.",
+        ],
+      },
+      {
+        heading: "Who we work with",
+        paragraphs: ["Owner-operated and growing businesses in:"],
+        bullets: [
+          "General contractors and construction managers",
+          "Subcontractors that need organized compliance records",
+        ],
+        after: "If subcontractor paperwork is holding up your jobs, tell us on the contact page and we'll scope it.",
+      },
+      HOW_IT_WORKS,
+      {
+        heading: "Common questions",
+        faq: [
+          {
+            q: "Do you check that a certificate's coverage meets our contract?",
+            a: "No. We track and file the certificates. Your team or your broker reviews coverage limits and endorsements.",
+          },
+          {
+            q: "Do you work in ProWorx?",
+            a: "Yes, we use ProWorx for project tracking.",
+          },
+          PRICING_FAQ,
+        ],
+      },
+    ],
+  },
+  "Staffing & Recruiting": {
+    metaTitle: "Administrative Support for Staffing & Recruiting | Aurum Ventura",
+    metaDescription: "Remote administrative support for staffing and recruiting firms: candidate records, placement paperwork, and client reports.",
+    heroSub: "Candidate records, placement paperwork, and client reports, kept current so your recruiters can focus on placements.",
+    sections: [
+      {
+        heading: "Every placement creates paperwork",
+        paragraphs: [
+          "Each placement brings candidate records, offer documents, client contracts, and reports. When that work lags, recruiters spend evenings updating systems instead of filling roles.",
+        ],
+      },
+      {
+        heading: "Example: a placement, start to finish",
+        note: "Illustrative example, not a client case.",
+        steps: [
+          "A new candidate is added, and their record is entered in your CRM.",
+          "Placement documents are filed as offers are accepted.",
+          "Client contracts are organized, with renewal dates logged.",
+          "Each week, you get a report on open placements by client.",
+        ],
+      },
+      {
+        heading: "Who we work with",
+        paragraphs: ["Owner-operated and growing businesses in:"],
+        bullets: [
+          "Staffing agencies and recruiting firms",
+          "In-house recruiting teams with high placement volume",
+        ],
+        after: "If records and reports are slowing your recruiters down, tell us on the contact page and we'll scope it.",
+      },
+      HOW_IT_WORKS,
+      {
+        heading: "Common questions",
+        faq: [
+          {
+            q: "Do you screen or evaluate candidates?",
+            a: "No. We handle records and paperwork. Screening and hiring decisions stay with your team.",
+          },
+          {
+            q: "Do you work in the systems we already use?",
+            a: "Yes. We work in the CRM and spreadsheets you already have.",
+          },
+          PRICING_FAQ,
+        ],
+      },
+    ],
+  },
+  "Real Estate": {
+    metaTitle: "Administrative Support for Real Estate | Aurum Ventura",
+    metaDescription: "Remote administrative support for real estate businesses: transaction paperwork, document files, and client records.",
+    heroSub: "Transaction paperwork, document files, and client records, organized so every deal file is complete before closing.",
+    sections: [
+      {
+        heading: "Every transaction creates a stack of paperwork",
+        paragraphs: [
+          "Each transaction brings forms, disclosures, and vendor records. A missing document can hold up a closing, and client records that aren't updated after the sale are hard to use for the next one.",
+        ],
+      },
+      {
+        heading: "Example: a transaction, start to finish",
+        note: "Illustrative example, not a client case.",
+        steps: [
+          "A new transaction opens. We set up a deal file with a checklist of the required forms.",
+          "Documents are filed as they come in, and missing items are flagged.",
+          "Vendor records, such as inspectors and title contacts, are kept current.",
+          "After closing, client records are updated in your CRM.",
+        ],
+      },
+      {
+        heading: "Who we work with",
+        paragraphs: ["Owner-operated and growing businesses in:"],
+        bullets: [
+          "Independent brokers and small brokerages",
+          "Investors and agents with a steady deal flow",
+        ],
+        after: "If deal files and client records are falling behind, tell us on the contact page and we'll scope it.",
+      },
+      HOW_IT_WORKS,
+      {
+        heading: "Common questions",
+        faq: [
+          {
+            q: "Do you review contracts or give legal advice?",
+            a: "No. We organize and track the paperwork. Your broker or attorney reviews the documents.",
+          },
+          PRICING_FAQ,
+        ],
+      },
+    ],
+  },
+  "Professional Services": {
+    metaTitle: "Administrative Support for Professional Services | Aurum Ventura",
+    metaDescription: "Remote administrative support for professional services firms: client records, engagement documents, and invoices.",
+    heroSub: "Client records, engagement documents, and invoices, kept organized so your team bills on time and spends its hours on client work.",
+    sections: [
+      {
+        heading: "Admin work that follows every engagement",
+        paragraphs: [
+          "Professional firms bill for their time, and the admin work behind it piles up: client records, engagement documents, invoices, and status updates. Late or unbilled invoices are the usual cost.",
+        ],
+      },
+      {
+        heading: "Example: a new client engagement",
+        note: "Illustrative example, not a client case.",
+        steps: [
+          "A new engagement opens. We set up the client record and document folder.",
+          "Engagement documents are filed as they come in.",
+          "Invoices are prepared once you approve the amount and recipient.",
+          "Each month, you get a status report on open engagements and invoices.",
+        ],
+      },
+      {
+        heading: "Who we work with",
+        paragraphs: ["Owner-operated and growing businesses in:"],
+        bullets: [
+          "Consulting and advisory firms",
+          "Small accounting and bookkeeping practices",
+        ],
+        after: "If billing and client records are slowing your team down, tell us on the contact page and we'll scope it.",
+      },
+      HOW_IT_WORKS,
+      {
+        heading: "Common questions",
+        faq: [
+          {
+            q: "Do you do the professional work or give client advice?",
+            a: "No. We handle the administrative work around your practice. Your professionals keep the client relationship and the advice.",
+          },
+          PRICING_FAQ,
+        ],
+      },
+    ],
+  },
 };
+
+export const INDUSTRY_SLUGS = AUDIENCE.map((industry) => industryToSlug(industry));
 
 // Build reverse mapping: industry → service slugs
 const INDUSTRY_SERVICES = {};
@@ -398,7 +687,7 @@ function useReveal() {
 export function adminIntakeDetailKey(id) { return `admin-intake:${id}`; }
 
 function industryToSlug(industry) {
-  return industry.toLowerCase().replace(/[&\s]+/g, "-").replace(/-+/g, "-");
+  return industry.toLowerCase().replace(/[&\s/]+/g, "-").replace(/-+/g, "-");
 }
 
 function slugToIndustry(slug) {

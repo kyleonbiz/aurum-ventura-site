@@ -819,7 +819,7 @@ function Swoosh({ style }) {
   );
 }
 
-const NAV_LABELS = { HowItWorks: "How It Works", ProgramsPartnerships: "Programs & Partnerships", Upload: "Upload Documents" };
+const NAV_LABELS = { Products: "Systems", HowItWorks: "How It Works", ProgramsPartnerships: "Programs & Partnerships", Upload: "Upload Documents" };
 
 const SERVICES_DROPDOWN_ITEMS = [
   { label: "All Services", key: "Services" },
@@ -1628,7 +1628,7 @@ function ProductsPage({ setPage }) {
       <section className="section" style={{ paddingTop: "2rem" }}>
         <div className="shop-layout">
           <aside className="shop-sidebar">
-            <h3 style={{ fontSize: "1.1rem" }}>Product Family</h3>
+            <h3 style={{ fontSize: "1.1rem" }}>System Family</h3>
             {PRODUCT_FAMILIES.map((f) => {
               const empty = f.items.length === 0;
               return (
@@ -1648,7 +1648,7 @@ function ProductsPage({ setPage }) {
           <div>
             <div className="shop-toolbar">
               <div>
-                <p className="shop-count-line">{products.length} {products.length === 1 ? "product" : "products"} found</p>
+                <p className="shop-count-line">{products.length} {products.length === 1 ? "system" : "systems"} found</p>
                 {activeChips.length > 0 && (
                   <div className="shop-chips">
                     <span style={{ fontSize: "0.85rem", color: COLORS.slate }}>Filters:</span>

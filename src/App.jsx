@@ -66,6 +66,8 @@ export const SERVICES = [
     slug: "document-preparation-management",
     title: "Document Preparation & Management",
     summary: "Organize your documents, maintain a clean digital filing system, and prepare routine administrative documents — trackers, checklists, forms, and reports.",
+    intro: ["Documents pile up across drives, inboxes, and desktops, and the same report gets rebuilt from scratch each month. We set up a filing structure your team can keep using, then prepare the routine documents you need: trackers, checklists, forms, and reports.", "Every project starts from the information you provide. We organize it, prepare the document, and file it where your team can find it."],
+    faq: [{"q": "Where are my documents stored?", "a": "Client documents are stored in Dropbox, which encrypts data in transit and at rest. Our Security & Confidentiality page covers how information is handled."}, {"q": "Can you prepare legal or tax documents?", "a": "We prepare routine administrative documents. Anything that needs a licensed professional's judgment stays with that professional."}],
     examples: [
       "Setting up a consistent folder structure across your business documents",
       "Preparing a weekly operations checklist from your notes",
@@ -76,6 +78,8 @@ export const SERVICES = [
     slug: "invoice-administration",
     title: "Invoice Administration",
     summary: "Prepare and send invoices, track payments and due dates, keep records organized. (No debt collection.)",
+    intro: ["Late invoices slow cash flow, and invoices that never go out are the most expensive kind. We prepare and send invoices once you approve the amount and recipient, log each payment's status, and flag due dates before they pass.", "Every invoice goes into a running log by client or job, so you always know what has been sent, what has been paid, and what is still open."],
+    faq: [{"q": "Do you chase unpaid invoices?", "a": "We track payment status and flag due dates. We do not do debt collection."}, {"q": "Who approves the amounts on an invoice?", "a": "You do. We send an invoice only after you approve its amount and recipient."}],
     examples: [
       "Preparing and sending an invoice once you approve the amount and recipient",
       "Logging payment status and flagging invoices approaching their due date",
@@ -86,6 +90,7 @@ export const SERVICES = [
     slug: "license-renewal-tracking",
     title: "License & Renewal Tracking",
     summary: "Record and track licenses, permits, certifications, and insurance — so nothing lapses. (We track administratively; you determine what's legally required.)",
+    intro: ["A lapsed license or insurance certificate can stop work before the renewal fee even matters. We build a renewal calendar for your licenses, permits, certifications, and insurance, send reminders ahead of each date, and file the confirmations and updated documents as they arrive.", "We track the deadlines administratively. Your state licensing board and your insurer decide what is required and when."],
     examples: [
       "Building a renewal calendar for your business license, permits, and certifications",
       "Sending you a reminder ahead of an upcoming expiration date",
@@ -103,6 +108,8 @@ export const SERVICES = [
     title: "Vendor Administration",
     seoTitle: "Vendor Administration, W-9 & COI Collection",
     summary: "Collect and organize vendor W-9s and Certificates of Insurance, track expiration dates, and keep vendor records current.",
+    intro: ["Vendor paperwork is a compliance risk. A missing W-9 holds up year-end 1099 reporting, and an expired certificate of insurance leaves your business exposed when a vendor is on your job.", "We collect and organize vendor W-9s and Certificates of Insurance, keep a directory of vendor contacts, log each expiration date, and flag a certificate before it lapses."],
+    faq: [{"q": "Why collect a W-9 from every vendor?", "a": "The W-9 gives you a vendor's legal name, taxpayer identification number, and federal tax classification, which you need to report payments accurately at tax time."}, {"q": "Do you verify coverage limits and endorsements?", "a": "We track and file the certificates. Your team or your broker reviews coverage limits and endorsements."}],
     examples: [
       "Building and maintaining a vendor contact directory",
       "Collecting and organizing W-9s and Certificates of Insurance",
@@ -113,6 +120,8 @@ export const SERVICES = [
     slug: "crm-data-management",
     title: "CRM & Data Management",
     summary: "Enter and update customer records, clean up duplicates, maintain spreadsheets, and handle routine Data Entry — keep your systems accurate.",
+    intro: ["Duplicate and outdated contacts waste sales time and make your reports unreliable. We enter new customer records after a sale closes, clean up duplicate and outdated entries, and keep your spreadsheets current.", "We work with the information you send us, in the CRM or spreadsheets you already use."],
+    faq: [{"q": "Where does the information come from?", "a": "You send it to us, in the form that's easiest for you: a spreadsheet, a list, notes, or documents. We enter and update what you provide."}, {"q": "Do you work in our existing CRM?", "a": "Yes. We work in the CRM or spreadsheets you already use."}],
     examples: [
       "Entering new customer records into your CRM after a sale closes",
       "Cleaning up duplicate or outdated contact entries",
@@ -123,6 +132,8 @@ export const SERVICES = [
     slug: "project-administration",
     title: "Project Administration",
     summary: "Create and maintain project folders, trackers, and documentation. Update status and prepare progress reports.",
+    intro: ["Projects slip when the paperwork falls behind the work. We set up a folder and tracker for each job, update its status as it moves through each stage, and prepare progress reports so you can see where every project stands.", "Documentation stays with the job it belongs to, so it's easy to find when a client, a subcontractor, or your team needs it."],
+    faq: [{"q": "What do you need from us to start?", "a": "Job information, status updates, and the documents for each project, sent in whatever form your team already uses."}, {"q": "Do you work in ProWorx?", "a": "Yes, we use ProWorx for project tracking."}],
     examples: [
       "Setting up a project folder and tracker for a new job",
       "Updating status fields as a project moves through its stages",
@@ -134,6 +145,8 @@ export const SERVICES = [
     title: "Forms & Paperwork",
     summary: "Prepare routine business forms, applications, checklists, and internal paperwork using information you supply. (Licensed professionals handle anything requiring their judgment.)",
     metaDescription: "Routine business forms, checklists, and internal paperwork, prepared from information you supply. Licensed professionals handle the rest.",
+    intro: ["Routine forms and checklists take time that owners rarely have. We prepare applications, checklists, and internal paperwork from the information you supply, so each form is complete before it goes out.", "You review each form before it is used. Anything that needs a licensed professional's judgment stays with that professional."],
+    faq: [{"q": "Who checks the content of a form?", "a": "You review every form before it is used. Licensed professionals handle anything that requires their judgment."}, {"q": "Can you prepare client-facing forms?", "a": "Yes. We prepare routine business forms and checklists from the information you supply."}],
     examples: [
       "Filling out a routine application form with information you supply",
       "Preparing an internal checklist for a recurring process",
@@ -144,6 +157,8 @@ export const SERVICES = [
     slug: "data-entry-reporting",
     title: "Data Entry & Reporting",
     summary: "Spreadsheets, data cleanup, and monthly operational reports — recurring reporting without the time cost.",
+    intro: ["Spreadsheets drift out of date, and monthly reports get rebuilt by hand. We clean up your data, enter the information you send, and prepare the recurring operational reports your business relies on.", "Reports are built from the data you provide, on the schedule you set, so the numbers you review are current."],
+    faq: [{"q": "What kinds of reports do you prepare?", "a": "Monthly operational reports and performance summaries, built from the data you provide."}, {"q": "How is my data kept secure?", "a": "Documents and data are stored in Dropbox, which encrypts them in transit and at rest. Our Security & Confidentiality page covers the details."}],
     examples: [
       "Entering weekly sales or job data into a tracking spreadsheet",
       "Cleaning up and standardizing an existing spreadsheet",
@@ -154,6 +169,8 @@ export const SERVICES = [
     slug: "general-administrative-support",
     title: "General Administrative Support",
     summary: "Routine administrative work within your approved scope. Every plan has defined scope and reserved capacity — that's what protects both sides.",
+    intro: ["Some work doesn't fit neatly into one category. General administrative support covers routine tasks within a scope you approve in advance, with capacity reserved so the work gets done on time.", "The scope is set in your service agreement. Work outside it is quoted separately, and only goes ahead with your approval."],
+    faq: [{"q": "What counts as in scope?", "a": "Only the tasks listed in the scope you approve. Anything outside it is quoted separately."}, {"q": "How is capacity reserved?", "a": "Each plan has a defined scope and reserved capacity, set out in your service agreement."}],
     examples: [
       "Handling day-to-day administrative requests within your approved scope",
       "Coordinating routine tasks that don't fit neatly into one category",
@@ -165,6 +182,8 @@ export const SERVICES = [
     title: "Business File Reset",
     oneTime: true,
     summary: "One-time cleanup and organization service for your digital files and folders. Every project is custom-scoped and quoted based on your current setup.",
+    intro: ["A one-time cleanup of your digital files and folders. We archive outdated files, consolidate duplicates, and set up a folder structure your team can keep using after the project ends.", "Each project is custom-scoped and quoted from your current setup. There is no ongoing commitment."],
+    faq: [{"q": "Is this an ongoing service?", "a": "No. It's a one-time project with no ongoing commitment."}, {"q": "What happens to outdated files?", "a": "They are archived, not removed, and the folder structure is set up so new files go to the right place."}],
     examples: [
       "Auditing and reorganizing a messy shared drive or folder structure",
       "Standardizing file and folder naming conventions across your business",
@@ -176,6 +195,8 @@ export const SERVICES = [
     title: "Back Office Set Up",
     oneTime: true,
     summary: "Initial setup and configuration of your back-office systems, processes, and administrative infrastructure. Customize your scope based on your business needs.",
+    intro: ["Setup is where the rest of the engagement begins. We configure your back-office systems, processes, and administrative workflows, then set up the vendor files, license tracking, and document organization your team will use day to day.", "Your scope is built around how your business actually runs, so the setup fits your work rather than a generic template."],
+    faq: [{"q": "What do you need to start?", "a": "Your current systems, documents, and priorities. We use them to build your scope."}, {"q": "Is setup priced separately from ongoing support?", "a": "Every engagement is quoted from a custom scope of services, so pricing depends on the setup your business needs."}],
     examples: [
       "Building a CRM from scratch and populating with existing customer data",
       "Creating administrative workflows and tracking systems for your business",
@@ -312,6 +333,7 @@ const PRICING_FAQ = {
 // Rendered by IndustryDetailPage; the industry name stays the H1.
 const INDUSTRY_PAGE_COPY = {
   "Contractors & Trades": {
+    h1: "Outsourced administrative support for contractors & trades",
     metaTitle: "Admin Support for Contractors & Trades | Aurum Ventura",
     metaDescription: "Remote administrative support for contractors and trades: job folders, progress reports, invoices, and license and insurance tracking.",
     heroSub: "The paperwork behind every job, handled remotely, so you can stay on the job site.",
@@ -370,6 +392,7 @@ const INDUSTRY_PAGE_COPY = {
     ],
   },
   "Property Management": {
+    h1: "Outsourced administrative support for property managers",
     metaTitle: "Admin Support for Property Management | Aurum Ventura",
     metaDescription: "Remote administrative support for property managers: vendor files, insurance certificates, invoices, and monthly reports.",
     heroSub: "Vendor files, insurance certificates, and monthly reports, kept current so your properties run without a paperwork backlog.",
@@ -419,6 +442,7 @@ const INDUSTRY_PAGE_COPY = {
     ],
   },
   "Cleaning & Facility Services": {
+    h1: "Outsourced administrative support for cleaning & facility services",
     metaTitle: "Admin Support for Cleaning & Facilities | Aurum Ventura",
     metaDescription: "Remote administrative support for cleaning and facility services: client invoices, service records, and performance reports.",
     heroSub: "Client invoices, service records, and performance reports, kept organized so your billing stays on time.",
@@ -463,6 +487,7 @@ const INDUSTRY_PAGE_COPY = {
     ],
   },
   "Construction/Subcontractors": {
+    h1: "Outsourced administrative support for construction & subcontractors",
     metaTitle: "Subcontractor Compliance & Admin Support | Aurum Ventura",
     metaDescription: "Remote administrative support for construction and subcontractor businesses: subcontractor files, insurance certificates, and job records.",
     heroSub: "Subcontractor paperwork, insurance certificates, and job records, kept current so you know who is cleared before the next payment.",
@@ -510,6 +535,7 @@ const INDUSTRY_PAGE_COPY = {
     ],
   },
   "Staffing & Recruiting": {
+    h1: "Outsourced administrative support for staffing & recruiting firms",
     metaTitle: "Admin Support for Staffing & Recruiting | Aurum Ventura",
     metaDescription: "Remote administrative support for staffing and recruiting firms: candidate records, placement paperwork, and client reports.",
     heroSub: "Candidate records, placement paperwork, and client reports, kept current so your recruiters can focus on placements.",
@@ -557,6 +583,7 @@ const INDUSTRY_PAGE_COPY = {
     ],
   },
   "Real Estate": {
+    h1: "Outsourced administrative support for real estate businesses",
     metaTitle: "Admin Support for Real Estate | Aurum Ventura",
     metaDescription: "Remote administrative support for real estate businesses: transaction paperwork, document files, and client records.",
     heroSub: "Transaction paperwork, document files, and client records, organized so every deal file is complete before closing.",
@@ -600,6 +627,7 @@ const INDUSTRY_PAGE_COPY = {
     ],
   },
   "Professional Services": {
+    h1: "Outsourced administrative support for professional services firms",
     metaTitle: "Admin Support for Professional Services | Aurum Ventura",
     metaDescription: "Remote administrative support for professional services firms: client records, engagement documents, and invoices.",
     heroSub: "Client records, engagement documents, and invoices, kept organized so your team bills on time and spends its hours on client work.",
@@ -1539,6 +1567,15 @@ function ProductDetailPage({ slug, setPage }) {
                 <ul className="plain-list">
                   {details.receive.map((r) => <li key={r}>{r}</li>)}
                 </ul>
+                <h3>Common questions</h3>
+                <div className="faq-item">
+                  <p className="faq-q"><strong>How is pricing set?</strong></p>
+                  <p className="industry-text">Each system is quoted from a custom scope of services, based on your business.</p>
+                </div>
+                <div className="faq-item">
+                  <p className="faq-q"><strong>How do I get started?</strong></p>
+                  <p className="industry-text">Request access, and we'll follow up by email to set up a short call.</p>
+                </div>
               </>
             ) : (
               <p className="section-lead">Full details for this product are coming soon.</p>
@@ -1711,19 +1748,31 @@ function ServiceDetailPage({ slug, setPage }) {
         <h1>{service.title}{service.oneTime && <span className="badge-one-time badge-one-time-h1">One-Time Project</span>}</h1>
         <p className="hero-sub">{service.summary}</p>
       </section>
+      {service.intro && (
+        <section className="section">
+          <h2>About This Service</h2>
+          {service.intro.map((p) => <p className="industry-text" key={p}>{p}</p>)}
+        </section>
+      )}
       <section className="section">
         <h2>Examples of This Work</h2>
         <ul className="plain-list">
           {service.examples.map((ex) => <li key={ex}>{ex}</li>)}
         </ul>
       </section>
+      <section className="section alt">
+        <h2>{HOW_IT_WORKS.heading}</h2>
+        <ol className="industry-list">
+          {HOW_IT_WORKS.steps.map((step) => <li key={step}>{step}</li>)}
+        </ol>
+      </section>
       {service.faq && (
-        <section className="section alt">
+        <section className="section">
           <h2>Common Questions</h2>
           {service.faq.map((item) => (
-            <div key={item.q} style={{ marginBottom: "1rem" }}>
-              <p><strong>{item.q}</strong></p>
-              <p>{item.a}</p>
+            <div className="faq-item" key={item.q}>
+              <p className="faq-q"><strong>{item.q}</strong></p>
+              <p className="industry-text">{item.a}</p>
             </div>
           ))}
         </section>
@@ -1786,7 +1835,7 @@ function IndustryDetailPage({ slug, setPage }) {
       <section className="page-head">
         <a className="btn-text back-link" href={pathFor("Industries")} onClick={go("Industries")}>&larr; All Industries</a>
         <p className="kicker">Industries We Serve</p>
-        <h1>{industry}</h1>
+        <h1>{INDUSTRY_PAGE_COPY[industry] ? INDUSTRY_PAGE_COPY[industry].h1 : industry}</h1>
         <p className="hero-sub">
           {INDUSTRY_PAGE_COPY[industry] ? INDUSTRY_PAGE_COPY[industry].heroSub : `${industry} businesses often juggle customer or project workflows while administrative tasks pile up. We handle the back-office work so you can focus on serving clients and growing.`}
         </p>

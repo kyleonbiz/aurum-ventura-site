@@ -101,6 +101,7 @@ export const SERVICES = [
   {
     slug: "vendor-administration",
     title: "Vendor Administration",
+    seoTitle: "Vendor Administration, W-9 & COI Collection",
     summary: "Collect and organize vendor W-9s and Certificates of Insurance, track expiration dates, and keep vendor records current.",
     examples: [
       "Building and maintaining a vendor contact directory",
@@ -132,6 +133,7 @@ export const SERVICES = [
     slug: "forms-paperwork",
     title: "Forms & Paperwork",
     summary: "Prepare routine business forms, applications, checklists, and internal paperwork using information you supply. (Licensed professionals handle anything requiring their judgment.)",
+    metaDescription: "Routine business forms, checklists, and internal paperwork, prepared from information you supply. Licensed professionals handle the rest.",
     examples: [
       "Filling out a routine application form with information you supply",
       "Preparing an internal checklist for a recurring process",
@@ -310,7 +312,7 @@ const PRICING_FAQ = {
 // Rendered by IndustryDetailPage; the industry name stays the H1.
 const INDUSTRY_PAGE_COPY = {
   "Contractors & Trades": {
-    metaTitle: "Administrative Support for Contractors & Trades | Aurum Ventura",
+    metaTitle: "Admin Support for Contractors & Trades | Aurum Ventura",
     metaDescription: "Remote administrative support for contractors and trades: job folders, progress reports, invoices, and license and insurance tracking.",
     heroSub: "The paperwork behind every job, handled remotely, so you can stay on the job site.",
     sections: [
@@ -368,7 +370,7 @@ const INDUSTRY_PAGE_COPY = {
     ],
   },
   "Property Management": {
-    metaTitle: "Administrative Support for Property Management | Aurum Ventura",
+    metaTitle: "Admin Support for Property Management | Aurum Ventura",
     metaDescription: "Remote administrative support for property managers: vendor files, insurance certificates, invoices, and monthly reports.",
     heroSub: "Vendor files, insurance certificates, and monthly reports, kept current so your properties run without a paperwork backlog.",
     sections: [
@@ -417,7 +419,7 @@ const INDUSTRY_PAGE_COPY = {
     ],
   },
   "Cleaning & Facility Services": {
-    metaTitle: "Administrative Support for Cleaning & Facility Services | Aurum Ventura",
+    metaTitle: "Admin Support for Cleaning & Facilities | Aurum Ventura",
     metaDescription: "Remote administrative support for cleaning and facility services: client invoices, service records, and performance reports.",
     heroSub: "Client invoices, service records, and performance reports, kept organized so your billing stays on time.",
     sections: [
@@ -508,7 +510,7 @@ const INDUSTRY_PAGE_COPY = {
     ],
   },
   "Staffing & Recruiting": {
-    metaTitle: "Administrative Support for Staffing & Recruiting | Aurum Ventura",
+    metaTitle: "Admin Support for Staffing & Recruiting | Aurum Ventura",
     metaDescription: "Remote administrative support for staffing and recruiting firms: candidate records, placement paperwork, and client reports.",
     heroSub: "Candidate records, placement paperwork, and client reports, kept current so your recruiters can focus on placements.",
     sections: [
@@ -555,7 +557,7 @@ const INDUSTRY_PAGE_COPY = {
     ],
   },
   "Real Estate": {
-    metaTitle: "Administrative Support for Real Estate | Aurum Ventura",
+    metaTitle: "Admin Support for Real Estate | Aurum Ventura",
     metaDescription: "Remote administrative support for real estate businesses: transaction paperwork, document files, and client records.",
     heroSub: "Transaction paperwork, document files, and client records, organized so every deal file is complete before closing.",
     sections: [
@@ -598,7 +600,7 @@ const INDUSTRY_PAGE_COPY = {
     ],
   },
   "Professional Services": {
-    metaTitle: "Administrative Support for Professional Services | Aurum Ventura",
+    metaTitle: "Admin Support for Professional Services | Aurum Ventura",
     metaDescription: "Remote administrative support for professional services firms: client records, engagement documents, and invoices.",
     heroSub: "Client records, engagement documents, and invoices, kept organized so your team bills on time and spends its hours on client work.",
     sections: [
@@ -3964,31 +3966,31 @@ function AdminIntakeDetailPage({ intakeId, setPage }) {
 export const SITE_NAME = "Aurum Ventura Enterprise LLC";
 const PAGE_TITLES = {
   Home: "Back Office Administrative Support | Aurum Ventura",
-  Services: `Services — ${SITE_NAME}`,
-  Products: `Business Systems & Products — ${SITE_NAME}`,
-  ProgramsPartnerships: `Programs & Partnerships — ${SITE_NAME}`,
-  About: `About — ${SITE_NAME}`,
-  Industries: `Industries — ${SITE_NAME}`,
-  HowItWorks: `How It Works — ${SITE_NAME}`,
-  Security: `Security & Confidentiality — ${SITE_NAME}`,
-  Privacy: `Privacy Policy — ${SITE_NAME}`,
-  Terms: `Terms of Service — ${SITE_NAME}`,
-  Contact: `Contact — ${SITE_NAME}`,
-  ROICalculator: `Calculate Your Time Savings — ${SITE_NAME}`,
-  FAQ: `Frequently Asked Questions — ${SITE_NAME}`,
-  Alternatives: `Aurum Ventura vs Virtual Assistants & DIY — ${SITE_NAME}`,
-  Upload: `Upload Documents — ${SITE_NAME}`,
-  ClientIntake: `Client Intake — ${SITE_NAME}`,
-  AdminLogin: `Admin — ${SITE_NAME}`,
-  AdminIntakes: `Client Intakes — ${SITE_NAME}`,
+  Services: `Services | Aurum Ventura`,
+  Products: `Business Systems & Products | Aurum Ventura`,
+  ProgramsPartnerships: `Programs & Partnerships | Aurum Ventura`,
+  About: `About | Aurum Ventura`,
+  Industries: `Industries | Aurum Ventura`,
+  HowItWorks: `How It Works | Aurum Ventura`,
+  Security: `Security & Confidentiality | Aurum Ventura`,
+  Privacy: `Privacy Policy | Aurum Ventura`,
+  Terms: `Terms of Service | Aurum Ventura`,
+  Contact: `Contact | Aurum Ventura`,
+  ROICalculator: `Calculate Your Time Savings | Aurum Ventura`,
+  FAQ: `Frequently Asked Questions | Aurum Ventura`,
+  Alternatives: `Aurum Ventura vs Virtual Assistants & DIY | Aurum Ventura`,
+  Upload: `Upload Documents | Aurum Ventura`,
+  ClientIntake: `Client Intake | Aurum Ventura`,
+  AdminLogin: `Admin | Aurum Ventura`,
+  AdminIntakes: `Client Intakes | Aurum Ventura`,
 };
 const PAGE_DESCRIPTIONS = {
-  Home: "We design and execute workflows to get you 10-16 hours/week back. Document Prep, Invoicing, Vendor Admin, CRM, License Tracking, and Custom Workflows for growing businesses nationwide.",
-  Services: "Recurring administrative services for businesses nationwide — Document Preparation, Invoice Administration, License Tracking, Vendor Administration, CRM Data Management, Project Administration, and more.",
-  Products: "Automated business systems for growing companies: growth systems for outreach and follow-up, and intelligence systems for prospect research, market data, and competitive insight.",
-  ProgramsPartnerships: "Implementation partnerships for organizations supporting entrepreneurs and small businesses. Hands-on operational systems and back-office implementation for entrepreneurship programs.",
-  About: "Aurum Ventura is a Nashville-based outsourced administrative back office serving small and growing businesses nationwide. Learn about our approach to business operations.",
-  Industries: "Back-office and administrative support for contractors, property managers, cleaning and landscaping, construction, staffing, real estate, professional services, and other industries nationwide.",
+  Home: "Administrative support that gives you 10 to 16 hours a week back. Document prep, invoicing, vendor admin, CRM, and license tracking.",
+  Services: "Recurring administrative services: document prep, invoicing, license tracking, vendor administration, CRM data, and project admin.",
+  Products: "Automated business systems: growth systems for outreach and follow-up, and intelligence systems for prospect research and market data.",
+  ProgramsPartnerships: "Implementation partnerships for organizations that support entrepreneurs: hands-on operational systems and back-office setup.",
+  About: "Nashville-based outsourced administrative back office for small and growing businesses nationwide. Learn about our approach.",
+  Industries: "Back-office and administrative support for contractors, property managers, cleaning, construction, staffing, real estate, and professional services.",
   HowItWorks: "How Aurum Ventura's back-office support process works — from consultation through service delivery and monthly reporting.",
   Security: "How Aurum Ventura secures and protects your business documents, information, and confidentiality when providing remote administrative services.",
   Privacy: "Privacy policy for Aurum Ventura's website and back-office administrative services for businesses nationwide.",
@@ -4108,14 +4110,14 @@ export function metaFor(page) {
     if (product) {
       const details = PRODUCT_DETAILS[product.name];
       return {
-        title: `${product.name} — ${SITE_NAME}`,
+        title: `${product.name} | Aurum Ventura`,
         description: details ? details.description : `${product.name}, a ${product.family.toLowerCase()} product from Aurum Ventura.`,
       };
     }
   }
   if (PAGE_TITLES[page]) return { title: PAGE_TITLES[page], description: PAGE_DESCRIPTIONS[page] };
   const service = SERVICES.find((s) => s.slug === page);
-  if (service) return { title: `${service.title} — ${SITE_NAME}`, description: service.summary };
+  if (service) return { title: `${service.seoTitle || service.title} | Aurum Ventura`, description: service.metaDescription || service.summary };
   if (typeof page === "string" && page.startsWith("industry:")) {
     const slug = page.slice("industry:".length);
     const industry = slugToIndustry(slug);
@@ -4124,13 +4126,13 @@ export function metaFor(page) {
     }
     if (industry) {
       return {
-        title: `${industry} | Back-Office & Administrative Support — ${SITE_NAME}`,
+        title: `${industry} | Back-Office & Administrative Support | Aurum Ventura`,
         description: `Professional outsourced administrative support for ${industry.toLowerCase()} businesses nationwide. Custom-scoped services including Document Management, invoicing, License Tracking, Vendor Administration, and more.`
       };
     }
   }
   if (typeof page === "string" && page.startsWith("admin-intake:")) {
-    return { title: `Intake Review — ${SITE_NAME}`, description: PAGE_DESCRIPTIONS.AdminIntakes };
+    return { title: `Intake Review | Aurum Ventura`, description: PAGE_DESCRIPTIONS.AdminIntakes };
   }
   return { title: PAGE_TITLES.Home, description: PAGE_DESCRIPTIONS.Home };
 }

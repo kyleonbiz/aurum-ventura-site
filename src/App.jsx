@@ -1110,6 +1110,42 @@ const PRODUCT_DETAILS = {
     handles: "Prospect discovery \u2192 qualification \u2192 data organization \u2192 outreach \u2192 follow-up \u2192 reporting",
     receive: ["Automated workflow", "Prospect database", "Outreach sequences", "Follow-up automation", "Activity reporting"],
   },
+  "Prospect Discovery": {
+    description: "Find the right businesses to reach, with verified details and clear filters, so your outreach starts with prospects that fit.",
+    builtFor: "Growing businesses that need a steady supply of qualified prospects without researching every lead by hand.",
+    handles: "Targeted prospect research \u2192 verified business data \u2192 custom filters and segmentation \u2192 actionable lead lists",
+    receive: ["Targeted prospect research", "Verified business data", "Custom filters and segmentation", "Actionable lead lists"],
+  },
+  "Follow-Up Automation": {
+    description: "Keeps prospects engaged with automated email and multi-channel follow-ups, sent at the right time and tracked in one system.",
+    builtFor: "Businesses that lose leads because follow-up is inconsistent or depends on someone remembering to send it.",
+    handles: "Automated email sequences \u2192 multi-channel follow-ups \u2192 smart scheduling \u2192 tracking and optimization",
+    receive: ["Automated email sequences", "Multi-channel follow-ups (email, SMS, and more)", "Smart scheduling", "Performance tracking"],
+  },
+  "Prospect Intelligence": {
+    description: "Company, contact, and market insight that helps you understand the businesses you want to reach and the people who make the decisions.",
+    builtFor: "Sales and business development teams that need deeper information on prospects before reaching out.",
+    handles: "Company and contact insights \u2192 firmographic and technographic data \u2192 decision-maker identification \u2192 competitive intelligence",
+    receive: ["Company and contact insights", "Firmographic and technographic data", "Decision-maker identification", "Real-time market and competitor insights"],
+  },
+  "Market Research": {
+    description: "Industry, competitor, and audience research that shows where your market is heading and where the opportunities are.",
+    builtFor: "Business owners planning a new offer, entering a new market, or deciding where to focus next.",
+    handles: "Industry and competitor analysis \u2192 target audience insights \u2192 trend and opportunity research \u2192 custom research reports",
+    receive: ["Industry and competitor analysis", "Target audience insights", "Trend and opportunity research", "Custom research reports"],
+  },
+  "Business Data": {
+    description: "Verified business records, with filters for industry and location, so you can build lists you can act on.",
+    builtFor: "Businesses building outreach, marketing, or sales lists that need accurate, current company information.",
+    handles: "Verified business records \u2192 industry and location filters \u2192 contact information \u2192 custom data lists",
+    receive: ["Verified business records", "Industry and location filters", "Contact information", "Custom data lists"],
+  },
+  "Competitive Intelligence": {
+    description: "Tracks competitors, market positioning, and emerging threats and opportunities, reported in a form you can act on.",
+    builtFor: "Business owners who want to know how they compare to competitors and what is changing in their market.",
+    handles: "Competitor analysis \u2192 market positioning insights \u2192 threat and opportunity tracking \u2192 custom intelligence reports",
+    receive: ["Competitor analysis", "Market positioning insights", "Threat and opportunity tracking", "Custom intelligence reports"],
+  },
 };
 
 const productSlug = (name) => name.toLowerCase().replace(/ /g, "-");

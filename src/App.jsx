@@ -1102,6 +1102,7 @@ const PRODUCT_FAMILIES = [
 
 const PRODUCT_IMAGES = {
   "Automated Outreach": "/products/automated-outreach.webp",
+  "Prospect Discovery": "/products/prospect-discovery.webp",
 };
 
 function ProductsPage({ setPage }) {
